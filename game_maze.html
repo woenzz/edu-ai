@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Nose Maze — ผึ้งน้อยผจญภัย</title>
+<style>
+:root{
+  --bg:#0f172a; --panel:#ffffff; --ink:#1e293b; --accent:#f59e0b;
+  --good:#22c55e; --bad:#ef4444; --soft:#e2e8f0;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);
+  font-family:-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;color:var(--ink);
+  user-select:none;touch-action:none}
+#app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{position:relative;aspect-ratio:1000/560;width:100%;height:auto;max-height:100%;
+  max-width:calc(100vh * (1000/560));background:#bfe6ff;border-radius:14px;overflow:hidden;
+  box-shadow:0 10px 40px rgba(0,0,0,.5)}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* ---------- บังคับแนวนอน ---------- */
+#rotate{position:fixed;inset:0;background:#0f172a;color:#fff;display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:999;text-align:center;padding:24px}
+#rotate .ph{width:70px;height:110px;border:5px solid #fff;border-radius:12px;animation:tilt 1.6s ease-in-out infinite}
+@keyframes tilt{0%,40%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+@media (orientation:portrait){#rotate{display:flex}}
+
+/* ---------- Overlay UI ---------- */
+.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;background:rgba(255,255,255,.94);z-index:5;padding:3%;text-align:center}
+.screen.on{display:flex}
+h1{font-size:clamp(20px,4.2vw,40px);color:#0f172a}
+h2{font-size:clamp(16px,2.8vw,26px)}
+p.sub{font-size:clamp(11px,1.7vw,16px);color:#475569;max-width:70%;line-height:1.6}
+.btn{border:0;border-radius:999px;padding:14px 30px;font-size:clamp(13px,2vw,19px);font-weight:700;
+  background:var(--accent);color:#fff;cursor:pointer;box-shadow:0 4px 0 #b45309;min-width:150px;min-height:56px}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #b45309}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:0 0 0 2px var(--soft) inset}
+.btn.sm{padding:9px 18px;font-size:13px;min-width:0;min-height:44px;box-shadow:0 3px 0 #b45309}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.levels{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:82%}
+.lv{background:#fff;border:2px solid var(--soft);border-radius:14px;padding:8px 4px;cursor:pointer;min-width:64px}
+.lv[disabled]{opacity:.35;cursor:not-allowed}
+.lv b{display:block;font-size:15px}
+.lv small{font-size:10px;color:#64748b}
+.lv .st{color:var(--accent);font-size:12px;letter-spacing:1px}
+
+/* ---------- HUD ---------- */
+#hud{position:absolute;inset:0;pointer-events:none;z-index:3}
+.chip{position:absolute;background:rgba(255,255,255,.9);border-radius:999px;padding:6px 14px;
+  font-weight:700;font-size:clamp(11px,1.6vw,16px);display:flex;gap:8px;align-items:center}
+#c-time{top:12px;left:50%;transform:translateX(-50%)}
+#c-star{top:12px;left:14px}
+#c-score{top:12px;right:14px}
+#hint{bottom:14px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.82);color:#fff}
+#tools{position:absolute;bottom:12px;right:12px;display:flex;gap:8px;pointer-events:auto;z-index:4}
+#cam{position:absolute;bottom:12px;left:12px;width:16%;min-width:110px;aspect-ratio:4/3;border-radius:10px;
+  overflow:hidden;background:#000;z-index:4;box-shadow:0 0 0 2px rgba(255,255,255,.7)}
+#cam video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+#cam .tag{position:absolute;bottom:0;left:0;right:0;font-size:10px;text-align:center;color:#fff;background:rgba(0,0,0,.5)}
+#cam.hide{display:none}
+.hidden{display:none!important}
+.badge{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:8px;padding:3px 10px;font-size:12px}
+label.sw{display:flex;gap:8px;align-items:center;font-size:13px;background:#fff;border:2px solid var(--soft);
+  border-radius:999px;padding:8px 14px;cursor:pointer}
+input[type=range]{width:200px}
+</style>
+</head>
+<body>
+
+<div id="rotate"><div class="ph"></div><h2>หมุนเครื่องเป็นแนวนอน</h2><p>เกมนี้เล่นแนวนอนเท่านั้น 🐝</p></div>
+
+<div id="app">
+<div id="stage">
+  <canvas id="cv"></canvas>
+
+  <div id="hud">
+    <div class="chip" id="c-star">⭐ <span id="v-star">0/0</span></div>
+    <div class="chip" id="c-time">⏱ <span id="v-time">60</span></div>
+    <div class="chip" id="c-score">🍯 <span id="v-score">0</span></div>
+    <div class="chip" id="hint">พาผึ้งไปหาดอกไม้ใหญ่</div>
+  </div>
+
+  <div id="tools">
+    <button class="btn sm ghost" id="btn-recenter">ตั้งกลางใหม่</button>
+    <button class="btn sm ghost" id="btn-pause">พัก</button>
+  </div>
+
+  <div id="cam" class="hide"><video id="vid" playsinline muted autoplay></video><div class="tag">on-device</div></div>
+
+  <!-- HOME -->
+  <div class="screen on" id="s-home">
+    <h1>🐝 Nose Maze</h1>
+    <p class="sub">ขยับ <b>หัว</b> เพื่อพาผึ้งน้อยบินผ่านเขาวงกต เก็บดาว แล้วไปหาดอกไม้ใหญ่<br>
+    ภาพจากกล้องประมวลผลในเครื่องเท่านั้น ไม่มีการบันทึกหรืออัปโหลด</p>
+    <div class="row">
+      <button class="btn" id="btn-play">เล่นด้วยกล้อง</button>
+      <button class="btn ghost" id="btn-mouse">เล่นด้วยเมาส์</button>
+    </div>
+    <div class="row"><button class="btn ghost sm" id="btn-levels">เลือกด่าน</button>
+      <button class="btn ghost sm" id="btn-settings">ตั้งค่า</button>
+      <button class="btn ghost sm" id="btn-full">เต็มจอ</button></div>
+    <span class="badge" id="status">พร้อมเล่น</span>
+  </div>
+
+  <!-- LEVEL SELECT -->
+  <div class="screen" id="s-levels"><h2>เลือกด่าน</h2>
+    <div class="levels" id="lvgrid"></div>
+    <button class="btn ghost sm" data-home>กลับ</button></div>
+
+  <!-- SETTINGS -->
+  <div class="screen" id="s-set"><h2>ตั้งค่า</h2>
+    <label class="sw">ความไว <input type="range" id="sens" min="0.6" max="2" step="0.1" value="1"><b id="sensv">1.0</b></label>
+    <label class="sw">ความนุ่มนวล <input type="range" id="smooth" min="5" max="18" step="1" value="10"><b id="smoothv">10</b></label>
+    <label class="sw"><input type="checkbox" id="mirror" checked> กลับซ้าย-ขวาแบบกระจก</label>
+    <label class="sw"><input type="checkbox" id="assist"> โหมดช่วยเหลือ (ผึ้งเล็กลง + เวลาเพิ่ม)</label>
+    <label class="sw"><input type="checkbox" id="sfx" checked> เสียงประกอบ</label>
+    <div class="row"><button class="btn ghost sm" id="btn-reset">ล้างความคืบหน้า</button>
+      <button class="btn sm" data-home>เสร็จแล้ว</button></div></div>
+
+  <!-- CALIBRATION -->
+  <div class="screen" id="s-cal"><h2 id="cal-title">มองตรงมาที่หน้าจอ</h2>
+    <p class="sub" id="cal-msg">กำลังหาใบหน้า…</p>
+    <div style="width:60%;height:14px;background:var(--soft);border-radius:99px;overflow:hidden">
+      <div id="cal-bar" style="width:0;height:100%;background:var(--good);transition:width .1s"></div></div>
+    <button class="btn ghost sm" data-home>ยกเลิก</button></div>
+
+  <!-- PAUSE -->
+  <div class="screen" id="s-pause"><h2 id="pause-title">พักก่อน</h2>
+    <p class="sub" id="pause-msg">กลับมาเมื่อพร้อมนะ</p>
+    <div class="row"><button class="btn" id="btn-resume">เล่นต่อ</button>
+      <button class="btn ghost" id="btn-retry2">เริ่มด่านใหม่</button>
+      <button class="btn ghost" data-home>ออก</button></div></div>
+
+  <!-- RESULT -->
+  <div class="screen" id="s-res"><h2 id="res-title">เยี่ยมมาก!</h2>
+    <div id="res-stars" style="font-size:44px;letter-spacing:8px">⭐</div>
+    <p class="sub" id="res-detail"></p>
+    <div class="row"><button class="btn" id="btn-next">ด่านต่อไป</button>
+      <button class="btn ghost" id="btn-retry">เล่นซ้ำ</button>
+      <button class="btn ghost" data-home>กลับหน้าหลัก</button></div></div>
+</div>
+</div>
+
+<script type="module">
+/* =========================================================
+   Nose Maze — Web prototype
+   Layer: Tracking Provider -> Face Input -> Gameplay
+   ========================================================= */
+const V={w:1000,h:560}, WALL=20;
+const $=id=>document.getElementById(id);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+
+/* ---------- 1) LEVEL DATA ---------- */
+const LEVELS=[
+ {n:'ผึ้งน้อยออกบิน',t:60,three:22,maxHit:2,start:[70,280],goal:[930,280],
+  walls:[[340,0,36,370],[640,190,36,370]],stars:[[490,470]]},
+ {n:'เก็บน้ำหวาน',t:60,three:30,maxHit:3,start:[70,280],goal:[930,280],
+  walls:[[300,130,36,300],[660,130,36,300]],stars:[[200,90],[500,480],[810,90]]},
+ {n:'ทางโค้งดอกไม้',t:60,three:32,maxHit:3,start:[70,90],goal:[930,470],
+  walls:[[210,0,34,400],[400,160,34,400],[590,0,34,400],[780,160,34,400]],stars:[[305,470],[690,90]]},
+ {n:'ประตูสีรุ้ง',t:75,three:34,maxHit:3,start:[70,280],goal:[930,280],
+  walls:[[560,0,36,235],[560,345,36,215],[260,140,34,280]],
+  keys:[[150,470]],doors:[{r:[560,235,36,110],mode:'key'}],stars:[[420,90],[760,470]]},
+ {n:'ใบไม้ขยับ',t:75,three:40,maxHit:4,start:[70,280],goal:[930,280],
+  walls:[[330,0,32,150],[330,430,32,130],[670,0,32,130],[670,440,32,120]],
+  movers:[{x:330,y:150,w:32,h:170,axis:'y',a:150,b:280,sp:60},
+          {x:670,y:130,w:32,h:180,axis:'y',a:130,b:280,sp:75}],stars:[[500,110],[500,460]]},
+ {n:'ทางแยกมหาสนุก',t:60,three:34,maxHit:3,start:[70,280],goal:[930,280],
+  walls:[[300,180,400,36],[300,360,400,36],[300,180,36,216],[664,180,36,216]],
+  stars:[[500,290],[500,90],[500,470]]},
+ {n:'ดาวที่หายไป',t:90,three:52,maxHit:4,start:[500,280],goal:[930,470],need:4,
+  walls:[[250,120,36,320],[714,120,36,320],[286,120,180,36],[534,404,180,36]],
+  stars:[[110,90],[110,470],[890,90],[500,280]]},
+ {n:'สะพานเปิดปิด',t:90,three:48,maxHit:4,start:[70,470],goal:[930,90],
+  walls:[[420,0,36,220],[420,340,36,220],[700,150,36,410]],
+  doors:[{r:[420,220,36,120],mode:'switch'}],switches:[[180,110,42]],stars:[[600,470],[850,470]]},
+ {n:'ลมพัดเบา ๆ',t:90,three:46,maxHit:5,start:[70,280],goal:[930,280],wind:34,
+  walls:[[300,0,34,230],[300,400,34,160],[620,0,34,160],[620,400,34,160]],stars:[[460,300],[790,300]]},
+ {n:'ราชินีดอกไม้',t:120,three:70,maxHit:5,start:[70,470],goal:[930,90],need:3,
+  walls:[[260,0,34,300],[520,240,34,320],[760,0,34,300]],
+  movers:[{x:390,y:120,w:150,h:30,axis:'x',a:330,b:470,sp:70}],
+  keys:[[880,470]],doors:[{r:[760,300,34,140],mode:'key'}],
+  stars:[[170,90],[430,470],[660,470]]}
+];
+
+/* ---------- 2) STATE ---------- */
+const cfg={sens:1,smooth:10,mirror:true,assist:false,sfx:true,
+  yawRange:0.26,pitchRange:0.19,dead:0.08,expo:1.3,lostDelay:.55};
+const save=JSON.parse(localStorage.getItem('nosemaze')||'{"unlocked":1,"lv":{}}');
+const persist=()=>localStorage.setItem('nosemaze',JSON.stringify(save));
+
+let mode='mouse', scene='home', idx=0, L=null, G=null;
+let raf=0, last=0;
+
+/* ---------- 3) TRACKING PROVIDER ---------- */
+const tracker={
+  ready:false, running:false, lm:null, video:$('vid'), lastTs:-1,
+  pose:{ok:false,yaw:0,pitch:0,nose:[.5,.5],conf:0},
+  async init(){
+    const m=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14');
+    const files=await m.FilesetResolver.forVisionTasks(
+      'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
+    this.lm=await m.FaceLandmarker.createFromOptions(files,{
+      baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',delegate:'GPU'},
+      runningMode:'VIDEO',numFaces:1,
+      outputFaceBlendshapes:true,outputFacialTransformationMatrixes:true});
+    const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:false});
+    this.video.srcObject=s; await this.video.play();
+    this.ready=true; this.running=true;
+  },
+  read(){
+    if(!this.running||this.video.readyState<2)return this.pose;
+    const ts=performance.now();
+    if(ts===this.lastTs)return this.pose; this.lastTs=ts;
+    let r; try{ r=this.lm.detectForVideo(this.video,ts);}catch(e){return this.pose;}
+    if(!r||!r.faceLandmarks?.length){this.pose.ok=false;this.pose.conf=0;return this.pose;}
+    const nose=r.faceLandmarks[0][4];
+    this.pose.nose=[nose.x,nose.y];
+    const M=r.facialTransformationMatrixes?.[0]?.data;
+    if(M){ // YXZ euler จาก column-major 4x4
+      const r02=M[8],r12=M[9],r22=M[10];
+      this.pose.pitch=Math.asin(clamp(-r12,-1,1));
+      this.pose.yaw=Math.atan2(r02,r22);
+    }else{ // fallback: จมูกเทียบกรอบหน้า
+      const p=r.faceLandmarks[0], l=p[234],rr=p[454],t=p[10],b=p[152];
+      this.pose.yaw=((nose.x-(l.x+rr.x)/2)/Math.max(1e-4,Math.abs(rr.x-l.x)))*1.2;
+      this.pose.pitch=((nose.y-(t.y+b.y)/2)/Math.max(1e-4,Math.abs(b.y-t.y)))*1.2;
+    }
+    this.pose.ok=true; this.pose.conf=1; return this.pose;
+  }
+};
+
+/* ---------- 4) FACE INPUT MAPPER (pure logic) ---------- */
+const input={
+  cal:{yaw0:0,pitch0:0}, vec:{x:0,y:0}, lostFor:0, state:'ok',
+  mouse:{x:0,y:0,active:false},
+  dz(v,d){const m=Math.abs(v); if(m<=d)return 0; return Math.sign(v)*((m-d)/(1-d));},
+  curve(v,e){return Math.sign(v)*Math.pow(Math.abs(v),e);},
+  update(dt){
+    let tx=0,ty=0,ok=true;
+    if(mode==='mouse'){ tx=this.mouse.x; ty=this.mouse.y; ok=this.mouse.active; }
+    else{
+      const p=tracker.read(); ok=p.ok;
+      if(ok){
+        let rx=clamp((p.yaw-this.cal.yaw0)/(cfg.yawRange/cfg.sens),-1,1);
+        let ry=clamp((p.pitch-this.cal.pitch0)/(cfg.pitchRange/cfg.sens),-1,1);
+        if(cfg.mirror) rx=-rx;
+        tx=this.curve(this.dz(rx,cfg.dead),cfg.expo);
+        ty=this.curve(this.dz(ry,cfg.dead),cfg.expo);
+      }
+    }
+    if(!ok){ this.lostFor+=dt; if(this.lostFor>cfg.lostDelay)this.state='lost'; tx=this.vec.x*.9; ty=this.vec.y*.9; }
+    else { this.lostFor=0; this.state='ok'; }
+    const k=1-Math.exp(-cfg.smooth*dt);      // frame-rate independent
+    this.vec.x+=(tx-this.vec.x)*k;
+    this.vec.y+=(ty-this.vec.y)*k;
+    return this.vec;
+  },
+  recenter(){ const p=tracker.pose; if(p.ok){this.cal.yaw0=p.yaw;this.cal.pitch0=p.pitch;} }
+};
+
+/* ---------- 5) COLLISION ---------- */
+const hitRect=(cx,cy,r,R)=>{
+  const nx=clamp(cx,R[0],R[0]+R[2]), ny=clamp(cy,R[1],R[1]+R[3]);
+  const dx=cx-nx, dy=cy-ny; return dx*dx+dy*dy < r*r;
+};
+function solid(x,y,r){
+  if(x-r<WALL||x+r>V.w-WALL||y-r<WALL||y+r>V.h-WALL)return true;
+  for(const w of G.walls) if(hitRect(x,y,r,w))return true;
+  for(const m of G.movers) if(hitRect(x,y,r,[m.x,m.y,m.w,m.h]))return true;
+  for(const d of G.doors) if(!d.open&&hitRect(x,y,r,d.r))return true;
+  return false;
+}
+function move(p,dx,dy,r){
+  const steps=Math.ceil(Math.max(Math.abs(dx),Math.abs(dy))/5)||1;
+  let bump=false;
+  for(let i=0;i<steps;i++){
+    const sx=dx/steps, sy=dy/steps;
+    if(!solid(p.x+sx,p.y,r)) p.x+=sx; else bump=true;
+    if(!solid(p.x,p.y+sy,r)) p.y+=sy; else bump=true;
+  }
+  return bump;
+}
+
+/* ---------- 6) GAME ---------- */
+function loadLevel(i){
+  idx=i; L=LEVELS[i];
+  const bonus=cfg.assist?15:0;
+  G={
+    walls:L.walls.map(w=>w.slice()),
+    movers:(L.movers||[]).map(m=>({...m,dir:1})),
+    doors:(L.doors||[]).map(d=>({r:d.r.slice(),mode:d.mode,open:false})),
+    keys:(L.keys||[]).map(k=>({x:k[0],y:k[1],got:false})),
+    switches:(L.switches||[]).map(s=>({x:s[0],y:s[1],r:s[2]})),
+    stars:L.stars.map(s=>({x:s[0],y:s[1],got:false})),
+    p:{x:L.start[0],y:L.start[1]},
+    r:cfg.assist?11:15, time:L.t+bonus, hits:0, got:0, hasKey:false,
+    goalOpen:!L.need, done:false, stuck:0, lastPos:{x:L.start[0],y:L.start[1]},
+    countdown:3, wobble:0, msg:''
+  };
+  input.vec.x=input.vec.y=0;
+  $('hint').textContent='พาผึ้งไปหาดอกไม้ใหญ่';
+  show('none'); scene='play';
+}
+
+function tick(dt){
+  if(G.countdown>0){G.countdown-=dt; return;}
+  const v=input.update(dt);
+  if(input.state==='lost'&&mode==='face'){ pause('ไม่เจอหน้าเลย 👀','ขยับเข้ามาในกรอบกล้องอีกนิดนะ'); return; }
+
+  // movers
+  for(const m of G.movers){
+    const k=m.axis==='x'?'x':'y';
+    m[k]+=m.sp*m.dir*dt;
+    if(m[k]>m.b){m[k]=m.b;m.dir=-1} if(m[k]<m.a){m[k]=m.a;m.dir=1}
+  }
+  // doors
+  for(const d of G.doors){
+    if(d.mode==='key') d.open=G.hasKey;
+    if(d.mode==='switch'){
+      d.open=G.switches.some(s=>Math.hypot(G.p.x-s.x,G.p.y-s.y)<s.r+G.r);
+    }
+  }
+  // movement
+  const speed=430*dt;
+  let dx=v.x*speed, dy=v.y*speed;
+  if(L.wind) dx+=L.wind*dt;
+  const bumped=move(G.p,dx,dy,G.r);
+  if(bumped){ G.wobble=.22; if(G.hitCool==null||G.hitCool<=0){G.hits++;G.time-=1;G.hitCool=.6;beep(180,.06);} }
+  if(G.hitCool>0)G.hitCool-=dt;
+  G.wobble=Math.max(0,G.wobble-dt);
+
+  // pickups
+  for(const s of G.stars) if(!s.got&&Math.hypot(G.p.x-s.x,G.p.y-s.y)<G.r+18){s.got=true;G.got++;beep(880,.08);}
+  for(const k of G.keys) if(!k.got&&Math.hypot(G.p.x-k.x,G.p.y-k.y)<G.r+18){k.got=true;G.hasKey=true;beep(660,.1);$('hint').textContent='ได้กุญแจแล้ว! ไปที่ประตู';}
+  if(L.need&&G.got>=L.need&&!G.goalOpen){G.goalOpen=true;$('hint').textContent='ดาวครบแล้ว! ไปหาดอกไม้ใหญ่';}
+
+  // stuck helper
+  if(Math.hypot(G.p.x-G.lastPos.x,G.p.y-G.lastPos.y)<6){G.stuck+=dt}else{G.stuck=0;G.lastPos={...G.p}}
+  if(G.stuck>5){$('hint').textContent='ลองหันหัวช้า ๆ ไปทางดอกไม้ใหญ่ 🌻';G.stuck=0;}
+
+  // goal / time
+  if(G.goalOpen&&Math.hypot(G.p.x-L.goal[0],G.p.y-L.goal[1])<G.r+26) return finish(true);
+  G.time-=dt; if(G.time<=0){G.time=0; finish(false);}
+}
+
+function finish(win){
+  scene='result';
+  const used=(L.t+(cfg.assist?15:0))-G.time;
+  let st=0, score=0;
+  if(win){
+    st=1;
+    if(G.got===G.stars.length)st=2;
+    if(st===2&&used<=L.three&&G.hits<=L.maxHit)st=3;
+    score=1000+G.got*500+Math.round(Math.max(0,G.time)*10)+Math.max(0,300-G.hits*50);
+    const rec=save.lv[idx]||{};
+    save.lv[idx]={stars:Math.max(rec.stars||0,st),best:Math.max(rec.best||0,score),
+                  time:Math.min(rec.time||9999,+used.toFixed(1))};
+    save.unlocked=Math.max(save.unlocked,Math.min(LEVELS.length,idx+2)); persist();
+    beep(1046,.12); setTimeout(()=>beep(1318,.16),120);
+  }
+  $('res-title').textContent=win?['เก่งมาก!','เยี่ยมไปเลย!','สุดยอด!'][st-1]:'เกือบแล้ว ลองอีกครั้งนะ';
+  $('res-stars').textContent=win?'⭐'.repeat(st)+'☆'.repeat(3-st):'☆☆☆';
+  $('res-detail').innerHTML=`เวลา ${used.toFixed(1)} วิ · ดาว ${G.got}/${G.stars.length} · ชน ${G.hits} ครั้ง<br><b>${score.toLocaleString()} คะแนน</b>`;
+  $('btn-next').style.display=(win&&idx<LEVELS.length-1)?'':'none';
+  show('s-res');
+}
+
+function pause(t,m){ if(scene!=='play')return; scene='pause'; $('pause-title').textContent=t||'พักก่อน';
+  $('pause-msg').textContent=m||'กลับมาเมื่อพร้อมนะ'; show('s-pause'); }
+
+/* ---------- 7) RENDER ---------- */
+const cv=$('cv'), ctx=cv.getContext('2d'); let S=1;
+function resize(){
+  const dpr=Math.min(2,devicePixelRatio||1), b=cv.getBoundingClientRect();
+  cv.width=b.width*dpr; cv.height=b.height*dpr; S=b.width/V.w*dpr;
+}
+addEventListener('resize',resize);
+
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
+function star(x,y,R,f){ctx.save();ctx.translate(x,y);ctx.beginPath();
+  for(let i=0;i<10;i++){const a=Math.PI/5*i-Math.PI/2,rr2=i%2?R*.45:R;
+  ctx.lineTo(Math.cos(a)*rr2,Math.sin(a)*rr2);} ctx.closePath();ctx.fillStyle=f;ctx.fill();ctx.restore();}
+
+function draw(){
+  ctx.setTransform(S,0,0,S,0,0);
+  const g=ctx.createLinearGradient(0,0,0,V.h);
+  g.addColorStop(0,'#cdeffd');g.addColorStop(1,'#eafbe0');ctx.fillStyle=g;ctx.fillRect(0,0,V.w,V.h);
+  if(!G){ctx.setTransform(1,0,0,1,0,0);return;}
+
+  ctx.fillStyle='#8bd17c'; // border
+  ctx.fillRect(0,0,V.w,WALL);ctx.fillRect(0,V.h-WALL,V.w,WALL);
+  ctx.fillRect(0,0,WALL,V.h);ctx.fillRect(V.w-WALL,0,WALL,V.h);
+  ctx.fillStyle='#7bc46c'; for(const w of G.walls) rr(w[0],w[1],w[2],w[3],12);
+  ctx.fillStyle='#c084fc'; for(const m of G.movers) rr(m.x,m.y,m.w,m.h,10);
+  for(const d of G.doors){ctx.globalAlpha=d.open?.18:1;ctx.fillStyle='#fb7185';rr(d.r[0],d.r[1],d.r[2],d.r[3],10);ctx.globalAlpha=1;}
+  for(const s of G.switches){ctx.fillStyle='#fde68a';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();
+    ctx.fillStyle='#b45309';ctx.font='bold 20px sans-serif';ctx.textAlign='center';ctx.fillText('⏺',s.x,s.y+7);}
+  for(const k of G.keys) if(!k.got){ctx.font='30px serif';ctx.textAlign='center';ctx.fillText('🔑',k.x,k.y+10);}
+  const t=performance.now()/1000;
+  for(const s of G.stars) if(!s.got) star(s.x,s.y+Math.sin(t*3+s.x)*4,17,'#fbbf24');
+
+  // goal
+  ctx.globalAlpha=G.goalOpen?1:.35; ctx.font='52px serif';ctx.textAlign='center';
+  ctx.fillText('🌻',L.goal[0],L.goal[1]+18); ctx.globalAlpha=1;
+
+  // bee
+  const wob=Math.sin(t*40)*G.wobble*6;
+  ctx.save();ctx.translate(G.p.x+wob,G.p.y);
+  ctx.fillStyle='rgba(255,255,255,.75)';
+  ctx.beginPath();ctx.ellipse(-9,-11,11,7,-.5,0,7);ctx.ellipse(9,-11,11,7,.5,0,7);ctx.fill();
+  ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(0,0,G.r,0,7);ctx.fill();
+  ctx.fillStyle='#1f2937';ctx.fillRect(-3,-G.r,5,G.r*2);ctx.fillRect(6,-G.r+4,4,G.r*2-8);
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-6,-4,4,0,7);ctx.fill();
+  ctx.fillStyle='#111';ctx.beginPath();ctx.arc(-6,-4,2,0,7);ctx.fill();
+  ctx.restore();
+
+  if(G.countdown>0){
+    ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillRect(0,0,V.w,V.h);
+    ctx.fillStyle='#0f172a';ctx.font='bold 130px sans-serif';ctx.textAlign='center';
+    ctx.fillText(Math.ceil(G.countdown),V.w/2,V.h/2+45);
+  }
+  ctx.setTransform(1,0,0,1,0,0);
+}
+
+/* ---------- 8) LOOP ---------- */
+function loop(ts){
+  raf=requestAnimationFrame(loop);
+  const dt=Math.min(.05,(ts-last)/1000||0); last=ts;
+  if(scene==='play'&&G){ tick(dt);
+    $('v-time').textContent=Math.ceil(G.time);
+    $('v-star').textContent=`${G.got}/${G.stars.length}`;
+    $('v-score').textContent=Math.max(0,1000+G.got*500+Math.round(G.time*10)-G.hits*50).toLocaleString();
+  }
+  draw();
+}
+
+/* ---------- 9) AUDIO ---------- */
+let AC=null;
+function beep(f,d){ if(!cfg.sfx)return; try{AC=AC||new (AudioContext||webkitAudioContext)();
+  const o=AC.createOscillator(),g2=AC.createGain();o.frequency.value=f;o.type='sine';
+  g2.gain.setValueAtTime(.16,AC.currentTime);g2.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);
+  o.connect(g2).connect(AC.destination);o.start();o.stop(AC.currentTime+d);}catch(e){} }
+
+/* ---------- 10) UI ---------- */
+const SCREENS=['s-home','s-levels','s-set','s-cal','s-pause','s-res'];
+function show(id){ SCREENS.forEach(s=>$(s).classList.toggle('on',s===id));
+  const playing=(id==='none'); $('hud').style.opacity=playing?1:0; $('tools').style.opacity=playing?1:0;
+  $('cam').classList.toggle('hide',mode!=='face'); }
+function home(){ scene='home'; G=null; show('s-home'); }
+document.querySelectorAll('[data-home]').forEach(b=>b.onclick=home);
+
+function buildLevels(){
+  $('lvgrid').innerHTML=LEVELS.map((l,i)=>{
+    const r=save.lv[i]||{}, lock=i+1>save.unlocked;
+    return `<button class="lv" ${lock?'disabled':''} data-i="${i}">
+      <b>${i+1}</b><small>${l.n}</small>
+      <div class="st">${'★'.repeat(r.stars||0)}${'☆'.repeat(3-(r.stars||0))}</div></button>`;
+  }).join('');
+  $('lvgrid').querySelectorAll('button:not([disabled])').forEach(b=>
+    b.onclick=()=>startLevel(+b.dataset.i));
+}
+function startLevel(i){ if(mode==='face'){ calibrate(()=>loadLevel(i)); } else loadLevel(i); }
+
+/* Calibration */
+async function calibrate(done){
+  show('s-cal'); scene='cal';
+  if(!tracker.ready){ $('cal-msg').textContent='กำลังเปิดกล้อง…';
+    try{ await tracker.init(); }catch(e){ $('cal-msg').textContent='เปิดกล้องไม่ได้ — สลับไปโหมดเมาส์แทน';
+      setTimeout(()=>{mode='mouse';done();},1400); return; } }
+  $('cam').classList.remove('hide');
+  const ys=[],ps=[];
+  const step=()=>{
+    if(scene!=='cal')return;
+    const p=tracker.read();
+    if(p.ok){ ys.push(p.yaw); ps.push(p.pitch);
+      $('cal-msg').textContent='นิ่ง ๆ อีกนิด…'; }
+    else { $('cal-msg').textContent='ไม่เจอใบหน้า — ขยับเข้ากรอบกล้อง'; ys.length=0; ps.length=0; }
+    $('cal-bar').style.width=Math.min(100,ys.length/40*100)+'%';
+    if(ys.length>=40){
+      const med=a=>[...a].sort((x,y)=>x-y)[a.length>>1];
+      input.cal.yaw0=med(ys); input.cal.pitch0=med(ps);
+      beep(700,.1); done(); return;
+    }
+    requestAnimationFrame(step);
+  }; step();
+}
+
+$('btn-play').onclick=()=>{ mode='face'; startLevel(Math.min(save.unlocked-1,LEVELS.length-1)); };
+$('btn-mouse').onclick=()=>{ mode='mouse'; loadLevel(Math.min(save.unlocked-1,LEVELS.length-1)); };
+$('btn-levels').onclick=()=>{buildLevels();show('s-levels')};
+$('btn-settings').onclick=()=>show('s-set');
+$('btn-pause').onclick=()=>pause();
+$('btn-resume').onclick=()=>{ if(G){scene='play';G.countdown=1.2;show('none');} };
+$('btn-retry').onclick=$('btn-retry2').onclick=()=>startLevel(idx);
+$('btn-next').onclick=()=>startLevel(Math.min(idx+1,LEVELS.length-1));
+$('btn-recenter').onclick=()=>{input.recenter();$('hint').textContent='ตั้งกลางใหม่แล้ว ✅';};
+$('btn-reset').onclick=()=>{save.unlocked=1;save.lv={};persist();buildLevels();alert('ล้างแล้ว');};
+$('btn-full').onclick=async()=>{ try{ await document.documentElement.requestFullscreen();
+  await screen.orientation?.lock?.('landscape'); }catch(e){} };
+
+/* settings binding */
+const bind=(id,key,fmt)=>{const el=$(id);const o=()=>{cfg[key]=el.type==='checkbox'?el.checked:+el.value;
+  if(fmt)$(fmt).textContent=el.type==='range'?(+el.value).toFixed(key==='sens'?1:0):'';};el.oninput=o;o();};
+bind('sens','sens','sensv'); bind('smooth','smooth','smoothv');
+bind('mirror','mirror'); bind('assist','assist'); bind('sfx','sfx');
+
+/* mouse input */
+addEventListener('pointermove',e=>{
+  const b=cv.getBoundingClientRect();
+  input.mouse.x=clamp(((e.clientX-b.left)/b.width-.5)*2.4,-1,1);
+  input.mouse.y=clamp(((e.clientY-b.top)/b.height-.5)*2.4,-1,1);
+  input.mouse.active=true;
+});
+addEventListener('pointerleave',()=>input.mouse.active=false);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pause('พักไว้ก่อน','กลับมาเล่นต่อได้เลย')});
+matchMedia('(orientation:portrait)').addEventListener('change',e=>{if(e.matches)pause('หมุนเป็นแนวนอน','เกมนี้เล่นแนวนอนนะ')});
+
+resize(); buildLevels(); show('s-home'); raf=requestAnimationFrame(loop);
+</script>
+</body>
+</html>
