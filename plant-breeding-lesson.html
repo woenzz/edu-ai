@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plant Breeding for Little Gardeners 🌱</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFFBF0;
+    --leaf:#4A7C59;
+    --leaf-dark:#345943;
+    --blossom:#F4A896;
+    --sun:#FFD166;
+    --sage:#5B8C7B;
+    --ink:#2D3A3A;
+    --paper:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    font-family:'Quicksand', sans-serif;
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+
+  /* subtle scattered dot texture */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:radial-gradient(var(--leaf) 1px, transparent 1px);
+    background-size:28px 28px;
+    opacity:0.05;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  header{
+    position:relative;
+    text-align:center;
+    padding:64px 24px 40px;
+    z-index:1;
+  }
+  header .badge{
+    display:inline-block;
+    background:var(--sun);
+    color:var(--ink);
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:0.85rem;
+    padding:6px 18px;
+    border-radius:999px;
+    margin-bottom:18px;
+    transform:rotate(-2deg);
+    box-shadow:0 4px 0 rgba(0,0,0,0.08);
+  }
+  header h1{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:clamp(2rem, 5vw, 3.2rem);
+    color:var(--leaf-dark);
+    margin:0 0 14px;
+    line-height:1.15;
+  }
+  header p{
+    max-width:520px;
+    margin:0 auto;
+    font-size:1.1rem;
+    color:var(--sage);
+    font-weight:600;
+    line-height:1.5;
+  }
+
+  main{
+    max-width:1080px;
+    margin:0 auto;
+    padding:20px 24px 100px;
+    position:relative;
+    z-index:1;
+  }
+
+  .scene{
+    display:flex;
+    align-items:center;
+    gap:44px;
+    background:var(--paper);
+    border-radius:32px;
+    padding:32px;
+    margin-bottom:56px;
+    box-shadow:0 10px 0 rgba(74,124,89,0.12), 0 20px 40px rgba(45,58,58,0.06);
+    position:relative;
+  }
+  .scene.reverse{ flex-direction:row-reverse; }
+
+  .scene-visual{
+    flex:0 0 300px;
+    width:300px;
+    height:300px;
+    border-radius:24px;
+    overflow:hidden;
+    background:linear-gradient(180deg, #EAF4EC 0%, #DCEDE1 100%);
+    position:relative;
+  }
+  .scene-visual canvas{ display:block; width:100%; height:100%; }
+
+  .scene-body{ flex:1; min-width:0; }
+
+  .step-number{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--leaf);
+    color:var(--cream);
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:1.15rem;
+    margin-bottom:14px;
+  }
+
+  .scene-body h2{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:1.6rem;
+    color:var(--leaf-dark);
+    margin:0 0 4px;
+  }
+  .scene-body .sub{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:500;
+    font-size:1rem;
+    color:var(--blossom);
+    margin:0 0 14px;
+  }
+  .scene-body p.explain{
+    font-size:1.05rem;
+    line-height:1.6;
+    font-weight:600;
+    color:var(--ink);
+    margin:0 0 16px;
+  }
+  .example-box{
+    background:#FBF6E9;
+    border:2px dashed var(--sun);
+    border-radius:16px;
+    padding:14px 18px;
+    font-size:0.98rem;
+    font-weight:600;
+    color:var(--leaf-dark);
+    line-height:1.5;
+  }
+  .example-box .label{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    color:var(--sage);
+    font-size:0.82rem;
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .note-box{
+    background:#FDEDEA;
+    border-radius:16px;
+    padding:12px 18px;
+    font-size:0.92rem;
+    font-weight:600;
+    color:#A85751;
+    margin-top:14px;
+  }
+
+  @media (max-width: 760px){
+    .scene, .scene.reverse{
+      flex-direction:column;
+      padding:24px;
+      gap:20px;
+    }
+    .scene-visual{ width:100%; flex-basis:auto; height:260px; }
+  }
+
+  footer{
+    text-align:center;
+    padding:20px 24px 60px;
+    color:var(--sage);
+    font-weight:600;
+    font-size:0.95rem;
+    position:relative;
+    z-index:1;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="badge">🌻 Little Gardener Lessons</span>
+  <h1>How Do Plants Get Their<br>Amazing Traits?</h1>
+  <p>Watch these 5 tiny 3D gardens to learn how farmers and scientists help plants grow the way we want!</p>
+</header>
+
+<main>
+
+  <!-- 1. True Breeding -->
+  <div class="scene">
+    <div class="scene-visual" id="scene1"></div>
+    <div class="scene-body">
+      <span class="step-number">1</span>
+      <h2>True Breeding</h2>
+      <p class="sub">Parents make babies that look just like them!</p>
+      <p class="explain">When a plant is "true breeding," it means if you let it make babies with another plant that is exactly the same, ALL the babies will look the same too — every single time!</p>
+      <div class="example-box">
+        <span class="label">EXAMPLE</span>
+        A tall pea plant 🌱 + a tall pea plant 🌱 = tall baby plants, every time!
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Seed Breeding -->
+  <div class="scene reverse">
+    <div class="scene-visual" id="scene2"></div>
+    <div class="scene-body">
+      <span class="step-number">2</span>
+      <h2>Seed Breeding</h2>
+      <p class="sub">Pick the best seeds, grow the best plants!</p>
+      <p class="explain">Farmers look at their plants and pick the seeds from the strongest, healthiest ones. Then they plant those seeds next season to grow even better plants!</p>
+      <div class="example-box">
+        <span class="label">EXAMPLE</span>
+        A farmer picks rice seeds 🌾 from the strongest plants with the most grains, and plants those next year.
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Cross Breeding -->
+  <div class="scene">
+    <div class="scene-visual" id="scene3"></div>
+    <div class="scene-body">
+      <span class="step-number">3</span>
+      <h2>Cross Breeding</h2>
+      <p class="sub">Mixing two different plants to get the best of both!</p>
+      <p class="explain">Scientists take two different kinds of plants — each one good at something different — and breed them together. They hope the babies will have both good traits!</p>
+      <div class="example-box">
+        <span class="label">EXAMPLE</span>
+        Rice A 🌾 (great in dry weather) + Rice B 🌾 (grows lots of food) = new rice that hopefully does both!
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Cross Pollination -->
+  <div class="scene reverse">
+    <div class="scene-visual" id="scene4"></div>
+    <div class="scene-body">
+      <span class="step-number">4</span>
+      <h2>Cross Pollination</h2>
+      <p class="sub">A busy bee carries pollen between flowers!</p>
+      <p class="explain">Pollen is like tiny yellow dust that flowers need to make seeds. When a bee flies from one flower to a totally different flower and drops pollen there, that's cross pollination!</p>
+      <div class="example-box">
+        <span class="label">EXAMPLE</span>
+        A bee 🐝 visits a sunflower on Plant A, then flies to Plant B and leaves pollen there.
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Seed Pollination -->
+  <div class="scene">
+    <div class="scene-visual" id="scene5"></div>
+    <div class="scene-body">
+      <span class="step-number">5</span>
+      <h2>Pollination Makes Seeds</h2>
+      <p class="sub">Pollen + flower = brand new seeds!</p>
+      <p class="explain">Once pollen lands on a flower, something magical happens — the flower can now grow a seed inside it! That tiny seed can grow into a whole new plant one day.</p>
+      <div class="example-box">
+        <span class="label">EXAMPLE</span>
+        Pollen lands on a flower 🌼 → the flower grows a little seed pod → a new seed is born!
+      </div>
+      <div class="note-box">
+        💡 Note for teachers: "seed pollination" isn't an official science term — it simply describes pollination leading to seed formation.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Made with 🌿 for curious young scientists</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ============ Shared helpers ============ */
+const clock = new THREE.Clock();
+const renderers = [];
+
+function makeScene(containerId){
+  const el = document.getElementById(containerId);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+  camera.position.set(0, 2.2, 6.5);
+  camera.lookAt(0,0.6,0);
+
+  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  el.appendChild(renderer.domElement);
+
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x88aa88, 0.9);
+  scene.add(hemi);
+  const dir = new THREE.DirectionalLight(0xffffff, 0.9);
+  dir.position.set(3,5,4);
+  scene.add(dir);
+
+  function resize(){
+    const w = el.clientWidth, h = el.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(el);
+  resize();
+
+  return {scene, camera, renderer, el};
+}
+
+function roundedPetalFlower(centerColor, petalColor, scale=1){
+  const g = new THREE.Group();
+  const petalGeo = new THREE.SphereGeometry(0.22*scale, 12, 12);
+  petalGeo.scale(1, 0.55, 0.55);
+  const petalMat = new THREE.MeshStandardMaterial({color: petalColor, roughness:0.6});
+  const count = 6;
+  for(let i=0;i<count;i++){
+    const petal = new THREE.Mesh(petalGeo, petalMat);
+    const ang = (i/count) * Math.PI*2;
+    petal.position.set(Math.cos(ang)*0.28*scale, 0, Math.sin(ang)*0.28*scale);
+    petal.rotation.y = -ang;
+    g.add(petal);
+  }
+  const center = new THREE.Mesh(
+    new THREE.SphereGeometry(0.16*scale, 14, 14),
+    new THREE.MeshStandardMaterial({color: centerColor, roughness:0.7})
+  );
+  g.add(center);
+  return g;
+}
+
+function stemWithLeaves(height=1.4, color=0x4A7C59){
+  // Returns a Group with a helper .setHeight(h) so growth animations can
+  // resize the stem WITHOUT stretching/flipping the leaves. The stem is a
+  // separate mesh (scaled + repositioned each frame); leaves keep a fixed
+  // shape and just slide up/down + fade in as the plant grows.
+  const g = new THREE.Group();
+
+  const stem = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.035, 0.05, 1, 8), // unit height, we scale it
+    new THREE.MeshStandardMaterial({color: color, roughness:0.7})
+  );
+  g.add(stem);
+
+  const leafGeo = new THREE.SphereGeometry(0.18, 8, 8);
+  leafGeo.scale(1.6, 0.25, 0.8);
+  const leafMat = new THREE.MeshStandardMaterial({color: 0x5B8C7B, roughness:0.7});
+
+  const leafL = new THREE.Mesh(leafGeo, leafMat);
+  leafL.rotation.z = 0.5;
+  g.add(leafL);
+
+  const leafR = new THREE.Mesh(leafGeo, leafMat);
+  leafR.rotation.z = -0.5;
+  g.add(leafR);
+
+  // fraction of full height at which each leaf sits along the stem
+  const leafLFrac = 0.45;
+  const leafRFrac = 0.62;
+  const fullHeight = height;
+
+  g.setHeight = function(h){
+    const safeH = Math.max(h, 0.001);
+    stem.scale.y = safeH;
+    stem.position.y = safeH / 2;
+
+    // leaves only appear once the stem has grown tall enough to host them,
+    // and they stay upright/undistorted — only their Y position and a
+    // gentle pop-in scale change
+    const leafVisible = safeH > fullHeight * 0.15;
+    leafL.visible = leafVisible;
+    leafR.visible = leafVisible;
+
+    leafL.position.set(-0.18, safeH * leafLFrac, 0);
+    leafR.position.set(0.18, safeH * leafRFrac, 0);
+
+    const popIn = THREE.MathUtils.clamp((safeH - fullHeight*0.15) / (fullHeight*0.25), 0, 1);
+    leafL.scale.setScalar(popIn);
+    leafR.scale.setScalar(popIn);
+  };
+
+  g.fullHeight = fullHeight;
+  g.setHeight(height); // initialize at full height by default
+  return g;
+}
+
+function groundDisc(radius=2.6, color=0xE4EFE0){
+  const disc = new THREE.Mesh(
+    new THREE.CylinderGeometry(radius, radius, 0.15, 32),
+    new THREE.MeshStandardMaterial({color, roughness:0.9})
+  );
+  disc.position.y = -0.08;
+  return disc;
+}
+
+function seed(color=0xC9A15A, scale=1){
+  const s = new THREE.Mesh(
+    new THREE.SphereGeometry(0.13*scale, 10, 10),
+    new THREE.MeshStandardMaterial({color, roughness:0.6})
+  );
+  s.scale.set(1, 1.3, 0.8);
+  return s;
+}
+
+/* ============ Scene 1: True Breeding ============ */
+(function(){
+  const {scene, camera, renderer, el} = makeScene('scene1');
+  scene.add(groundDisc());
+
+  const parentL = stemWithLeaves(1.1);
+  parentL.position.x = -1.3;
+  const flowerL = roundedPetalFlower(0xFFD166, 0xF4A896, 1);
+  flowerL.position.set(-1.3, 1.15, 0);
+  scene.add(parentL, flowerL);
+
+  const parentR = stemWithLeaves(1.1);
+  parentR.position.x = 1.3;
+  const flowerR = roundedPetalFlower(0xFFD166, 0xF4A896, 1);
+  flowerR.position.set(1.3, 1.15, 0);
+  scene.add(parentR, flowerR);
+
+  // baby plants that will pop up in the middle, all identical & tall
+  const babies = [];
+  for(let i=-1;i<=1;i++){
+    const targetH = 0.85;
+    const stem = stemWithLeaves(targetH); // built at real target height
+    stem.setHeight(0.001); // start collapsed
+    stem.position.x = i*0.55;
+    const flower = roundedPetalFlower(0xFFD166, 0xF4A896, 0.7);
+    flower.position.set(i*0.55, 0, 0);
+    flower.visible = false;
+    scene.add(stem, flower);
+    babies.push({stem, flower, targetH, x:i*0.55});
+  }
+
+  function animate(){
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    const sway = Math.sin(t*1.2)*0.05;
+    flowerL.rotation.z = sway;
+    flowerR.rotation.z = -sway;
+
+    // loop: babies grow up together over a 4s cycle, then reset
+    const cycle = t % 4.5;
+    babies.forEach((b, i)=>{
+      const grow = THREE.MathUtils.clamp((cycle - 1) / 2, 0, 1);
+      const h = grow * b.targetH;
+      b.stem.setHeight(h);
+      b.flower.visible = grow > 0.05;
+      b.flower.position.y = h;
+      b.flower.scale.setScalar(0.7 * Math.min(grow*1.4,1));
+      b.flower.rotation.y = t*0.6;
+    });
+
+    camera.position.x = Math.sin(t*0.15)*0.4;
+    camera.lookAt(0,0.7,0);
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+/* ============ Scene 2: Seed Breeding ============ */
+(function(){
+  const {scene, camera, renderer} = makeScene('scene2');
+  scene.add(groundDisc());
+
+  // three candidate plants of varying health; the best one gets picked & glows
+  const plants = [];
+  const heights = [0.7, 1.3, 0.9];
+  const xs = [-1.4, 0, 1.4];
+  for(let i=0;i<3;i++){
+    const stem = stemWithLeaves(heights[i]);
+    stem.position.x = xs[i];
+    const flower = roundedPetalFlower(0xFFD166, i===1?0x4A7C59:0xF4A896, i===1?1.1:0.85);
+    flower.position.set(xs[i], heights[i], 0);
+    scene.add(stem, flower);
+    plants.push({stem, flower, best: i===1});
+  }
+
+  // a glowing seed that travels from the best plant down and forward, then sprouts as a new small plant
+  const travelSeed = seed(0xE8C170, 1.4);
+  travelSeed.position.set(0, 1.3, 0);
+  scene.add(travelSeed);
+
+  const newStemTargetH = 0.9;
+  const newStem = stemWithLeaves(newStemTargetH);
+  newStem.setHeight(0.001);
+  newStem.position.set(0, 0, 1.8);
+  const newFlower = roundedPetalFlower(0xFFD166, 0x4A7C59, 0.9);
+  newFlower.position.set(0, 0, 1.8);
+  newFlower.visible = false;
+  scene.add(newStem, newFlower);
+
+  const glowRing = new THREE.Mesh(
+    new THREE.RingGeometry(0.5, 0.62, 24),
+    new THREE.MeshBasicMaterial({color:0xFFD166, transparent:true, opacity:0.6, side:THREE.DoubleSide})
+  );
+  glowRing.rotation.x = -Math.PI/2;
+  glowRing.position.set(0, 0.02, 0);
+  scene.add(glowRing);
+
+  function animate(){
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    plants.forEach((p,i)=>{
+      const sway = Math.sin(t*1.1 + i)*0.04;
+      p.flower.rotation.z = sway;
+      if(p.best){
+        const pulse = 1 + Math.sin(t*3)*0.06;
+        p.flower.scale.setScalar(1.1*pulse);
+      }
+    });
+    glowRing.scale.setScalar(1 + Math.sin(t*3)*0.15);
+
+    const cycle = t % 5;
+    // phase 0-1.5: seed travels from best plant to ground front
+    // phase 1.5-4: new plant grows
+    const travel = THREE.MathUtils.clamp(cycle/1.5, 0, 1);
+    travelSeed.visible = cycle < 1.6;
+    travelSeed.position.set(
+      THREE.MathUtils.lerp(0, 0, travel),
+      THREE.MathUtils.lerp(1.3, 0.15, travel) + Math.sin(travel*Math.PI)*0.6,
+      THREE.MathUtils.lerp(0, 1.8, travel)
+    );
+    travelSeed.rotation.y = t*4;
+
+    const grow = THREE.MathUtils.clamp((cycle-1.6)/2.2, 0, 1);
+    newStem.setHeight(grow * newStemTargetH);
+    newFlower.visible = grow>0.05;
+    newFlower.position.y = grow*newStemTargetH;
+    newFlower.scale.setScalar(0.9*Math.min(grow*1.4,1));
+
+    camera.position.x = Math.sin(t*0.15)*0.5;
+    camera.lookAt(0,0.7,0.4);
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+/* ============ Scene 3: Cross Breeding ============ */
+(function(){
+  const {scene, camera, renderer} = makeScene('scene3');
+  scene.add(groundDisc());
+
+  // Parent A: drought-tough (spiky, orange) on left
+  const stemA = stemWithLeaves(1.0);
+  stemA.position.x = -1.5;
+  const flowerA = roundedPetalFlower(0xE07A5F, 0xF2CC8F, 1);
+  flowerA.position.set(-1.5, 1.0, 0);
+  scene.add(stemA, flowerA);
+
+  // Parent B: high-yield (lots of petals, green) on right
+  const stemB = stemWithLeaves(1.0);
+  stemB.position.x = 1.5;
+  const flowerB = roundedPetalFlower(0x4A7C59, 0x9BC53D, 1);
+  flowerB.position.set(1.5, 1.0, 0);
+  scene.add(stemB, flowerB);
+
+  // two glowing pollen orbs travel toward the center and merge into a new hybrid flower
+  const orbA = new THREE.Mesh(new THREE.SphereGeometry(0.09,10,10), new THREE.MeshStandardMaterial({color:0xF2CC8F, emissive:0xF2CC8F, emissiveIntensity:0.4}));
+  const orbB = new THREE.Mesh(new THREE.SphereGeometry(0.09,10,10), new THREE.MeshStandardMaterial({color:0x9BC53D, emissive:0x9BC53D, emissiveIntensity:0.4}));
+  scene.add(orbA, orbB);
+
+  const hybridStemTargetH = 1.0;
+  const hybridStem = stemWithLeaves(hybridStemTargetH);
+  hybridStem.setHeight(0.001);
+  hybridStem.position.set(0,0,0.6);
+  scene.add(hybridStem);
+  const hybridFlower = roundedPetalFlower(0xE07A5F, 0x9BC53D, 1.05); // mixed colors!
+  hybridFlower.position.set(0,0,0.6);
+  hybridFlower.visible = false;
+  scene.add(hybridFlower);
+
+  const sparkleGeo = new THREE.SphereGeometry(0.04, 6, 6);
+  const sparkleMat = new THREE.MeshBasicMaterial({color:0xFFF3B0});
+  const sparkles = [];
+  for(let i=0;i<8;i++){
+    const s = new THREE.Mesh(sparkleGeo, sparkleMat);
+    s.visible = false;
+    scene.add(s);
+    sparkles.push(s);
+  }
+
+  function animate(){
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    flowerA.rotation.z = Math.sin(t*1.1)*0.05;
+    flowerB.rotation.z = -Math.sin(t*1.1)*0.05;
+
+    const cycle = t % 5.5;
+    const travel = THREE.MathUtils.clamp(cycle/1.8, 0, 1);
+    const showOrbs = cycle < 2;
+    orbA.visible = showOrbs;
+    orbB.visible = showOrbs;
+    orbA.position.set(
+      THREE.MathUtils.lerp(-1.5, 0, travel),
+      THREE.MathUtils.lerp(1.0, 0.5, travel) + Math.sin(travel*Math.PI)*0.5,
+      THREE.MathUtils.lerp(0, 0.6, travel)
+    );
+    orbB.position.set(
+      THREE.MathUtils.lerp(1.5, 0, travel),
+      THREE.MathUtils.lerp(1.0, 0.5, travel) + Math.sin(travel*Math.PI)*0.5,
+      THREE.MathUtils.lerp(0, 0.6, travel)
+    );
+
+    // merge flash
+    if(cycle > 1.8 && cycle < 2.2){
+      sparkles.forEach((s,i)=>{
+        s.visible = true;
+        const ang = (i/8)*Math.PI*2;
+        const r = (cycle-1.8)*2.5;
+        s.position.set(Math.cos(ang)*r, 0.5+Math.sin(ang*2)*0.2, 0.6+Math.sin(ang)*r);
+      });
+    } else {
+      sparkles.forEach(s=> s.visible=false);
+    }
+
+    const grow = THREE.MathUtils.clamp((cycle-2.2)/2.5, 0, 1);
+    hybridStem.setHeight(grow * hybridStemTargetH);
+    hybridFlower.visible = grow>0.05;
+    hybridFlower.position.y = grow*hybridStemTargetH;
+    hybridFlower.scale.setScalar(1.05*Math.min(grow*1.4,1));
+    hybridFlower.rotation.y = t*0.7;
+
+    camera.position.x = Math.sin(t*0.15)*0.5;
+    camera.lookAt(0,0.7,0.3);
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+/* ============ Scene 4: Cross Pollination (bee) ============ */
+(function(){
+  const {scene, camera, renderer} = makeScene('scene4');
+  scene.add(groundDisc());
+
+  const stemA = stemWithLeaves(1.0);
+  stemA.position.set(-1.5, 0, 0);
+  const flowerA = roundedPetalFlower(0x6A4C93, 0xFFD166, 1.1);
+  flowerA.position.set(-1.5, 1.0, 0);
+  scene.add(stemA, flowerA);
+
+  const stemB = stemWithLeaves(1.0);
+  stemB.position.set(1.5, 0, -0.3);
+  const flowerB = roundedPetalFlower(0x6A4C93, 0xF4A896, 1.1);
+  flowerB.position.set(1.5, 1.0, -0.3);
+  scene.add(stemB, flowerB);
+
+  // cute bee: yellow-black striped body
+  const bee = new THREE.Group();
+  const body = new THREE.Mesh(
+    new THREE.SphereGeometry(0.16, 12, 12),
+    new THREE.MeshStandardMaterial({color:0xFFD166, roughness:0.5})
+  );
+  bee.add(body);
+  const stripeMat = new THREE.MeshStandardMaterial({color:0x2D2D2D, roughness:0.5});
+  for(let i=-1;i<=1;i++){
+    const stripe = new THREE.Mesh(new THREE.TorusGeometry(0.165, 0.025, 6, 16), stripeMat);
+    stripe.rotation.y = Math.PI/2;
+    stripe.position.x = i*0.08;
+    bee.add(stripe);
+  }
+  const wingMat = new THREE.MeshStandardMaterial({color:0xEAF6FF, transparent:true, opacity:0.7, roughness:0.3});
+  const wingGeo = new THREE.SphereGeometry(0.11,8,8);
+  wingGeo.scale(1.4,0.3,0.9);
+  const wingL = new THREE.Mesh(wingGeo, wingMat);
+  wingL.position.set(-0.08, 0.12, 0.05);
+  const wingR = wingL.clone();
+  wingR.position.set(0.08, 0.12, 0.05);
+  bee.add(wingL, wingR);
+  scene.add(bee);
+
+  // pollen dust particles that travel with the bee
+  const dustGeo = new THREE.SphereGeometry(0.025, 6, 6);
+  const dustMat = new THREE.MeshBasicMaterial({color:0xFFE28A});
+  const dusts = [];
+  for(let i=0;i<5;i++){
+    const d = new THREE.Mesh(dustGeo, dustMat);
+    scene.add(d);
+    dusts.push(d);
+  }
+
+  const dropSparkles = [];
+  for(let i=0;i<6;i++){
+    const s = new THREE.Mesh(new THREE.SphereGeometry(0.03,6,6), new THREE.MeshBasicMaterial({color:0xFFE28A}));
+    s.visible = false;
+    scene.add(s);
+    dropSparkles.push(s);
+  }
+
+  function bezier(p0,p1,p2,t){
+    const x = (1-t)*(1-t)*p0.x + 2*(1-t)*t*p1.x + t*t*p2.x;
+    const y = (1-t)*(1-t)*p0.y + 2*(1-t)*t*p1.y + t*t*p2.y;
+    const z = (1-t)*(1-t)*p0.z + 2*(1-t)*t*p1.z + t*t*p2.z;
+    return {x,y,z};
+  }
+
+  function animate(){
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    flowerA.rotation.z = Math.sin(t*1.1)*0.05;
+    flowerB.rotation.z = -Math.sin(t*1.1)*0.05;
+
+    const cycle = t % 5;
+    const wingFlap = Math.sin(t*30)*0.3;
+    wingL.rotation.z = wingFlap;
+    wingR.rotation.z = -wingFlap;
+
+    const p0 = {x:-1.5, y:1.35, z:0};
+    const p2 = {x:1.5, y:1.35, z:-0.3};
+    const p1 = {x:0, y:2.3, z:0.5};
+
+    let bt, atFlowerA, atFlowerB;
+    if(cycle < 1){
+      // hovering at flower A, collecting pollen
+      bt = 0; atFlowerA = true; atFlowerB = false;
+    } else if(cycle < 3){
+      bt = (cycle-1)/2; atFlowerA=false; atFlowerB=false;
+    } else if(cycle < 4){
+      bt = 1; atFlowerA=false; atFlowerB=true;
+    } else {
+      bt = 1; atFlowerA=false; atFlowerB=false;
+    }
+    const pos = bezier(p0,p1,p2,bt);
+    bee.position.set(pos.x, pos.y + Math.sin(t*8)*0.05, pos.z);
+    bee.rotation.y = -Math.PI/2 + bt*Math.PI*0.9;
+
+    dusts.forEach((d,i)=>{
+      d.visible = cycle>=1;
+      const off = i*0.15;
+      d.position.set(
+        bee.position.x + Math.sin(t*5+i)*0.15,
+        bee.position.y - 0.1 - off*0.3,
+        bee.position.z + Math.cos(t*5+i)*0.15
+      );
+      d.scale.setScalar(Math.max(0, 1-off));
+    });
+
+    if(cycle>=3 && cycle<3.6){
+      const dt = (cycle-3)/0.6;
+      dropSparkles.forEach((s,i)=>{
+        s.visible = true;
+        const ang = (i/6)*Math.PI*2;
+        s.position.set(1.5+Math.cos(ang)*dt*0.5, 1.0+Math.sin(ang)*dt*0.3, -0.3+Math.sin(ang)*dt*0.5);
+      });
+    } else {
+      dropSparkles.forEach(s=>s.visible=false);
+    }
+
+    camera.position.x = Math.sin(t*0.1)*0.6;
+    camera.lookAt(0,1.1,0);
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+/* ============ Scene 5: Pollination -> Seed ============ */
+(function(){
+  const {scene, camera, renderer} = makeScene('scene5');
+  scene.add(groundDisc());
+
+  const stem = stemWithLeaves(1.1);
+  stem.position.set(0,0,0);
+  scene.add(stem);
+  const flower = roundedPetalFlower(0xFFD166, 0xF4A896, 1.2);
+  flower.position.set(0, 1.1, 0);
+  scene.add(flower);
+
+  // incoming pollen dust
+  const dustGeo = new THREE.SphereGeometry(0.03, 6, 6);
+  const dustMat = new THREE.MeshBasicMaterial({color:0xFFE28A});
+  const dusts = [];
+  for(let i=0;i<10;i++){
+    const d = new THREE.Mesh(dustGeo, dustMat);
+    scene.add(d);
+    dusts.push({mesh:d, seed: Math.random()*10});
+  }
+
+  // seed pod that grows beneath the flower after pollination
+  const pod = new THREE.Mesh(
+    new THREE.SphereGeometry(0.001, 12, 12),
+    new THREE.MeshStandardMaterial({color:0x8AA34D, roughness:0.7})
+  );
+  pod.position.set(0, 0.85, 0);
+  scene.add(pod);
+
+  // final little seed that pops out and drops to the ground
+  const finalSeed = seed(0xC9A15A, 1.6);
+  finalSeed.visible = false;
+  scene.add(finalSeed);
+
+  const glow = new THREE.PointLight(0xFFE28A, 0, 2);
+  glow.position.set(0,1.1,0);
+  scene.add(glow);
+
+  function animate(){
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    flower.rotation.z = Math.sin(t*1.1)*0.05;
+
+    const cycle = t % 6;
+    // phase 0-1.5: pollen drifts in from above onto flower
+    // phase 1.5-2: flash / glow (pollination happens)
+    // phase 2-4.5: pod grows
+    // phase 4.5-6: seed emerges and drops
+
+    const pollenIn = THREE.MathUtils.clamp(cycle/1.5, 0, 1);
+    dusts.forEach(({mesh, seed:sd})=>{
+      mesh.visible = cycle < 1.6;
+      const ang = sd;
+      const startR = 1.6;
+      const r = THREE.MathUtils.lerp(startR, 0.1, pollenIn);
+      mesh.position.set(
+        Math.cos(ang+t*0.3)*r,
+        THREE.MathUtils.lerp(2.4, 1.1, pollenIn) + Math.sin(t*3+sd)*0.05,
+        Math.sin(ang+t*0.3)*r
+      );
+    });
+
+    const flash = (cycle>1.4 && cycle<2.1) ? Math.sin(((cycle-1.4)/0.7)*Math.PI) : 0;
+    glow.intensity = flash*1.5;
+
+    const podGrow = THREE.MathUtils.clamp((cycle-2)/2.3, 0, 1);
+    pod.scale.setScalar(0.001 + podGrow*0.34);
+    pod.visible = cycle>2 && cycle<5;
+
+    const dropPhase = THREE.MathUtils.clamp((cycle-4.5)/1.4, 0, 1);
+    finalSeed.visible = cycle>4.5;
+    if(cycle>4.5){
+      finalSeed.position.set(
+        0,
+        THREE.MathUtils.lerp(0.85, 0.15, Math.min(dropPhase*1.6,1)),
+        THREE.MathUtils.lerp(0, 0.9, dropPhase)
+      );
+      finalSeed.rotation.y = t*3;
+      pod.visible = dropPhase < 0.3;
+    }
+
+    camera.position.x = Math.sin(t*0.15)*0.5;
+    camera.lookAt(0,0.9,0.2);
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>
