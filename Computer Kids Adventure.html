@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberKids: Fun Computer Learning Adventure</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Fredoka & Nunito for friendly, rounded kid aesthetic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            fredoka: ['Fredoka', 'sans-serif'],
+            nunito: ['Nunito', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              yellow: '#FFDE59',
+              blue: '#54A0FF',
+              darkBlue: '#2E86DE',
+              pink: '#FF6B81',
+              green: '#1DD1A1',
+              purple: '#A55EEA',
+              cardBg: '#F8FAFC'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-kid {
+      font-family: 'Fredoka', cursive, sans-serif;
+    }
+    .bounce-hover:hover {
+      transform: translateY(-4px) scale(1.02);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.05); }
+    }
+    .animate-pulse-soft {
+      animation: pulse-soft 2s infinite ease-in-out;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-sky-100 via-indigo-50 to-purple-100 min-h-screen text-slate-800 pb-16">
+
+  <!-- SOUND SYNTHESIZER UTILITIES (Web Audio API - No external files) -->
+  <script>
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSound(type) {
+      try {
+        const ctx = getAudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        const now = ctx.currentTime;
+
+        if (type === 'pop') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(450, now);
+          osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        } else if (type === 'correct') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'wrong') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.setValueAtTime(160, now + 0.12);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
+          osc.start(now);
+          osc.stop(now + 0.28);
+        } else if (type === 'fanfare') {
+          const notes = [523.25, 659.25, 783.99, 1046.5];
+          notes.forEach((freq, idx) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.frequency.setValueAtTime(freq, now + idx * 0.1);
+            g.gain.setValueAtTime(0.3, now + idx * 0.1);
+            g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.25);
+            o.start(now + idx * 0.1);
+            o.stop(now + idx * 0.1 + 0.25);
+          });
+        }
+      } catch (e) {
+        console.log("Audio not supported or waiting for user gesture");
+      }
+    }
+  </script>
+
+  <header class="max-w-6xl mx-auto px-4 pt-6 pb-4">
+    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-5 md:p-6 shadow-xl border-4 border-indigo-200 flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- Logo & Characters -->
+      <div class="flex items-center gap-4">
+        <!-- Cute SVG Robot Companion (Byte) -->
+        <div class="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0 animate-float">
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+            <!-- Antenna -->
+            <line x1="50" y1="20" x2="50" y2="6" stroke="#4B5563" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="50" cy="6" r="6" fill="#FF5252" />
+            <!-- Head -->
+            <rect x="20" y="20" width="60" height="50" rx="14" fill="#60A5FA" stroke="#2563EB" stroke-width="3.5" />
+            <!-- Screen Eyes -->
+            <circle cx="38" cy="42" r="7" fill="#1E293B" />
+            <circle cx="62" cy="42" r="7" fill="#1E293B" />
+            <circle cx="40" cy="40" r="2.5" fill="#FFFFFF" />
+            <circle cx="64" cy="40" r="2.5" fill="#FFFFFF" />
+            <!-- Cheeks -->
+            <circle cx="28" cy="52" r="4" fill="#F472B6" opacity="0.8" />
+            <circle cx="72" cy="52" r="4" fill="#F472B6" opacity="0.8" />
+            <!-- Smile -->
+            <path d="M 40 56 Q 50 66 60 56" fill="none" stroke="#1E293B" stroke-width="3" stroke-linecap="round"/>
+            <!-- Body Preview -->
+            <path d="M 30 70 L 70 70 L 75 92 L 25 92 Z" fill="#3B82F6" stroke="#1D4ED8" stroke-width="3" />
+            <circle cx="50" cy="80" r="4" fill="#FDE047" />
+          </svg>
+        </div>
+
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs uppercase tracking-wider mb-1">
+            <span>✨ Primary Computer Science</span>
+          </div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 font-kid tracking-wide">
+            CyberKids Computer Club 🚀
+          </h1>
+          <p class="text-xs md:text-sm text-slate-500 font-medium">
+            Learn devices, computer vs brain, cloud storage, software, internet safety & take tests!
+          </p>
+        </div>
+      </div>
+
+      <!-- Cute Brain Companion (Pip) & Stars Count -->
+      <div class="flex items-center gap-4 bg-gradient-to-r from-amber-50 to-pink-50 px-4 py-2 rounded-2xl border-2 border-amber-200">
+        <div class="w-12 h-12 flex-shrink-0 animate-bounce">
+          <!-- Cute Pink Brain SVG -->
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow">
+            <ellipse cx="50" cy="50" rx="35" ry="30" fill="#F472B6" stroke="#DB2777" stroke-width="3"/>
+            <circle cx="36" cy="38" r="14" fill="#F472B6" stroke="#DB2777" stroke-width="2.5"/>
+            <circle cx="64" cy="38" r="14" fill="#F472B6" stroke="#DB2777" stroke-width="2.5"/>
+            <!-- Eyes -->
+            <ellipse cx="42" cy="50" rx="4" ry="5" fill="#1F2937" />
+            <ellipse cx="58" cy="50" rx="4" ry="5" fill="#1F2937" />
+            <circle cx="43" cy="48" r="1.5" fill="#FFF" />
+            <circle cx="59" cy="48" r="1.5" fill="#FFF" />
+            <!-- Rosy Cheeks -->
+            <circle cx="34" cy="56" r="3.5" fill="#FDA4AF" />
+            <circle cx="66" cy="56" r="3.5" fill="#FDA4AF" />
+            <!-- Smile -->
+            <path d="M 45 58 Q 50 65 55 58" fill="none" stroke="#1F2937" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="text-right">
+          <div class="text-xs font-bold text-amber-700">Stars Earned</div>
+          <div class="flex items-center justify-end gap-1 text-xl font-kid font-bold text-amber-500">
+            <span id="starCounter">0</span>
+            <span>⭐</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="flex flex-wrap justify-center gap-2 md:gap-3 mt-4">
+      <button onclick="switchTab('lessons')" id="tabBtn-lessons" class="nav-btn px-4 md:px-6 py-2.5 rounded-2xl font-kid font-bold text-sm md:text-base flex items-center gap-2 shadow-md transition-all bg-indigo-600 text-white shadow-indigo-200">
+        <span>📚</span> Lessons
+      </button>
+      <button onclick="switchTab('game')" id="tabBtn-game" class="nav-btn px-4 md:px-6 py-2.5 rounded-2xl font-kid font-bold text-sm md:text-base flex items-center gap-2 shadow-md transition-all bg-white text-slate-700 hover:bg-slate-50 border-2 border-slate-200">
+        <span>🎮</span> Sorting Game
+      </button>
+      <button onclick="switchTab('topicQuiz')" id="tabBtn-topicQuiz" class="nav-btn px-4 md:px-6 py-2.5 rounded-2xl font-kid font-bold text-sm md:text-base flex items-center gap-2 shadow-md transition-all bg-white text-slate-700 hover:bg-slate-50 border-2 border-slate-200">
+        <span>⚡</span> Chapter Quizzes
+      </button>
+      <button onclick="switchTab('finalExam')" id="tabBtn-finalExam" class="nav-btn px-4 md:px-6 py-2.5 rounded-2xl font-kid font-bold text-sm md:text-base flex items-center gap-2 shadow-md transition-all bg-white text-slate-700 hover:bg-slate-50 border-2 border-slate-200">
+        <span>🏆</span> 20-Question Exam
+      </button>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-6xl mx-auto px-4 mt-2">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: LESSONS & SUMMARIES                 -->
+    <!-- ========================================== -->
+    <section id="section-lessons" class="space-y-6">
+      
+      <!-- Greeting Banner -->
+      <div class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+        <div class="relative z-10 max-w-2xl">
+          <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Welcome Buddy!</span>
+          <h2 class="text-2xl md:text-3xl font-kid font-bold mt-2">Interactive Notebook Notes 📖</h2>
+          <p class="text-sm md:text-base text-indigo-100 mt-1">
+            Everything from your handwriting notes made easy with pictures, interactive cards, and simple English! Click each card to test your memory.
+          </p>
+        </div>
+        <div class="absolute right-4 -bottom-6 opacity-20 text-9xl select-none hidden md:block">💻</div>
+      </div>
+
+      <!-- Chapter 1: Types of Digital Devices -->
+      <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-sky-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-2xl bg-sky-500 text-white flex items-center justify-center text-xl font-bold font-kid shadow-md">1</div>
+          <div>
+            <h3 class="text-xl font-kid font-bold text-sky-900">Types of Digital Devices</h3>
+            <p class="text-xs text-slate-500">Each device has its own superpower task!</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <!-- Laptop -->
+          <div class="bg-sky-50/70 p-4 rounded-2xl border-2 border-sky-200 text-center bounce-hover transition">
+            <div class="text-3xl mb-1">💻</div>
+            <div class="font-kid font-bold text-sky-800">Laptop</div>
+            <div class="text-xs font-semibold text-sky-600 bg-white rounded-lg py-1 mt-2 shadow-sm">School & Work</div>
+          </div>
+          <!-- SmartPhone -->
+          <div class="bg-indigo-50/70 p-4 rounded-2xl border-2 border-indigo-200 text-center bounce-hover transition">
+            <div class="text-3xl mb-1">📱</div>
+            <div class="font-kid font-bold text-indigo-800">SmartPhone</div>
+            <div class="text-xs font-semibold text-indigo-600 bg-white rounded-lg py-1 mt-2 shadow-sm">Calls & Apps</div>
+          </div>
+          <!-- Tablet -->
+          <div class="bg-purple-50/70 p-4 rounded-2xl border-2 border-purple-200 text-center bounce-hover transition">
+            <div class="text-3xl mb-1">📲</div>
+            <div class="font-kid font-bold text-purple-800">Tablet</div>
+            <div class="text-xs font-semibold text-purple-600 bg-white rounded-lg py-1 mt-2 shadow-sm">Reading & Play</div>
+          </div>
+          <!-- Smart TV -->
+          <div class="bg-amber-50/70 p-4 rounded-2xl border-2 border-amber-200 text-center bounce-hover transition">
+            <div class="text-3xl mb-1">📺</div>
+            <div class="font-kid font-bold text-amber-800">Smart TV</div>
+            <div class="text-xs font-semibold text-amber-600 bg-white rounded-lg py-1 mt-2 shadow-sm">Watch & Stream</div>
+          </div>
+          <!-- Game Console -->
+          <div class="bg-emerald-50/70 p-4 rounded-2xl border-2 border-emerald-200 text-center bounce-hover transition">
+            <div class="text-3xl mb-1">🎮</div>
+            <div class="font-kid font-bold text-emerald-800">Game Console</div>
+            <div class="text-xs font-semibold text-emerald-600 bg-white rounded-lg py-1 mt-2 shadow-sm">Gaming Fun</div>
+          </div>
+          <!-- Digital Camera -->
+          <div class="bg-rose-50/70 p-4 rounded-2xl border-2 border-rose-200 text-center bounce-hover transition">
+            <div class="text-3xl mb-1">📷</div>
+            <div class="font-kid font-bold text-rose-800">Digital Camera</div>
+            <div class="text-xs font-semibold text-rose-600 bg-white rounded-lg py-1 mt-2 shadow-sm">Take Photos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 2: How Computers Process Information -->
+      <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-emerald-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-xl font-bold font-kid shadow-md">2</div>
+          <div>
+            <h3 class="text-xl font-kid font-bold text-emerald-900">How Computers Process Information</h3>
+            <p class="text-xs text-slate-500">The 3 magic steps: Input ➡️ Process ➡️ Output</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
+          <!-- Step 1: Input -->
+          <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-300 rounded-3xl p-5 shadow-sm text-center">
+            <div class="inline-block bg-emerald-500 text-white font-kid px-3 py-1 rounded-full text-xs font-bold mb-2">Step 1</div>
+            <h4 class="text-2xl font-kid font-bold text-emerald-800">INPUT</h4>
+            <p class="text-sm font-bold text-slate-600 mt-1">"You give information"</p>
+            <div class="mt-3 p-3 bg-white rounded-2xl border border-emerald-200 text-xs text-slate-600 space-y-1">
+              <span class="font-bold text-emerald-700">Input Devices:</span>
+              <div>⌨️ Keyboard • 🖱️ Mouse</div>
+              <div>📷 Camera • 🎙️ Microphone</div>
+            </div>
+          </div>
+
+          <!-- Step 2: Process -->
+          <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-3xl p-5 shadow-sm text-center">
+            <div class="inline-block bg-blue-500 text-white font-kid px-3 py-1 rounded-full text-xs font-bold mb-2">Step 2</div>
+            <h4 class="text-2xl font-kid font-bold text-blue-800">PROCESS</h4>
+            <p class="text-sm font-bold text-slate-600 mt-1">"The computer thinks & works it out"</p>
+            <div class="mt-3 p-3 bg-white rounded-2xl border border-blue-200 text-xs text-slate-600 space-y-1">
+              <span class="font-bold text-blue-700">The Brain:</span>
+              <div>⚙️ CPU (Central Processing Unit)</div>
+              <div>🧮 Fast calculations & logic!</div>
+            </div>
+          </div>
+
+          <!-- Step 3: Output -->
+          <div class="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-300 rounded-3xl p-5 shadow-sm text-center">
+            <div class="inline-block bg-purple-500 text-white font-kid px-3 py-1 rounded-full text-xs font-bold mb-2">Step 3</div>
+            <h4 class="text-2xl font-kid font-bold text-purple-800">OUTPUT</h4>
+            <p class="text-sm font-bold text-slate-600 mt-1">"The computer shows the answer"</p>
+            <div class="mt-3 p-3 bg-white rounded-2xl border border-purple-200 text-xs text-slate-600 space-y-1">
+              <span class="font-bold text-purple-700">Output Devices:</span>
+              <div>🖥️ Screen / Monitor • 🔊 Speakers</div>
+              <div>🖨️ Printer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 3: Computer vs. Human Brain -->
+      <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-2xl bg-pink-500 text-white flex items-center justify-center text-xl font-bold font-kid shadow-md">3</div>
+          <div>
+            <h3 class="text-xl font-kid font-bold text-pink-900">Computer vs. Human Brain 🧠⚡💻</h3>
+            <p class="text-xs text-slate-500">What can each do better? And what do both share?</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Human Brain Only -->
+          <div class="bg-amber-50 rounded-2xl p-4 border-2 border-amber-300">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-2xl">🧠</span>
+              <h4 class="font-kid font-bold text-amber-900">Human Brain Only</h4>
+            </div>
+            <ul class="text-xs space-y-1.5 text-amber-950 font-medium">
+              <li class="flex items-center gap-1.5">💖 <b>Feeling emotions</b> (happy, excited)</li>
+              <li class="flex items-center gap-1.5">🎨 <b>Being creative</b> & drawing art</li>
+              <li class="flex items-center gap-1.5">🌱 <b>Learning from mistakes</b></li>
+              <li class="flex items-center gap-1.5">🤔 <b>Making decisions</b> on its own</li>
+              <li class="flex items-center gap-1.5">👀 Input from <b>5 senses</b> ➡️ actions</li>
+            </ul>
+          </div>
+
+          <!-- BOTH CAN DO -->
+          <div class="bg-lime-50 rounded-2xl p-4 border-2 border-lime-300 text-center flex flex-col justify-center">
+            <div class="inline-block bg-lime-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 mx-auto">🤝 Both Can Do!</div>
+            <ul class="text-xs space-y-2 text-lime-950 font-bold">
+              <li>✨ Think & problem solve</li>
+              <li>🧠 Remember facts</li>
+              <li>📖 Learn new things</li>
+              <li>⚙️ Process information</li>
+            </ul>
+          </div>
+
+          <!-- Computer Only -->
+          <div class="bg-sky-50 rounded-2xl p-4 border-2 border-sky-300">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-2xl">💻</span>
+              <h4 class="font-kid font-bold text-sky-900">Computer Only</h4>
+            </div>
+            <ul class="text-xs space-y-1.5 text-sky-950 font-medium">
+              <li class="flex items-center gap-1.5">⚡ <b>Super fast calculations</b></li>
+              <li class="flex items-center gap-1.5">💾 <b>Storing huge information</b></li>
+              <li class="flex items-center gap-1.5">⏰ <b>Always ready</b> (never sleeps!)</li>
+              <li class="flex items-center gap-1.5">📏 <b>Follows exact rules</b> & programs</li>
+              <li class="flex items-center gap-1.5">🔌 Needs keyboard/mouse & electricity</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 4: Types of Computer Storage (Cloud vs Local) -->
+      <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-indigo-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-2xl bg-indigo-500 text-white flex items-center justify-center text-xl font-bold font-kid shadow-md">4</div>
+          <div>
+            <h3 class="text-xl font-kid font-bold text-indigo-900">Computer Storage: Cloud vs. Local</h3>
+            <p class="text-xs text-slate-500">Where do your photos and school homework sleep?</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Cloud Storage -->
+          <div class="bg-blue-50/80 rounded-2xl p-5 border-2 border-blue-300 relative">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-3xl">☁️</span>
+                <h4 class="text-lg font-kid font-bold text-blue-900">Cloud Storage</h4>
+              </div>
+              <span class="text-xs bg-blue-200 text-blue-800 font-bold px-2 py-0.5 rounded-full">Internet</span>
+            </div>
+            <ul class="text-xs space-y-2 text-blue-950">
+              <li>🌐 <b>Where:</b> Stored on the <b>INTERNET</b></li>
+              <li>🌍 <b>Access:</b> Access from <b>ANYWHERE</b> around the world</li>
+              <li>📶 <b>Requires:</b> Needs <b>WiFi / Data</b> to open & save</li>
+              <li>🛡️ <b>Safety:</b> <b>SAFE</b> even if your tablet breaks!</li>
+              <li>📂 <b>Examples:</b> Google Drive, Microsoft OneDrive, iCloud</li>
+            </ul>
+          </div>
+
+          <!-- Local Storage -->
+          <div class="bg-orange-50/80 rounded-2xl p-5 border-2 border-orange-300 relative">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-3xl">💾</span>
+                <h4 class="text-lg font-kid font-bold text-orange-900">Local Storage</h4>
+              </div>
+              <span class="text-xs bg-orange-200 text-orange-800 font-bold px-2 py-0.5 rounded-full">Device</span>
+            </div>
+            <ul class="text-xs space-y-2 text-orange-950">
+              <li>📱 <b>Where:</b> Stored inside <b>YOUR DEVICE</b></li>
+              <li>⚡ <b>Speed:</b> Super fast, <b>no waiting</b> for download!</li>
+              <li>📴 <b>Offline:</b> Works perfectly <b>WITHOUT internet</b></li>
+              <li>⚠️ <b>Risk:</b> Files can be <b>lost</b> if device breaks</li>
+              <li>📂 <b>Examples:</b> USB Flash Drive, Hard Disk Drive, Memory Card</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 5: Application Software (Word, Slides, Sheets) -->
+      <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-purple-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-2xl bg-purple-500 text-white flex items-center justify-center text-xl font-bold font-kid shadow-md">5</div>
+          <div>
+            <h3 class="text-xl font-kid font-bold text-purple-900">Computer Software: Your Digital Tools 🛠️</h3>
+            <p class="text-xs text-slate-500">Software is a computer program that helps us complete tasks!</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Word Processing -->
+          <div class="bg-blue-50 border-2 border-blue-300 rounded-2xl p-4">
+            <div class="w-12 h-12 bg-blue-600 rounded-xl text-white flex items-center justify-center font-kid font-bold text-2xl mb-2 shadow">W</div>
+            <h4 class="font-kid font-bold text-blue-900 text-base">Word Processing</h4>
+            <div class="text-xs font-semibold text-blue-600 mb-2">MS Word & Google Docs</div>
+            <ul class="text-xs space-y-1 text-slate-700">
+              <li>✍️ Create documents faster & easier</li>
+              <li>⌨️ Type text, add clip art & drawings</li>
+              <li>📄 Make letters, posters, reports & forms</li>
+            </ul>
+          </div>
+
+          <!-- Presentation -->
+          <div class="bg-red-50 border-2 border-red-300 rounded-2xl p-4">
+            <div class="w-12 h-12 bg-red-500 rounded-xl text-white flex items-center justify-center font-kid font-bold text-2xl mb-2 shadow">P</div>
+            <h4 class="font-kid font-bold text-red-900 text-base">Presentation Software</h4>
+            <div class="text-xs font-semibold text-red-600 mb-2">MS PowerPoint & Google Slides</div>
+            <ul class="text-xs space-y-1 text-slate-700">
+              <li>🎤 Present data easily to the class</li>
+              <li>🖼️ Add text, pictures, audio & videos</li>
+              <li>📽️ Animated slides for show & tell</li>
+            </ul>
+          </div>
+
+          <!-- Spreadsheet -->
+          <div class="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4">
+            <div class="w-12 h-12 bg-emerald-600 rounded-xl text-white flex items-center justify-center font-kid font-bold text-2xl mb-2 shadow">X</div>
+            <h4 class="font-kid font-bold text-emerald-900 text-base">Spreadsheet Software</h4>
+            <div class="text-xs font-semibold text-emerald-600 mb-2">MS Excel & Google Sheets</div>
+            <ul class="text-xs space-y-1 text-slate-700">
+              <li>➕ Add, subtract, multiply & divide numbers</li>
+              <li>📊 Turn numbers into graphs and charts</li>
+              <li>🧾 Organize lists and tables easily</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 6: The Internet & 5 Safety Rules -->
+      <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-amber-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl font-bold font-kid shadow-md">6</div>
+          <div>
+            <h3 class="text-xl font-kid font-bold text-amber-900">Using the Internet & Safety Rules 🛡️</h3>
+            <p class="text-xs text-slate-500">The Internet is a huge network connecting computers around the world!</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <!-- 3 Things needed + Trusted Domains -->
+          <div class="space-y-3">
+            <div class="bg-amber-50/70 p-4 rounded-2xl border-2 border-amber-200">
+              <h4 class="font-kid font-bold text-amber-900 text-sm mb-2">📶 3 Things Needed to Access Internet:</h4>
+              <ol class="text-xs space-y-1.5 text-slate-700 list-decimal list-inside font-medium">
+                <li><b>Computer Device:</b> Phone, Laptop, iPad, Tablet</li>
+                <li><b>Data Connection:</b> WiFi or Mobile Data</li>
+                <li><b>Web Browser:</b> Chrome, Safari, Firefox, MS Edge</li>
+              </ol>
+            </div>
+
+            <div class="bg-teal-50/70 p-4 rounded-2xl border-2 border-teal-200">
+              <h4 class="font-kid font-bold text-teal-900 text-sm mb-2">🔍 Trusted Website Endings:</h4>
+              <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                <div class="bg-white p-2 rounded-xl border border-teal-300">
+                  <div class="font-bold text-teal-800 text-sm">.ac</div>
+                  <div class="text-[11px] text-slate-500">Academic / School</div>
+                </div>
+                <div class="bg-white p-2 rounded-xl border border-teal-300">
+                  <div class="font-bold text-teal-800 text-sm">.gov</div>
+                  <div class="text-[11px] text-slate-500">Government</div>
+                </div>
+                <div class="bg-white p-2 rounded-xl border border-teal-300">
+                  <div class="font-bold text-teal-800 text-sm">.org</div>
+                  <div class="text-[11px] text-slate-500">Non-profit</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5 Kids Cyber Safety Tips -->
+          <div class="bg-rose-50/70 p-4 rounded-2xl border-2 border-rose-200">
+            <h4 class="font-kid font-bold text-rose-900 text-sm mb-2">🛡️ 5 Golden Safety Tips for Kids:</h4>
+            <div class="space-y-1.5 text-xs text-rose-950 font-medium">
+              <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-rose-200">
+                <span class="text-base">1️⃣</span>
+                <span><b>Do NOT share</b> personal information (address, full name).</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-rose-200">
+                <span class="text-base">2️⃣</span>
+                <span>Use a <b>strong password</b> (mix letters & numbers).</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-rose-200">
+                <span class="text-base">3️⃣</span>
+                <span><b>Do NOT talk</b> to strangers online!</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-rose-200">
+                <span class="text-base">4️⃣</span>
+                <span><b>Do NOT click</b> on strange links or popup ads.</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-rose-200">
+                <span class="text-base">5️⃣</span>
+                <span><b>Tell an adult</b> if something makes you feel uncomfortable.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: INTERACTIVE MINI-GAME               -->
+    <!-- ========================================== -->
+    <section id="section-game" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-amber-300 text-center relative overflow-hidden">
+        <div class="max-w-xl mx-auto">
+          <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase">Interactive Arcade 🕹️</span>
+          <h2 class="text-2xl md:text-3xl font-kid font-bold text-slate-800 mt-2">
+            Brain 🧠 vs. Computer 💻 Sorting Fun!
+          </h2>
+          <p class="text-xs md:text-sm text-slate-500 mt-1">
+            Read the trait on the card and click which bucket it belongs to! Earn 10 points and a ⭐ star for every correct pick.
+          </p>
+
+          <!-- Game Scoreboard -->
+          <div class="flex justify-center items-center gap-6 mt-4 p-3 bg-amber-50 rounded-2xl border-2 border-amber-200">
+            <div>
+              <span class="text-xs text-slate-500 font-bold">GAME SCORE</span>
+              <div id="gameScore" class="text-2xl font-kid font-bold text-amber-600">0</div>
+            </div>
+            <div class="h-8 w-px bg-amber-200"></div>
+            <div>
+              <span class="text-xs text-slate-500 font-bold">REMAINING CARDS</span>
+              <div id="gameCardsLeft" class="text-2xl font-kid font-bold text-indigo-600">8</div>
+            </div>
+          </div>
+
+          <!-- Active Question Card -->
+          <div id="gameActiveCardContainer" class="mt-6">
+            <div id="gameCard" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-3xl p-6 shadow-xl transform transition duration-300 hover:scale-105 border-4 border-white inline-block w-full max-w-md">
+              <div class="text-xs font-bold uppercase tracking-widest text-indigo-200 mb-1">Who can do this?</div>
+              <div id="gameCardText" class="text-xl md:text-2xl font-kid font-bold my-2">Feeling Emotions ❤️</div>
+              <div id="gameCardHint" class="text-xs text-indigo-100">Happy, excited, or sad feelings</div>
+            </div>
+
+            <!-- Bin Buttons -->
+            <div class="grid grid-cols-3 gap-3 mt-6">
+              <button onclick="handleGameAnswer('brain')" class="p-3 md:p-4 rounded-2xl bg-amber-100 border-2 border-amber-400 hover:bg-amber-200 font-kid font-bold text-amber-900 transition flex flex-col items-center shadow-sm">
+                <span class="text-3xl mb-1">🧠</span>
+                <span class="text-xs md:text-sm">Human Brain</span>
+              </button>
+              <button onclick="handleGameAnswer('both')" class="p-3 md:p-4 rounded-2xl bg-lime-100 border-2 border-lime-400 hover:bg-lime-200 font-kid font-bold text-lime-900 transition flex flex-col items-center shadow-sm">
+                <span class="text-3xl mb-1">🤝</span>
+                <span class="text-xs md:text-sm">Both!</span>
+              </button>
+              <button onclick="handleGameAnswer('computer')" class="p-3 md:p-4 rounded-2xl bg-sky-100 border-2 border-sky-400 hover:bg-sky-200 font-kid font-bold text-sky-900 transition flex flex-col items-center shadow-sm">
+                <span class="text-3xl mb-1">💻</span>
+                <span class="text-xs md:text-sm">Computer</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Game Over Panel (Hidden Initially) -->
+          <div id="gameOverPanel" class="hidden mt-6 bg-emerald-50 p-6 rounded-3xl border-2 border-emerald-300">
+            <div class="text-5xl mb-2">🎉🏆🌟</div>
+            <h3 class="text-2xl font-kid font-bold text-emerald-800">You Are a Super Sorter!</h3>
+            <p id="gameOverMsg" class="text-sm text-slate-600 mt-1">Fantastic job sorting the human brain and computer abilities!</p>
+            <button onclick="restartGame()" class="mt-4 px-6 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-kid font-bold shadow-lg transition">
+              🔄 Play Again
+            </button>
+          </div>
+
+          <!-- Feedback Toast -->
+          <div id="gameFeedback" class="mt-4 text-sm font-bold h-6 transition-all duration-300 text-slate-500">
+            Tap a button above to sort!
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: CHAPTER MINI QUIZZES (Randomized)   -->
+    <!-- ========================================== -->
+    <section id="section-topicQuiz" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-indigo-200">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full uppercase">Quick Practice ⚡</span>
+            <h2 class="text-2xl font-kid font-bold text-slate-800 mt-1">Topic Mini Quizzes</h2>
+            <p class="text-xs text-slate-500">Every time you click a topic or open this, choices randomize!</p>
+          </div>
+
+          <!-- Topic Selector -->
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="loadTopicQuiz(0)" id="tBtn-0" class="t-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white">1. Devices</button>
+            <button onclick="loadTopicQuiz(1)" id="tBtn-1" class="t-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">2. I-P-O</button>
+            <button onclick="loadTopicQuiz(2)" id="tBtn-2" class="t-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">3. Brain vs PC</button>
+            <button onclick="loadTopicQuiz(3)" id="tBtn-3" class="t-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">4. Storage</button>
+            <button onclick="loadTopicQuiz(4)" id="tBtn-4" class="t-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">5. Software</button>
+            <button onclick="loadTopicQuiz(5)" id="tBtn-5" class="t-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">6. Internet</button>
+          </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="topicQuizContainer" class="mt-6 max-w-2xl mx-auto space-y-4">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: COMPREHENSIVE 20-QUESTION EXAM      -->
+    <!-- ========================================== -->
+    <section id="section-finalExam" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-purple-200">
+        
+        <!-- Header -->
+        <div class="text-center max-w-2xl mx-auto">
+          <div class="inline-flex items-center gap-1.5 bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full uppercase">
+            <span>🎓</span> Complete Chapter Assessment
+          </div>
+          <h2 class="text-2xl md:text-3xl font-kid font-bold text-slate-800 mt-2">
+            20-Question Master Quiz 🌟
+          </h2>
+          <p class="text-xs md:text-sm text-slate-500 mt-1">
+            Features 10 Multiple Choice, 5 Interactive Matchings, and 5 Fill-in-the-Blanks! Shuffled choices each time you practice.
+          </p>
+
+          <!-- Exam Progress Bar -->
+          <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden mt-4 border border-slate-200">
+            <div id="examProgressBar" class="bg-gradient-to-r from-indigo-500 to-purple-600 h-full w-0 transition-all duration-300"></div>
+          </div>
+        </div>
+
+        <!-- 20 Questions Container -->
+        <div id="examQuestionsList" class="mt-8 space-y-6 max-w-3xl mx-auto">
+          <!-- Dynamically injected via JavaScript -->
+        </div>
+
+        <!-- Submit & Results Area -->
+        <div class="mt-8 text-center border-t border-slate-100 pt-6 max-w-3xl mx-auto">
+          <button id="submitExamBtn" onclick="gradeFinalExam()" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-kid font-bold text-lg shadow-lg shadow-purple-200 bounce-hover transition">
+            ✨ Check My Score & Answers!
+          </button>
+          
+          <button id="retakeExamBtn" onclick="initFinalExam()" class="hidden ml-3 px-6 py-3.5 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-kid font-bold text-base transition">
+            🔄 Retake Exam (Shuffle)
+          </button>
+
+          <!-- Score Card Results (Hidden until submit) -->
+          <div id="examResultCard" class="hidden mt-6 p-6 rounded-3xl bg-gradient-to-br from-indigo-50 to-purple-50 border-4 border-purple-300 text-center animate-pulse-soft">
+            <div id="examResultIcon" class="text-6xl mb-2">🎉</div>
+            <h3 id="examResultTitle" class="text-2xl font-kid font-bold text-purple-900">Awesome Job!</h3>
+            <div class="text-4xl font-kid font-bold text-indigo-600 my-2">
+              <span id="examScoreNumber">0</span> / 20
+            </div>
+            <p id="examFeedbackText" class="text-sm text-slate-600 max-w-md mx-auto">
+              You did a wonderful job! Review any questions in red below to learn from mistakes!
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC: Data, Shuffling, Interactive Games, Quizzes, Grading   -->
+  <!-- ========================================================================= -->
+  <script>
+    let totalStars = 0;
+
+    function addStars(num) {
+      totalStars += num;
+      document.getElementById('starCounter').innerText = totalStars;
+    }
+
+    // Helper: Fisher-Yates array shuffler
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Tab Navigation
+    function switchTab(tabId) {
+      playSound('pop');
+      const tabs = ['lessons', 'game', 'topicQuiz', 'finalExam'];
+      tabs.forEach(t => {
+        const sec = document.getElementById(`section-${t}`);
+        const btn = document.getElementById(`tabBtn-${t}`);
+        if (t === tabId) {
+          sec.classList.remove('hidden');
+          btn.className = "nav-btn px-4 md:px-6 py-2.5 rounded-2xl font-kid font-bold text-sm md:text-base flex items-center gap-2 shadow-md transition-all bg-indigo-600 text-white shadow-indigo-200";
+        } else {
+          sec.classList.add('hidden');
+          btn.className = "nav-btn px-4 md:px-6 py-2.5 rounded-2xl font-kid font-bold text-sm md:text-base flex items-center gap-2 shadow-md transition-all bg-white text-slate-700 hover:bg-slate-50 border-2 border-slate-200";
+        }
+      });
+
+      if (tabId === 'topicQuiz') {
+        loadTopicQuiz(0);
+      } else if (tabId === 'finalExam' && !examInitialized) {
+        initFinalExam();
+      }
+    }
+
+    const gameItems = [
+      { text: "Feeling Emotions ❤️", hint: "Happy, excited, sad, or caring", type: "brain" },
+      { text: "Super Fast Calculations ⚡", hint: "Calculating 999 x 888 in 0.001 seconds", type: "computer" },
+      { text: "Think & Problem Solve 💡", hint: "Finding answers to challenging questions", type: "both" },
+      { text: "Being Creative & Painting 🎨", hint: "Making original artwork and stories", type: "brain" },
+      { text: "Storing 1,000,000 Photos 💾", hint: "Holding hard drives of massive data", type: "computer" },
+      { text: "Learning New Things 📚", hint: "Reading new facts and getting smarter", type: "both" },
+      { text: "Learning From Mistakes 🌱", hint: "Understanding what went wrong and improving", type: "brain" },
+      { text: "Always Ready & Doesn't Sleep ⏰", hint: "Works all night long without getting tired", type: "computer" }
+    ];
+
+    let currentGameDeck = [];
+    let currentCardIndex = 0;
+    let gameScore = 0;
+
+    function initGame() {
+      currentGameDeck = shuffleArray(gameItems);
+      currentCardIndex = 0;
+      gameScore = 0;
+      document.getElementById('gameScore').innerText = gameScore;
+      document.getElementById('gameCardsLeft').innerText = currentGameDeck.length;
+      document.getElementById('gameOverPanel').classList.add('hidden');
+      document.getElementById('gameActiveCardContainer').classList.remove('hidden');
+      document.getElementById('gameFeedback').innerText = "Click where each skill belongs!";
+      document.getElementById('gameFeedback').className = "mt-4 text-sm font-bold h-6 transition-all duration-300 text-slate-500";
+      showCard();
+    }
+
+    function showCard() {
+      if (currentCardIndex >= currentGameDeck.length) {
+        // Game Over!
+        playSound('fanfare');
+        addStars(5);
+        document.getElementById('gameActiveCardContainer').classList.add('hidden');
+        document.getElementById('gameOverPanel').classList.remove('hidden');
+        document.getElementById('gameOverMsg').innerText = `Amazing! You finished with ${gameScore} points and won 5 bonus ⭐ stars!`;
+        return;
+      }
+      const item = currentGameDeck[currentCardIndex];
+      document.getElementById('gameCardText').innerText = item.text;
+      document.getElementById('gameCardHint').innerText = item.hint;
+      document.getElementById('gameCardsLeft').innerText = (currentGameDeck.length - currentCardIndex);
+    }
+
+    function handleGameAnswer(userChoice) {
+      if (currentCardIndex >= currentGameDeck.length) return;
+      const currentItem = currentGameDeck[currentCardIndex];
+      const feedback = document.getElementById('gameFeedback');
+
+      if (userChoice === currentItem.type) {
+        playSound('correct');
+        gameScore += 10;
+        addStars(1);
+        document.getElementById('gameScore').innerText = gameScore;
+        feedback.innerText = "⭐ Correct! Brilliant job!";
+        feedback.className = "mt-4 text-sm font-bold h-6 transition-all duration-300 text-emerald-600";
+      } else {
+        playSound('wrong');
+        const correctLabel = currentItem.type === 'brain' ? 'Human Brain 🧠' : (currentItem.type === 'computer' ? 'Computer 💻' : 'Both! 🤝');
+        feedback.innerText = `Oops! That belongs to: ${correctLabel}`;
+        feedback.className = "mt-4 text-sm font-bold h-6 transition-all duration-300 text-rose-500";
+      }
+
+      currentCardIndex++;
+      setTimeout(() => {
+        showCard();
+      }, 700);
+    }
+
+    function restartGame() {
+      playSound('pop');
+      initGame();
+    }
+
+    const topicQuizData = [
+      // Topic 0: Digital Devices
+      {
+        title: "Chapter 1: Types of Digital Devices",
+        questions: [
+          {
+            q: "Which digital device is mostly used for School & Work?",
+            options: ["Laptop", "Game Console", "Digital Camera", "Smart TV"],
+            answer: 0,
+            explain: "Laptops are ideal for school and office work!"
+          },
+          {
+            q: "What is a Tablet best suited for according to your notes?",
+            options: ["Reading & Play", "Hardcore printing", "Only calling phone numbers", "Taking satellite photos"],
+            answer: 0,
+            explain: "Tablets are fun and portable for reading books and playing games."
+          },
+          {
+            q: "Which device is dedicated specifically to 'Gaming Fun'?",
+            options: ["Game Console", "Digital Camera", "Printer", "Microwave"],
+            answer: 0,
+            explain: "Game consoles like PlayStation, Xbox, and Nintendo are built for gaming fun!"
+          }
+        ]
+      },
+      // Topic 1: Input - Process - Output
+      {
+        title: "Chapter 2: How Computers Process Information",
+        questions: [
+          {
+            q: "In the 3-step cycle, what does 'INPUT' mean?",
+            options: ["You give information to the computer", "The computer prints a paper", "The computer turns off", "The computer sends an email"],
+            answer: 0,
+            explain: "Input is when you supply instructions or data to the computer!"
+          },
+          {
+            q: "Which of the following is an OUTPUT device?",
+            options: ["Screen / Monitor", "Keyboard", "Mouse", "Microphone"],
+            answer: 0,
+            explain: "A screen shows the answer (output) so you can see it!"
+          },
+          {
+            q: "What happens during the 'PROCESS' step?",
+            options: ["The computer thinks & works it out", "You press keys with your fingers", "The speakers make sound", "You unplug the cable"],
+            answer: 0,
+            explain: "During processing, the CPU calculates and works out the solution."
+          }
+        ]
+      },
+      // Topic 2: Computer vs Human Brain
+      {
+        title: "Chapter 3: Computer vs. Human Brain",
+        questions: [
+          {
+            q: "Which ability belongs ONLY to the Human Brain?",
+            options: ["Feeling emotions & being creative", "Doing 1,000,000 calculations instantly", "Storing files on a hard drive", "Working without sleeping"],
+            answer: 0,
+            explain: "Human brains feel emotions (joy, love, sadness) and think creatively!"
+          },
+          {
+            q: "What is something BOTH computers and human brains can do?",
+            options: ["Think & problem solve", "Cry when watching sad movies", "Eat food for fuel", "Rust if left in water"],
+            answer: 0,
+            explain: "Both can process information, learn new facts, and solve problems!"
+          },
+          {
+            q: "The human brain receives input from which source?",
+            options: ["The 5 human senses", "A USB flash drive", "An electric wall plug", "A computer mouse"],
+            answer: 0,
+            explain: "Our brain receives input from our 5 senses: sight, hearing, smell, taste, and touch!"
+          }
+        ]
+      },
+      // Topic 3: Cloud vs Local Storage
+      {
+        title: "Chapter 4: Types of Computer Storage",
+        questions: [
+          {
+            q: "Where is Cloud Storage saved?",
+            options: ["On the Internet", "Only on your desk", "Inside a paper notebook", "In the battery"],
+            answer: 0,
+            explain: "Cloud storage lives on internet servers accessible anywhere with WiFi!"
+          },
+          {
+            q: "What is an advantage of Local Storage (like a USB Drive)?",
+            options: ["It works quickly WITHOUT internet", "It can never be broken or lost", "It saves files automatically in space", "It needs WiFi to open"],
+            answer: 0,
+            explain: "Local storage needs no WiFi or internet connection to open."
+          },
+          {
+            q: "What is Google Drive an example of?",
+            options: ["Cloud storage", "Local storage", "An input device", "A web browser"],
+            answer: 0,
+            explain: "Google Drive and OneDrive are famous cloud storage services."
+          }
+        ]
+      },
+      // Topic 4: Application Software
+      {
+        title: "Chapter 5: Application Software",
+        questions: [
+          {
+            q: "Which software helps you add, subtract, multiply, and make charts?",
+            options: ["Spreadsheet (Excel / Google Sheets)", "Word Processor (MS Word)", "Presentation (PowerPoint)", "Photo Camera"],
+            answer: 0,
+            explain: "Spreadsheets are created to calculate numbers and create graphs."
+          },
+          {
+            q: "Microsoft PowerPoint and Google Slides are used to:",
+            options: ["Present slides easily to the class", "Edit sound files only", "Browse web domains", "Clean your computer desk"],
+            answer: 0,
+            explain: "Presentation software lets you add slides, text, pictures, and video for presentations."
+          },
+          {
+            q: "What is Software?",
+            options: ["A computer program / digital tool that helps us complete tasks", "The metal box holding the computer", "The power cable connected to the wall", "A plastic keyboard key"],
+            answer: 0,
+            explain: "Software is digital programming and instructions that help us do tasks."
+          }
+        ]
+      },
+      // Topic 5: Internet & Safety
+      {
+        title: "Chapter 6: Using the Internet & Cyber Safety",
+        questions: [
+          {
+            q: "Which website ending is used by academic & school websites?",
+            options: [".ac", ".gov", ".org", ".com"],
+            answer: 0,
+            explain: "'.ac' stands for academic institutions like schools and universities!"
+          },
+          {
+            q: "What should you NEVER share with strangers online?",
+            options: ["Personal information (address, full name, phone number)", "Your favorite color", "The word 'Hello'", "What game you like"],
+            answer: 0,
+            explain: "Safety Tip #1: Never share personal details online with anyone you do not know in real life."
+          },
+          {
+            q: "What are the 3 things needed to connect to the Internet?",
+            options: ["Computer device, data connection (WiFi), and a web browser", "Pencil, paper, and notebook", "TV, radio, and DVD player", "Printer, scanner, and camera"],
+            answer: 0,
+            explain: "You need a device (phone/PC), connection (WiFi/data), and browser (Chrome/Safari)!"
+          }
+        ]
+      }
+    ];
+
+    function loadTopicQuiz(topicIndex) {
+      // Style active button
+      for (let i = 0; i < 6; i++) {
+        const btn = document.getElementById(`tBtn-${i}`);
+        if (i === topicIndex) {
+          btn.className = "t-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white";
+        } else {
+          btn.className = "t-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200";
+        }
+      }
+
+      const currentTopic = topicQuizData[topicIndex];
+      const container = document.getElementById('topicQuizContainer');
+
+      let html = `
+        <div class="bg-indigo-50 border-2 border-indigo-200 p-4 rounded-2xl mb-4">
+          <h3 class="font-kid font-bold text-indigo-900 text-lg">${currentTopic.title}</h3>
+          <p class="text-xs text-indigo-700">Answer all 3 questions below. Choices are dynamically shuffled!</p>
+        </div>
+      `;
+
+      currentTopic.questions.forEach((item, qIdx) => {
+        // Prepare shuffled options
+        const originalOptions = item.options.map((opt, idx) => ({ text: opt, isCorrect: idx === item.answer }));
+        const shuffled = shuffleArray(originalOptions);
+
+        html += `
+          <div class="bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm space-y-3" id="tq-card-${qIdx}">
+            <div class="font-kid font-bold text-slate-800 text-sm md:text-base">
+              ${qIdx + 1}. ${item.q}
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        `;
+
+        shuffled.forEach((opt) => {
+          const escaped = opt.text.replace(/'/g, "\\'");
+          html += `
+            <button onclick="checkTopicAnswer(this, ${opt.isCorrect}, '${escaped}', '${item.explain.replace(/'/g, "\\'")}')" 
+                    class="topic-opt-btn text-left p-3 rounded-xl border-2 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/50 font-medium text-xs md:text-sm text-slate-700 transition">
+              ${opt.text}
+            </button>
+          `;
+        });
+
+        html += `
+            </div>
+            <div class="tq-feedback text-xs font-bold hidden p-2.5 rounded-xl"></div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function checkTopicAnswer(btn, isCorrect, text, explain) {
+      const parent = btn.closest('#topicQuizContainer');
+      const card = btn.parentElement.parentElement;
+      const allBtns = card.querySelectorAll('.topic-opt-btn');
+      const feedback = card.querySelector('.tq-feedback');
+
+      // Disable other buttons on this card
+      allBtns.forEach(b => b.disabled = true);
+
+      if (isCorrect) {
+        playSound('correct');
+        addStars(1);
+        btn.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-900');
+        feedback.innerHTML = `✅ <b>Correct!</b> ${explain}`;
+        feedback.className = "tq-feedback text-xs font-bold block p-2.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-300";
+      } else {
+        playSound('wrong');
+        btn.classList.add('bg-rose-100', 'border-rose-500', 'text-rose-900');
+        feedback.innerHTML = `❌ <b>Keep Learning:</b> ${explain}`;
+        feedback.className = "tq-feedback text-xs font-bold block p-2.5 rounded-xl bg-rose-50 text-rose-800 border border-rose-300";
+      }
+    }
+
+    // 20 Questions based directly on notebook contents:
+    // Q1-Q10: Multiple Choice (with auto-shuffled choices)
+    // Q11-Q15: Interactive Matching Pairs
+    // Q16-Q20: Fill-in-the-Blank with smart interactive word bank
+    const examQuestionsData = [
+      // 10 MULTIPLE CHOICE
+      {
+        id: 1,
+        type: 'choice',
+        badge: 'Device Usage',
+        question: "Which digital device is used primarily for 'Watch & Stream' video content?",
+        options: ["Smart TV", "Digital Camera", "Microphone", "USB Flash Drive"],
+        answer: "Smart TV"
+      },
+      {
+        id: 2,
+        type: 'choice',
+        badge: 'Information Processing',
+        question: "What is the correct 3-step order of how computers process information?",
+        options: ["Input ➔ Process ➔ Output", "Output ➔ Process ➔ Input", "Process ➔ Input ➔ Output", "Input ➔ Output ➔ Process"],
+        answer: "Input ➔ Process ➔ Output"
+      },
+      {
+        id: 3,
+        type: 'choice',
+        badge: 'Human Brain',
+        question: "Which of these can the Human Brain do that a regular computer CANNOT?",
+        options: ["Feel emotions & have empathy", "Calculate 5,000,000 numbers per second", "Store identical gigabytes forever", "Run without food or rest"],
+        answer: "Feel emotions & have empathy"
+      },
+      {
+        id: 4,
+        type: 'choice',
+        badge: 'Computer Advantage',
+        question: "What can a Computer do much better than a human brain?",
+        options: ["Execute super-fast calculations and follow exact rules", "Cry during happy moments", "Be genuinely creative from imagination", "Feel taste and smell"],
+        answer: "Execute super-fast calculations and follow exact rules"
+      },
+      {
+        id: 5,
+        type: 'choice',
+        badge: 'Storage Types',
+        question: "Which is a major benefit of Cloud Storage like Google Drive or OneDrive?",
+        options: ["Files can be accessed from ANYWHERE and stay safe if your tablet breaks", "It works without any internet or power", "It is stored on a wooden shelf", "It only holds 1 single picture"],
+        answer: "Files can be accessed from ANYWHERE and stay safe if your tablet breaks"
+      },
+      {
+        id: 6,
+        type: 'choice',
+        badge: 'Local Storage',
+        question: "Which of the following is an example of Local Storage?",
+        options: ["USB Flash Drive", "Google Drive", "Microsoft OneDrive", "iCloud"],
+        answer: "USB Flash Drive"
+      },
+      {
+        id: 7,
+        type: 'choice',
+        badge: 'Software Types',
+        question: "Microsoft Word and Google Docs are classified as what kind of software?",
+        options: ["Word Processing Software", "Spreadsheet Software", "Web Browser", "Game Operating System"],
+        answer: "Word Processing Software"
+      },
+      {
+        id: 8,
+        type: 'choice',
+        badge: 'Presentation Software',
+        question: "Which tool is best suited to create animated slides for classroom presentations?",
+        options: ["Microsoft PowerPoint / Google Slides", "Microsoft Excel", "Digital Camera", "Microphone"],
+        answer: "Microsoft PowerPoint / Google Slides"
+      },
+      {
+        id: 9,
+        type: 'choice',
+        badge: 'Trusted Domains',
+        question: "What type of website is identified by the domain ending '.gov'?",
+        options: ["Government website", "Academic / School website", "Non-profit organisation", "Online toy store"],
+        answer: "Government website"
+      },
+      {
+        id: 10,
+        type: 'choice',
+        badge: 'Online Safety',
+        question: "What is Safety Tip #1 when using the internet for kids?",
+        options: ["Do NOT share personal information with strangers", "Always download every unknown popup file", "Use 1234 as your password", "Click strange links sent by unknown people"],
+        answer: "Do NOT share personal information with strangers"
+      },
+
+      // 5 MATCHING QUESTIONS
+      {
+        id: 11,
+        type: 'match',
+        badge: 'Matching Pairs',
+        question: "Match the Digital Device with its primary use:",
+        left: ["Digital Camera", "SmartPhone", "Game Console", "Laptop"],
+        right: ["Take Photos", "Calls & Apps", "Gaming Fun", "School & Work"],
+        pairs: {
+          "Digital Camera": "Take Photos",
+          "SmartPhone": "Calls & Apps",
+          "Game Console": "Gaming Fun",
+          "Laptop": "School & Work"
+        }
+      },
+      {
+        id: 12,
+        type: 'match',
+        badge: 'Matching Pairs',
+        question: "Match each hardware piece as INPUT or OUTPUT:",
+        left: ["Keyboard", "Screen / Monitor", "Microphone", "Printer"],
+        right: ["Input Device", "Output Device", "Input Device", "Output Device"],
+        pairs: {
+          "Keyboard": "Input Device",
+          "Screen / Monitor": "Output Device",
+          "Microphone": "Input Device",
+          "Printer": "Output Device"
+        }
+      },
+      {
+        id: 13,
+        type: 'match',
+        badge: 'Matching Pairs',
+        question: "Match the Software with its primary function:",
+        left: ["MS Word", "MS PowerPoint", "MS Excel", "Web Browser"],
+        right: ["Type documents & letters", "Present data slides to class", "Add, subtract & make charts", "Access websites via internet"],
+        pairs: {
+          "MS Word": "Type documents & letters",
+          "MS PowerPoint": "Present data slides to class",
+          "MS Excel": "Add, subtract & make charts",
+          "Web Browser": "Access websites via internet"
+        }
+      },
+      {
+        id: 14,
+        type: 'match',
+        badge: 'Matching Pairs',
+        question: "Match the Storage Type with its key trait:",
+        left: ["Cloud Storage", "Local Storage", "Hard Disk Drive", "Google Drive"],
+        right: ["Access from anywhere via Internet", "Works fast without Internet", "Local magnetic storage", "Cloud storage service"],
+        pairs: {
+          "Cloud Storage": "Access from anywhere via Internet",
+          "Local Storage": "Works fast without Internet",
+          "Hard Disk Drive": "Local magnetic storage",
+          "Google Drive": "Cloud storage service"
+        }
+      },
+      {
+        id: 15,
+        type: 'match',
+        badge: 'Matching Pairs',
+        question: "Match the Internet domain ending with its true meaning:",
+        left: [".ac", ".gov", ".org", "Web Browser"],
+        right: ["Academic website", "Government website", "Non-profit organisation", "Chrome, Safari, Firefox"],
+        pairs: {
+          ".ac": "Academic website",
+          ".gov": "Government website",
+          ".org": "Non-profit organisation",
+          "Web Browser": "Chrome, Safari, Firefox"
+        }
+      },
+
+      // 5 FILL IN THE BLANKS
+      {
+        id: 16,
+        type: 'fill',
+        badge: 'Fill in the Blank',
+        question: "The human brain receives input from the five _______ and outputs to action.",
+        options: ["senses", "screens", "keyboards", "batteries"],
+        answer: "senses"
+      },
+      {
+        id: 17,
+        type: 'fill',
+        badge: 'Fill in the Blank',
+        question: "Software is a computer _______ that helps us complete tasks.",
+        options: ["program", "wire", "camera", "printer"],
+        answer: "program"
+      },
+      {
+        id: 18,
+        type: 'fill',
+        badge: 'Fill in the Blank',
+        question: "Spreadsheet software is used to subtract, add, multiply, and _______ numbers.",
+        options: ["divide", "color", "sing", "listen"],
+        answer: "divide"
+      },
+      {
+        id: 19,
+        type: 'fill',
+        badge: 'Fill in the Blank',
+        question: "The Internet is a large network of computers connected all over the _______.",
+        options: ["world", "classroom", "box", "desk"],
+        answer: "world"
+      },
+      {
+        id: 20,
+        type: 'fill',
+        badge: 'Fill in the Blank',
+        question: "Safety Tip #5: Tell an _______ if something online makes you feel uncomfortable.",
+        options: ["adult", "alien", "animal", "actor"],
+        answer: "adult"
+      }
+    ];
+
+    let examInitialized = false;
+    let userAnswers = {};
+
+    function initFinalExam() {
+      examInitialized = true;
+      userAnswers = {};
+      const container = document.getElementById('examQuestionsList');
+      container.innerHTML = '';
+
+      // Reset result card and retake button
+      document.getElementById('examResultCard').classList.add('hidden');
+      document.getElementById('retakeExamBtn').classList.add('hidden');
+      document.getElementById('submitExamBtn').classList.remove('hidden');
+      updateExamProgress();
+
+      examQuestionsData.forEach((q, index) => {
+        const card = document.createElement('div');
+        card.id = `exam-q-${q.id}`;
+        card.className = "bg-white border-2 border-slate-200 rounded-3xl p-5 md:p-6 shadow-sm transition";
+
+        let contentHtml = `
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-purple-700 bg-purple-100 px-3 py-1 rounded-full uppercase tracking-wide">
+              Question ${index + 1} of 20 • ${q.badge}
+            </span>
+            <span id="status-q-${q.id}" class="text-xs font-bold text-slate-400">Not Answered</span>
+          </div>
+          <h4 class="text-base md:text-lg font-kid font-bold text-slate-800 mb-3">${q.question}</h4>
+        `;
+
+        // 1. Multiple Choice Renderer
+        if (q.type === 'choice') {
+          const shuffledOpts = shuffleArray(q.options);
+          contentHtml += `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">`;
+          shuffledOpts.forEach(opt => {
+            const safeOpt = opt.replace(/'/g, "\\'");
+            contentHtml += `
+              <button type="button" 
+                      onclick="selectChoiceAnswer(${q.id}, '${safeOpt}', this)"
+                      class="exam-choice-btn text-left p-3 rounded-2xl border-2 border-slate-200 hover:border-purple-300 hover:bg-purple-50/50 font-medium text-xs md:text-sm text-slate-700 transition">
+                <span class="inline-block w-4 h-4 rounded-full border-2 border-slate-300 mr-2 align-middle"></span>
+                <span>${opt}</span>
+              </button>
+            `;
+          });
+          contentHtml += `</div>`;
+        }
+
+        // 2. Matching Renderer (Interactive Select Dropdowns with Shuffled Options)
+        else if (q.type === 'match') {
+          const uniqueRightOptions = shuffleArray([...new Set(q.right)]);
+          contentHtml += `<div class="space-y-2.5 bg-purple-50/50 p-4 rounded-2xl border border-purple-100">`;
+          q.left.forEach(leftItem => {
+            contentHtml += `
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 bg-white rounded-xl border border-slate-200">
+                <span class="font-bold text-xs md:text-sm text-slate-800 flex items-center gap-1.5">
+                  <span class="text-purple-600 font-extrabold">•</span> ${leftItem}
+                </span>
+                <select onchange="selectMatchAnswer(${q.id}, '${leftItem.replace(/'/g, "\\'")}', this.value)"
+                        class="match-select bg-slate-50 border border-slate-300 text-slate-700 text-xs rounded-xl p-2 focus:ring-2 focus:ring-purple-400 font-medium">
+                  <option value="">-- Choose Match --</option>
+                  ${uniqueRightOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                </select>
+              </div>
+            `;
+          });
+          contentHtml += `</div>`;
+        }
+
+        // 3. Fill in the Blank with Shuffled Word Chips
+        else if (q.type === 'fill') {
+          const shuffledChips = shuffleArray(q.options);
+          contentHtml += `
+            <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-200 space-y-3">
+              <div class="text-xs font-bold text-amber-800">Tap the correct word chip to fill the blank:</div>
+              <div class="flex flex-wrap gap-2">
+                ${shuffledChips.map(chip => {
+                  const safeChip = chip.replace(/'/g, "\\'");
+                  return `
+                    <button type="button" 
+                            onclick="selectFillAnswer(${q.id}, '${safeChip}', this)"
+                            class="fill-chip px-4 py-2 rounded-xl bg-white border-2 border-amber-300 hover:bg-amber-100 text-amber-900 font-kid font-bold text-sm shadow-sm transition">
+                      ${chip}
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+              <div class="mt-2 text-xs font-bold text-slate-600">
+                Your Answer: <span id="fill-display-${q.id}" class="text-purple-700 underline font-extrabold font-kid text-base">__________</span>
+              </div>
+            </div>
+          `;
+        }
+
+        contentHtml += `<div id="explain-q-${q.id}" class="hidden mt-3 p-3 rounded-2xl text-xs font-medium"></div>`;
+        card.innerHTML = contentHtml;
+        container.appendChild(card);
+      });
+    }
+
+    function selectChoiceAnswer(qId, selectedOption, btn) {
+      playSound('pop');
+      userAnswers[qId] = selectedOption;
+      
+      const parentCard = document.getElementById(`exam-q-${qId}`);
+      const buttons = parentCard.querySelectorAll('.exam-choice-btn');
+      buttons.forEach(b => {
+        b.className = "exam-choice-btn text-left p-3 rounded-2xl border-2 border-slate-200 hover:border-purple-300 hover:bg-purple-50/50 font-medium text-xs md:text-sm text-slate-700 transition";
+        const dot = b.querySelector('span');
+        if (dot) dot.className = "inline-block w-4 h-4 rounded-full border-2 border-slate-300 mr-2 align-middle";
+      });
+
+      btn.className = "exam-choice-btn text-left p-3 rounded-2xl border-2 border-purple-500 bg-purple-100 font-bold text-xs md:text-sm text-purple-900 transition shadow-sm";
+      const activeDot = btn.querySelector('span');
+      if (activeDot) activeDot.className = "inline-block w-4 h-4 rounded-full border-4 border-purple-600 bg-white mr-2 align-middle";
+
+      document.getElementById(`status-q-${qId}`).innerText = "✅ Answered";
+      document.getElementById(`status-q-${qId}`).className = "text-xs font-bold text-purple-600";
+      updateExamProgress();
+    }
+
+    function selectMatchAnswer(qId, leftKey, selectedVal) {
+      playSound('pop');
+      if (!userAnswers[qId]) userAnswers[qId] = {};
+      userAnswers[qId][leftKey] = selectedVal;
+
+      const questionObj = examQuestionsData.find(q => q.id === qId);
+      const answeredCount = Object.keys(userAnswers[qId]).filter(k => userAnswers[qId][k] !== "").length;
+
+      if (answeredCount === questionObj.left.length) {
+        document.getElementById(`status-q-${qId}`).innerText = "✅ Answered";
+        document.getElementById(`status-q-${qId}`).className = "text-xs font-bold text-purple-600";
+      } else {
+        document.getElementById(`status-q-${qId}`).innerText = `${answeredCount}/${questionObj.left.length} Matched`;
+        document.getElementById(`status-q-${qId}`).className = "text-xs font-bold text-amber-600";
+      }
+      updateExamProgress();
+    }
+
+    function selectFillAnswer(qId, word, btn) {
+      playSound('pop');
+      userAnswers[qId] = word;
+      document.getElementById(`fill-display-${qId}`).innerText = word;
+
+      const card = document.getElementById(`exam-q-${qId}`);
+      const chips = card.querySelectorAll('.fill-chip');
+      chips.forEach(c => {
+        c.className = "fill-chip px-4 py-2 rounded-xl bg-white border-2 border-amber-300 hover:bg-amber-100 text-amber-900 font-kid font-bold text-sm shadow-sm transition";
+      });
+
+      btn.className = "fill-chip px-4 py-2 rounded-xl bg-purple-600 border-2 border-purple-700 text-white font-kid font-bold text-sm shadow-md transition scale-105";
+
+      document.getElementById(`status-q-${qId}`).innerText = "✅ Answered";
+      document.getElementById(`status-q-${qId}`).className = "text-xs font-bold text-purple-600";
+      updateExamProgress();
+    }
+
+    function updateExamProgress() {
+      let count = 0;
+      examQuestionsData.forEach(q => {
+        if (q.type === 'match') {
+          if (userAnswers[q.id] && Object.keys(userAnswers[q.id]).length === q.left.length) {
+            count++;
+          }
+        } else {
+          if (userAnswers[q.id]) count++;
+        }
+      });
+      const pct = (count / examQuestionsData.length) * 100;
+      document.getElementById('examProgressBar').style.width = `${pct}%`;
+    }
+
+    function gradeFinalExam() {
+      let score = 0;
+
+      examQuestionsData.forEach(q => {
+        const card = document.getElementById(`exam-q-${q.id}`);
+        const explain = document.getElementById(`explain-q-${q.id}`);
+        explain.classList.remove('hidden');
+
+        // Check Multiple Choice
+        if (q.type === 'choice') {
+          const userPick = userAnswers[q.id];
+          if (userPick === q.answer) {
+            score++;
+            card.classList.add('border-emerald-400', 'bg-emerald-50/20');
+            explain.className = "mt-3 p-3 rounded-2xl text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300";
+            explain.innerHTML = `🌟 <b>Super!</b> You got this right!`;
+          } else {
+            card.classList.add('border-rose-400', 'bg-rose-50/20');
+            explain.className = "mt-3 p-3 rounded-2xl text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300";
+            explain.innerHTML = `💡 <b>Correct Answer:</b> "${q.answer}"`;
+          }
+        }
+
+        // Check Matching
+        else if (q.type === 'match') {
+          const userPairs = userAnswers[q.id] || {};
+          let allCorrect = true;
+          let matchSummary = [];
+
+          q.left.forEach(item => {
+            const correctTarget = q.pairs[item];
+            const userTarget = userPairs[item];
+            if (userTarget === correctTarget) {
+              matchSummary.push(`✓ ${item} ➔ ${correctTarget}`);
+            } else {
+              allCorrect = false;
+              matchSummary.push(`✗ ${item} ➔ should be: ${correctTarget}`);
+            }
+          });
+
+          if (allCorrect) {
+            score++;
+            card.classList.add('border-emerald-400', 'bg-emerald-50/20');
+            explain.className = "mt-3 p-3 rounded-2xl text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300";
+            explain.innerHTML = `🌟 <b>All Pairs Matched Perfectly!</b><br>${matchSummary.join('<br>')}`;
+          } else {
+            card.classList.add('border-rose-400', 'bg-rose-50/20');
+            explain.className = "mt-3 p-3 rounded-2xl text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300";
+            explain.innerHTML = `💡 <b>Matching Results:</b><br>${matchSummary.join('<br>')}`;
+          }
+        }
+
+        // Check Fill-in-the-Blank
+        else if (q.type === 'fill') {
+          const userPick = userAnswers[q.id];
+          if (userPick === q.answer) {
+            score++;
+            card.classList.add('border-emerald-400', 'bg-emerald-50/20');
+            explain.className = "mt-3 p-3 rounded-2xl text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300";
+            explain.innerHTML = `🌟 <b>Correct Word!</b> "${q.answer}" completes the sentence!`;
+          } else {
+            card.classList.add('border-rose-400', 'bg-rose-50/20');
+            explain.className = "mt-3 p-3 rounded-2xl text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300";
+            explain.innerHTML = `💡 <b>Correct Word:</b> "${q.answer}"`;
+          }
+        }
+      });
+
+      // Show Result Card
+      const resultCard = document.getElementById('examResultCard');
+      const scoreNum = document.getElementById('examScoreNumber');
+      const title = document.getElementById('examResultTitle');
+      const icon = document.getElementById('examResultIcon');
+      const text = document.getElementById('examFeedbackText');
+
+      scoreNum.innerText = score;
+      resultCard.classList.remove('hidden');
+      document.getElementById('retakeExamBtn').classList.remove('hidden');
+      document.getElementById('submitExamBtn').classList.add('hidden');
+
+      if (score >= 18) {
+        playSound('fanfare');
+        addStars(20);
+        icon.innerText = "🏆👑🥇";
+        title.innerText = "Outstanding Genius! Grade A+!";
+        text.innerText = `Incredible work! You scored ${score} out of 20 and earned 20 ⭐ stars! You have mastered Computer Science!`;
+      } else if (score >= 14) {
+        playSound('correct');
+        addStars(10);
+        icon.innerText = "🎉⭐👏";
+        title.innerText = "Great Job! Super Smart!";
+        text.innerText = `Well done! You got ${score} out of 20 and earned 10 ⭐ stars! Review the highlighted questions to reach 20/20!`;
+      } else {
+        playSound('pop');
+        addStars(5);
+        icon.innerText = "💪🌱✨";
+        title.innerText = "Good Try! Keep Practicing!";
+        text.innerText = `You scored ${score} out of 20. Like the human brain, we learn from our mistakes! Click retake to try again.`;
+      }
+
+      // Smooth scroll to results
+      resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    window.onload = function() {
+      initGame();
+      loadTopicQuiz(0);
+      initFinalExam();
+    };
+  </script>
+</body>
+</html>
