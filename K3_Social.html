@@ -1,0 +1,2389 @@
+<!DOCTYPE html>
+<html lang="en" data-font-size="medium">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🌟 K3 Social Studies: Storybook &amp; 50-Question Desk Exam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&family=Patrick+Hand&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --font-scale: 1.0;
+      --primary: #4338CA;
+      --primary-light: #EEF2FF;
+      --culture-color: #E11D48;
+      --culture-bg: #FFE4E6;
+      --democracy-color: #0284C7;
+      --democracy-bg: #E0F2FE;
+      --history-color: #059669;
+      --history-bg: #D1FAE5;
+      --accent-gold: #F59E0B;
+      --text-dark: #1E293B;
+      --text-muted: #64748B;
+      --paper-bg: #FFFDF9;
+      --paper-border: #E2E8F0;
+      --desk-wood: #3D220F;
+      --desk-wood-light: #633A19;
+      --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      --shadow-book: 0 20px 30px rgba(0,0,0,0.25);
+    }
+
+    :root[data-font-size="small"] { --font-scale: 0.88; }
+    :root[data-font-size="medium"] { --font-scale: 1.0; }
+    :root[data-font-size="large"] { --font-scale: 1.18; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Nunito', 'Sarabun', sans-serif;
+      font-size: calc(16px * var(--font-scale));
+      color: var(--text-dark);
+      background: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      transition: font-size 0.2s ease;
+    }
+
+    /* TOP NAVBAR */
+    .top-navbar {
+      background: #1e1b4b;
+      color: white;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Fredoka', cursive;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-brand .logo-icon {
+      font-size: 1.6rem;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mode-switch-group {
+      display: flex;
+      background: rgba(255,255,255,0.12);
+      border-radius: 30px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .btn-mode {
+      border: none;
+      background: transparent;
+      color: #c7d2fe;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-family: 'Fredoka', cursive;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-mode.active {
+      background: #4f46e5;
+      color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .font-controls {
+      display: flex;
+      background: rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .btn-font {
+      border: none;
+      background: transparent;
+      color: #e2e8f0;
+      padding: 4px 10px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: all 0.15s;
+    }
+
+    .btn-font.active {
+      background: #f59e0b;
+      color: #1e1b4b;
+    }
+
+    .btn-tool {
+      border: none;
+      background: rgba(255,255,255,0.12);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .btn-tool:hover {
+      background: rgba(255,255,255,0.22);
+    }
+
+    /* MAIN CONTAINER */
+    .app-main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 16px 12px 30px;
+      background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+    }
+
+    /* ========================================================
+       PART 1: STORYBOOK VIEW
+       ======================================================== */
+    #storybook-view {
+      width: 100%;
+      max-width: 1060px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+    }
+
+    /* BOOKMARKS RIBBONS */
+    .bookmark-ribbons {
+      display: flex;
+      gap: 12px;
+      align-self: flex-end;
+      margin-right: 20px;
+      z-index: 20;
+    }
+
+    .bookmark-tab {
+      border: none;
+      padding: 10px 18px 14px;
+      border-radius: 8px 8px 0 0;
+      color: white;
+      font-family: 'Fredoka', cursive;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      box-shadow: 0 -3px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .bookmark-tab:hover {
+      transform: translateY(-4px);
+    }
+
+    .bookmark-tab.active {
+      transform: translateY(-6px);
+      filter: brightness(1.1);
+      box-shadow: 0 -5px 12px rgba(0,0,0,0.3);
+    }
+
+    .bookmark-tab.ch1 { background: linear-gradient(to bottom, #f43f5e, #be123c); }
+    .bookmark-tab.ch2 { background: linear-gradient(to bottom, #0ea5e9, #0369a1); }
+    .bookmark-tab.ch3 { background: linear-gradient(to bottom, #10b981, #047857); }
+
+    /* THE OPEN BOOK FRAME */
+    .book-outer {
+      width: 100%;
+      background: #472d16;
+      background-image: linear-gradient(135deg, #472d16 0%, #2b1a0c 100%);
+      padding: 16px 20px;
+      border-radius: 18px;
+      box-shadow: var(--shadow-book), inset 0 2px 4px rgba(255,255,255,0.2);
+      border: 3px solid #6b4423;
+      position: relative;
+    }
+
+    .book-inner {
+      background: var(--paper-bg);
+      border-radius: 12px;
+      min-height: 580px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.06);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #ebd9bf;
+    }
+
+    /* BOOK SPINE CENTER SHADOW */
+    .book-inner::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 28px;
+      transform: translateX(-50%);
+      background: linear-gradient(to right, 
+        rgba(0,0,0,0.08) 0%, 
+        rgba(0,0,0,0.03) 40%, 
+        rgba(0,0,0,0.03) 60%, 
+        rgba(0,0,0,0.08) 100%);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    @media (max-width: 768px) {
+      .book-inner::after { display: none; }
+      .book-outer { padding: 10px; border-radius: 12px; }
+    }
+
+    /* PAGE HEADER */
+    .book-page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 24px;
+      border-bottom: 2px dashed #f1e2ce;
+      background: rgba(254, 243, 199, 0.35);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ch-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Fredoka', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .ch-indicator.c1 { color: #be123c; }
+    .ch-indicator.c2 { color: #0369a1; }
+    .ch-indicator.c3 { color: #047857; }
+
+    .page-read-btn {
+      border: none;
+      background: #4338ca;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Fredoka', cursive;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      transition: all 0.2s;
+    }
+
+    .page-read-btn:hover {
+      background: #3730a3;
+      transform: scale(1.03);
+    }
+
+    .page-read-btn.speaking {
+      background: #dc2626;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6); }
+      70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+    }
+
+    /* PAGE BODY CONTENT */
+    .book-page-body {
+      padding: 24px 28px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: fadeInPage 0.35s ease-out;
+    }
+
+    @keyframes fadeInPage {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-headline {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .page-headline h2 {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.6rem;
+      color: #1e1b4b;
+    }
+
+    .page-headline .subtitle {
+      color: #64748b;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    /* MASCOT SPEECH BUBBLE */
+    .mascot-strip {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      border-radius: 16px;
+      padding: 10px 16px;
+    }
+
+    .mascot-avatar {
+      font-size: 2.2rem;
+      flex-shrink: 0;
+      animation: wiggle 3s infinite ease-in-out;
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-8deg); }
+      75% { transform: rotate(8deg); }
+    }
+
+    .mascot-bubble {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.2rem;
+      color: #1e3a8a;
+      line-height: 1.35;
+    }
+
+    /* EXAM ALERT BOX */
+    .exam-tip-box {
+      background: #fffbeb;
+      border-left: 5px solid #f59e0b;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.1);
+    }
+
+    .exam-tip-box .tip-icon {
+      font-size: 1.3rem;
+      color: #d97706;
+      flex-shrink: 0;
+    }
+
+    .exam-tip-box .tip-text {
+      font-size: 0.95rem;
+      color: #78350f;
+    }
+
+    /* CARD GRIDS & CONTENT COMPONENTS */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .info-card {
+      background: white;
+      border: 1.5px solid var(--paper-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .info-card.culture-accent { border-top: 4px solid var(--culture-color); }
+    .info-card.democracy-accent { border-top: 4px solid var(--democracy-color); }
+
+    .card-header {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .example-box {
+      background: #f8fafc;
+      border-left: 3px solid #94a3b8;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: #334155;
+    }
+
+    .highlight-banner {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.95rem;
+    }
+
+    .highlight-banner .icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .pillar-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      border: 1.5px solid #fed7aa;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    }
+
+    .pillar-icon {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .pillar-card h4 {
+      font-family: 'Fredoka', cursive;
+      color: #9a3412;
+      margin-bottom: 4px;
+    }
+
+    .section-title {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.15rem;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .fun-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+      background: white;
+    }
+
+    .fun-table th {
+      background: #f8fafc;
+      padding: 10px 14px;
+      font-family: 'Fredoka', cursive;
+      color: #334155;
+      border-bottom: 2px solid #cbd5e1;
+    }
+
+    .fun-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .fun-table tr:hover td {
+      background: #fffbeb;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .mini-box {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.92rem;
+    }
+
+    .herb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .herb-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px;
+      border: 1.5px solid #bbf7d0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .herb-img {
+      font-size: 2.2rem;
+    }
+
+    .herb-card h4 {
+      font-family: 'Fredoka', cursive;
+      color: #166534;
+      font-size: 1.1rem;
+    }
+
+    .herb-benefit {
+      background: #f0fdf4;
+      color: #15803d;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .rules-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .rule-item {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .rule-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #0284c7;
+      color: white;
+      font-family: 'Fredoka', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .leader-grid, .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .leader-card, .history-item {
+      background: white;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .leader-icon, .hist-icon {
+      font-size: 2.2rem;
+      margin-bottom: 6px;
+    }
+
+    .duties-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .duty-pill {
+      background: white;
+      border: 1px solid #bae6fd;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.92rem;
+    }
+
+    .flag-timeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+    }
+
+    .flag-step {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .flag-box {
+      width: 90px;
+      height: 56px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      border: 1px solid rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .trairanga-preview {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* STORYBOOK NAVIGATION FOOTER */
+    .book-footer {
+      padding: 12px 24px;
+      border-top: 2px dashed #f1e2ce;
+      background: rgba(254, 243, 199, 0.35);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-page-nav {
+      border: none;
+      background: #1e1b4b;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-family: 'Fredoka', cursive;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-page-nav:hover:not(:disabled) {
+      background: #312e81;
+      transform: scale(1.04);
+    }
+
+    .btn-page-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .page-dots-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .page-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .page-dot.active {
+      background: #4338ca;
+      transform: scale(1.4);
+    }
+
+    .page-counter-text {
+      font-family: 'Fredoka', cursive;
+      font-size: 0.95rem;
+      color: #475569;
+    }
+
+    /* MINI QUIZ CONTAINER (AT CHAPTER END) */
+    .quiz-container {
+      background: white;
+      border: 2px solid #e0e7ff;
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 10px rgba(67, 56, 202, 0.06);
+    }
+
+    .quiz-status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid #e2e8f0;
+      margin-bottom: 16px;
+      font-family: 'Fredoka', cursive;
+      color: #4338ca;
+      font-size: 1.05rem;
+    }
+
+    .btn-shuffle {
+      border: none;
+      background: #f1f5f9;
+      color: #334155;
+      padding: 6px 14px;
+      border-radius: 16px;
+      font-family: 'Fredoka', cursive;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-shuffle:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .quiz-q-title {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.25rem;
+      color: #1e1b4b;
+      margin-bottom: 14px;
+    }
+
+    .quiz-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .quiz-opt-btn {
+      border: 2px solid #e2e8f0;
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 12px;
+      text-align: left;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .quiz-opt-btn:hover:not(:disabled) {
+      border-color: #818cf8;
+      background: #eef2ff;
+      transform: translateX(4px);
+    }
+
+    .quiz-opt-btn.correct {
+      border-color: #10b981;
+      background: #ecfdf5;
+      color: #065f46;
+      font-weight: 700;
+    }
+
+    .quiz-opt-btn.wrong {
+      border-color: #ef4444;
+      background: #fef2f2;
+      color: #991b1b;
+    }
+
+    .quiz-feedback-box {
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      animation: fadeInPage 0.25s ease-out;
+    }
+
+    .quiz-feedback-box.correct-fb {
+      background: #ecfdf5;
+      border-left: 4px solid #10b981;
+      color: #065f46;
+    }
+
+    .quiz-feedback-box.wrong-fb {
+      background: #fef2f2;
+      border-left: 4px solid #ef4444;
+      color: #991b1b;
+    }
+
+    .quiz-nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .quiz-score-badge {
+      font-family: 'Fredoka', cursive;
+      font-size: 1rem;
+      color: #4338ca;
+      font-weight: 700;
+    }
+
+    /* ========================================================
+       PART 2: DESK EXAM VIEW (50 QUESTIONS)
+       ======================================================== */
+    #exam-view {
+      width: 100%;
+      max-width: 980px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* DESK BACKGROUND CONTAINER */
+    .desk-surface {
+      width: 100%;
+      background: #45260f;
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(255,255,255,0.06) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 2px, transparent 2px, transparent 8px),
+        linear-gradient(135deg, #45260f 0%, #2b1608 100%);
+      padding: 28px 24px;
+      border-radius: 20px;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.4), inset 0 2px 6px rgba(255,255,255,0.15);
+      border: 4px solid #633a19;
+      position: relative;
+    }
+
+    @media (max-width: 768px) {
+      .desk-surface { padding: 14px 10px; border-radius: 14px; }
+    }
+
+    /* EXAM PACKET STACK EFFECT */
+    .exam-paper-stack {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 
+        0 1px 1px rgba(0,0,0,0.15), 
+        0 4px 0 #f8fafc, 
+        0 5px 0 #cbd5e1, 
+        0 8px 0 #f1f5f9, 
+        0 9px 0 #94a3b8,
+        0 15px 30px rgba(0,0,0,0.3);
+      position: relative;
+      border: 1px solid #cbd5e1;
+      padding: 30px 36px 36px;
+    }
+
+    @media (max-width: 768px) {
+      .exam-paper-stack { padding: 20px 16px 24px; }
+    }
+
+    /* TOP-LEFT METALLIC STAPLE PIN */
+    .staple-pin {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      width: 32px;
+      height: 7px;
+      background: linear-gradient(180deg, #f1f5f9 0%, #94a3b8 40%, #64748b 70%, #cbd5e1 100%);
+      transform: rotate(-45deg);
+      border-radius: 1.5px;
+      box-shadow: 2px 3px 5px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.8);
+      z-index: 50;
+    }
+
+    .staple-indent {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 44px;
+      height: 44px;
+      border-top: 1.5px solid rgba(0,0,0,0.06);
+      border-left: 1.5px solid rgba(0,0,0,0.06);
+      transform: rotate(-45deg);
+      pointer-events: none;
+    }
+
+    /* EXAM SHEET HEADER */
+    .exam-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .exam-title-block h3 {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.45rem;
+      color: #0f172a;
+    }
+
+    .exam-title-block p {
+      color: #64748b;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .exam-meta-block {
+      text-align: right;
+      font-size: 0.88rem;
+      color: #334155;
+    }
+
+    .student-badge {
+      display: inline-block;
+      background: #f1f5f9;
+      border: 1px dashed #94a3b8;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.1rem;
+      margin-top: 4px;
+    }
+
+    /* SHEET PROGRESS AND JUMP PILLS */
+    .exam-progress-bar-wrap {
+      background: #f1f5f9;
+      border-radius: 12px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .exam-progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(to right, #4338ca, #10b981);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .sheet-pills-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .sheet-pill {
+      border: 1.5px solid #cbd5e1;
+      background: #f8fafc;
+      color: #475569;
+      font-family: 'Fredoka', cursive;
+      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .sheet-pill.active {
+      background: #4338ca;
+      color: white;
+      border-color: #4338ca;
+    }
+
+    .sheet-pill.complete {
+      background: #dcfce7;
+      color: #15803d;
+      border-color: #86efac;
+    }
+
+    /* QUESTION CONTAINERS */
+    .question-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      transition: border-color 0.2s;
+    }
+
+    .question-card.answered {
+      border-color: #cbd5e1;
+    }
+
+    .q-number-title {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.15rem;
+      color: #1e293b;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .q-options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .q-opt-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.15s ease;
+    }
+
+    .q-opt-label:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .q-opt-label.selected {
+      background: #eef2ff;
+      border-color: #6366f1;
+      font-weight: 700;
+      color: #312e81;
+    }
+
+    .q-opt-label input[type="radio"] {
+      accent-color: #4338ca;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* MATCHING INTERFACE (SHEET 9) */
+    .matching-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .matching-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      flex-wrap: wrap;
+    }
+
+    .match-left {
+      font-weight: 700;
+      color: #1e293b;
+      font-size: 0.95rem;
+      min-width: 140px;
+    }
+
+    .match-select {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1.5px solid #cbd5e1;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      background: white;
+      color: #1e293b;
+      cursor: pointer;
+      flex: 1;
+      max-width: 320px;
+    }
+
+    /* FILL-IN-THE-BLANK (SHEET 10) */
+    .word-bank-box {
+      background: #f1f5f9;
+      border: 1.5px dashed #94a3b8;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .bank-title {
+      font-family: 'Fredoka', cursive;
+      font-size: 0.9rem;
+      color: #475569;
+    }
+
+    .word-chip {
+      background: white;
+      border: 1.5px solid #cbd5e1;
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #334155;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: all 0.15s;
+    }
+
+    .word-chip:hover {
+      background: #e0e7ff;
+      border-color: #6366f1;
+      color: #4338ca;
+    }
+
+    .fill-template-text {
+      line-height: 2.2;
+      font-size: 1rem;
+      color: #1e293b;
+    }
+
+    .blank-slot {
+      display: inline-block;
+      min-width: 130px;
+      border-bottom: 2px solid #4338ca;
+      padding: 0 8px;
+      font-weight: 700;
+      color: #4338ca;
+      text-align: center;
+      cursor: pointer;
+      background: #eef2ff;
+      border-radius: 4px 4px 0 0;
+      margin: 0 4px;
+    }
+
+    /* STORY READING BOX */
+    .story-reading-box {
+      background: #fefce8;
+      border: 1.5px solid #fef08a;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .story-reading-box h4 {
+      font-family: 'Fredoka', cursive;
+      color: #854d0e;
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .story-reading-box p {
+      color: #713f12;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    /* EXAM REVIEW CALLOUT */
+    .exam-explanation {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      display: none;
+    }
+
+    .exam-explanation.show {
+      display: block;
+    }
+
+    .exam-explanation.correct-exp {
+      background: #ecfdf5;
+      border-left: 4px solid #10b981;
+      color: #065f46;
+    }
+
+    .exam-explanation.wrong-exp {
+      background: #fef2f2;
+      border-left: 4px solid #ef4444;
+      color: #991b1b;
+    }
+
+    /* DESK EXAM FOOTER BAR */
+    .exam-sheet-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 2px solid #0f172a;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-exam-nav {
+      border: none;
+      background: #0f172a;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-family: 'Fredoka', cursive;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-exam-nav:hover:not(:disabled) {
+      background: #334155;
+      transform: scale(1.03);
+    }
+
+    .btn-exam-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .btn-submit-exam {
+      border: none;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 24px;
+      font-family: 'Fredoka', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-submit-exam:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5);
+    }
+
+    /* MODAL RESULT POPUP */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 16px;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 24px;
+      max-width: 520px;
+      width: 100%;
+      padding: 32px 28px;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-stars {
+      font-size: 3rem;
+      margin-bottom: 8px;
+    }
+
+    .modal-score {
+      font-family: 'Fredoka', cursive;
+      font-size: 3.2rem;
+      color: #4338ca;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .modal-score-sub {
+      font-size: 1.1rem;
+      color: #64748b;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .modal-praise {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.4rem;
+      color: #0f172a;
+      margin-bottom: 24px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-modal {
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-family: 'Fredoka', cursive;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-modal.primary {
+      background: #4338ca;
+      color: white;
+    }
+
+    .btn-modal.secondary {
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    .btn-modal:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVBAR -->
+  <header class="top-navbar">
+    <div class="nav-brand">
+      <span class="logo-icon">🌟</span>
+      <span>K3 Social Studies Adventure</span>
+    </div>
+
+    <div class="nav-controls">
+      <!-- Storybook vs Desk Exam Mode Switch -->
+      <div class="mode-switch-group">
+        <button id="btn-mode-story" class="btn-mode active" onclick="switchMode('storybook')">
+          <i class="fa-solid fa-book-open"></i> Storybook
+        </button>
+        <button id="btn-mode-exam" class="btn-mode" onclick="switchMode('exam')">
+          <i class="fa-solid fa-file-pen"></i> Desk Exam (50 Qs)
+        </button>
+      </div>
+
+      <!-- Font Size Adjuster (3 Levels) -->
+      <div class="font-controls" title="Adjust font size">
+        <button class="btn-font" onclick="setFontSize('small')">A-</button>
+        <button class="btn-font active" onclick="setFontSize('medium')">A</button>
+        <button class="btn-font" onclick="setFontSize('large')">A+</button>
+      </div>
+
+      <!-- Audio Narration Sound Toggle -->
+      <button id="btn-toggle-sound" class="btn-tool" onclick="toggleAudio()" title="Toggle page turn sounds">
+        <i class="fa-solid fa-volume-high"></i> Sound: ON
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="app-main">
+
+    <!-- ========================================================
+         PART 1: STORYBOOK VIEW
+         ======================================================== -->
+    <section id="storybook-view">
+
+      <!-- 3 Ribbon Bookmarks Hanging Above the Book -->
+      <div class="bookmark-ribbons">
+        <button class="bookmark-tab ch1 active" onclick="jumpToChapter(1)" title="Jump to Chapter 1">
+          🌸 Ch 1: Traditional &amp; Culture
+        </button>
+        <button class="bookmark-tab ch2" onclick="jumpToChapter(2)" title="Jump to Chapter 2">
+          🏛️ Ch 2: Democracy
+        </button>
+        <button class="bookmark-tab ch3" onclick="jumpToChapter(3)" title="Jump to Chapter 3">
+          🌍 Ch 3: World History
+        </button>
+      </div>
+
+      <!-- THE BOOK FRAME -->
+      <div class="book-outer">
+        <div class="book-inner">
+
+          <!-- Page Top Bar -->
+          <div class="book-page-header">
+            <div id="book-ch-indicator" class="ch-indicator c1">
+              <span id="ch-icon">🌸</span>
+              <span id="ch-title">Chapter 1: Traditional &amp; Culture</span>
+            </div>
+
+            <button id="btn-read-aloud" class="page-read-btn" onclick="toggleSpeech()">
+              <i class="fa-solid fa-volume-high"></i> <span>Listen</span>
+            </button>
+          </div>
+
+          <!-- Page Body -->
+          <div class="book-page-body">
+            <div class="page-headline">
+              <h2 id="page-title">Page Title</h2>
+              <div id="page-subtitle" class="subtitle">Page Subtitle</div>
+            </div>
+
+            <!-- Mascot Strip -->
+            <div class="mascot-strip">
+              <div id="mascot-icon" class="mascot-avatar">🐻</div>
+              <div id="mascot-bubble" class="mascot-bubble">Welcome to the adventure!</div>
+            </div>
+
+            <!-- Exam Alert Box -->
+            <div class="exam-tip-box">
+              <div class="tip-icon"><i class="fa-solid fa-star"></i></div>
+              <div class="tip-text" id="exam-tip-text">Exam highlight tip goes here!</div>
+            </div>
+
+            <!-- Dynamic Content Area -->
+            <div id="page-dynamic-content"></div>
+          </div>
+
+          <!-- Page Footer Navigation -->
+          <div class="book-footer">
+            <button id="btn-prev-page" class="btn-page-nav" onclick="changePage(-1)">
+              <i class="fa-solid fa-arrow-left"></i> Previous Page
+            </button>
+
+            <div class="page-dots-wrap" id="page-dots-container"></div>
+
+            <div class="page-counter-text">
+              Page <span id="current-page-num">1</span> of <span id="total-page-num">23</span>
+            </div>
+
+            <button id="btn-next-page" class="btn-page-nav" onclick="changePage(1)">
+              Next Page <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         PART 2: DESK EXAM VIEW (50 QUESTIONS)
+         ======================================================== -->
+    <section id="exam-view">
+      <div class="desk-surface">
+
+        <!-- Stacked Exam Paper with Metallic Top-Left Staple -->
+        <div class="exam-paper-stack">
+          <!-- Top-Left Staple Pin -->
+          <div class="staple-pin" title="Stapled Exam Paper"></div>
+          <div class="staple-indent"></div>
+
+          <!-- Exam Header -->
+          <div class="exam-header">
+            <div class="exam-title-block">
+              <h3>📝 K3 Social Studies Comprehensive Examination</h3>
+              <p>50 Questions | Choice, Matching, Fill-in-the-Blank &amp; Story Comprehension</p>
+            </div>
+            <div class="exam-meta-block">
+              <div>Time: <strong>60 Mins</strong> | Level: <strong>K3 (EP/Bilingual)</strong></div>
+              <div class="student-badge">Candidate: <strong>Grade 3 Scholar</strong></div>
+            </div>
+          </div>
+
+          <!-- Progress Bar & Answered Counter -->
+          <div class="exam-progress-bar-wrap">
+            <div id="exam-progress-fill" class="exam-progress-bar-fill"></div>
+          </div>
+
+          <!-- Quick Sheet Jump Pills (1 through 10) -->
+          <div class="sheet-pills-bar" id="sheet-pills-bar"></div>
+
+          <!-- Current Sheet Title -->
+          <div style="margin-bottom: 14px;">
+            <h4 id="current-sheet-title" style="font-family:'Fredoka',cursive; font-size:1.3rem; color:#1e1b4b;">Sheet 1</h4>
+            <p id="current-sheet-desc" style="color:#64748b; font-size:0.92rem;">Description</p>
+          </div>
+
+          <!-- Questions Content Container (5 Questions on this sheet) -->
+          <div id="exam-questions-container"></div>
+
+          <!-- Sheet Navigation & Submit Exam Footer -->
+          <div class="exam-sheet-footer">
+            <button id="btn-prev-sheet" class="btn-exam-nav" onclick="changeExamSheet(-1)">
+              <i class="fa-solid fa-arrow-left"></i> Previous Sheet
+            </button>
+
+            <span id="sheet-indicator" style="font-family:'Fredoka',cursive; font-size:1.05rem; color:#1e293b;">
+              Sheet 1 of 10
+            </span>
+
+            <div style="display:flex; gap:10px;">
+              <button id="btn-next-sheet" class="btn-exam-nav" onclick="changeExamSheet(1)">
+                Next Sheet <i class="fa-solid fa-arrow-right"></i>
+              </button>
+              <button class="btn-submit-exam" onclick="submitExam()">
+                <i class="fa-solid fa-paper-plane"></i> Submit Exam
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CELEBRATION MODAL -->
+  <div id="result-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-stars" id="modal-stars">⭐⭐⭐</div>
+      <div class="modal-score" id="modal-score-val">50 / 50</div>
+      <div class="modal-score-sub" id="modal-percent-val">100% Score!</div>
+      <div class="modal-praise" id="modal-praise-msg">Outstanding Achievement! You are a Social Studies Master!</div>
+      <div class="modal-actions">
+        <button class="btn-modal primary" onclick="enterReviewMode()">
+          <i class="fa-solid fa-magnifying-glass"></i> Review Answers
+        </button>
+        <button class="btn-modal secondary" onclick="retakeExam()">
+          <i class="fa-solid fa-rotate-right"></i> Retake Exam
+        </button>
+        <button class="btn-modal secondary" onclick="closeModal()">
+          <i class="fa-solid fa-xmark"></i> Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMBEDDED DATA & LOGIC -->
+  <script>
+    // DATA INJECTED FROM GENERATOR
+    const storybookPages = [{"chapter": 1, "chapterTitle": "Chapter 1: Traditional & Culture", "chapterIcon": "\ud83c\udf38", "bookmark": "Culture", "pageNum": 1, "title": "What Are Tradition & Culture?", "subtitle": "Our Heritage, Identity, and Way of Life", "mascot": "\ud83d\udc3b", "mascotMsg": "Hello K3 explorers! Did you know tradition and culture make our society peaceful and orderly?", "examTip": "Tradition = customs passed down for a long time. Culture = the social way of life, beliefs, and arts!", "contentHtml": "\n        <div class=\"card-grid\">\n          <div class=\"info-card culture-accent\">\n            <div class=\"card-header\"><span class=\"badge\">Definition</span> \ud83d\udcdc Tradition</div>\n            <p>A <strong>set of customs and beliefs</strong> that have been part of a particular way of life <strong>for a long time</strong>.</p>\n            <div class=\"example-box\">\ud83c\udf1f <em>Example:</em> <strong>Loy Krathong</strong> \u2014 floating baskets on rivers to thank the Water Goddess (Phra Mae Khongkha) and ask for forgiveness.</div>\n          </div>\n          <div class=\"info-card culture-accent\">\n            <div class=\"card-header\"><span class=\"badge\">Definition</span> \ud83c\udfdb\ufe0f Culture</div>\n            <p>The <strong>social organisation and way of life</strong> of a community. It includes customs, beliefs, and forms of art practised by its members.</p>\n            <div class=\"example-box\">\ud83c\udfe1 <em>Example:</em> Ancient Thai stilt-house villages, polite manners, and sharing food with neighbours.</div>\n          </div>\n        </div>\n        <div class=\"highlight-banner mt-3\">\n          <span class=\"icon\">\ud83d\udde3\ufe0f</span>\n          <div>\n            <strong>Did You Know? Thai Local Dialects:</strong> Thai is our national and official language, but people living in different regions speak with different accents and local words known as <strong>local dialects of Thai</strong> (Northern, Northeastern, Southern, and Central).\n          </div>\n        </div>\n        ", "ttsText": "Welcome to Chapter 1! Tradition is a set of customs and beliefs passed down for a long time, like the Loy Krathong festival. Culture is the social organisation and way of life of a community, including customs, beliefs, and art. Following tradition helps our society become orderly and peaceful. Also remember: different regions speak different local dialects of Thai!"}, {"chapter": 1, "chapterTitle": "Chapter 1: Traditional & Culture", "chapterIcon": "\ud83c\udf38", "bookmark": "Culture", "pageNum": 2, "title": "Family Culture & Respect", "subtitle": "The 4 Pillars of Living in Harmony at Home", "mascot": "\ud83d\udc67", "mascotMsg": "At home, we practice culture every single day by showing love and respect to our family!", "examTip": "Wai and Krab are traditional Thai gestures to show respect for parents, grandparents, and elders.", "contentHtml": "\n        <div class=\"pillar-grid\">\n          <div class=\"pillar-card\">\n            <div class=\"pillar-icon\">\ud83d\ude4f</div>\n            <h4>1. Respect for Elders</h4>\n            <p>Performing the <strong>Wai</strong> or <strong>Krab</strong> when greeting elders. Bow slightly when walking past an elder's path.</p>\n          </div>\n          <div class=\"pillar-card\">\n            <div class=\"pillar-icon\">\ud83e\uddf9</div>\n            <h4>2. Loyalty & Obedience</h4>\n            <p>Doing household chores to help our parents, and following polite advice from older relatives.</p>\n          </div>\n          <div class=\"pillar-card\">\n            <div class=\"pillar-icon\">\ud83c\udf72</div>\n            <h4>3. Family Time</h4>\n            <p>Having <strong>meals together</strong> around the dining table and enjoying happy family vacations.</p>\n          </div>\n          <div class=\"pillar-card\">\n            <div class=\"pillar-icon\">\ud83d\udc96</div>\n            <h4>4. Love & Generosity</h4>\n            <p>Being kind, caring, and helpful to every family member without being asked.</p>\n          </div>\n        </div>\n        ", "ttsText": "Family culture has four pillars: One: Showing respect for elders by performing the Wai or Krab and bowing when walking past. Two: Showing loyalty and obedience by helping with chores. Three: Spending quality time having meals together. Four: Being loving, generous, and helpful to family members."}, {"chapter": 1, "chapterTitle": "Chapter 1: Traditional & Culture", "chapterIcon": "\ud83c\udf38", "bookmark": "Culture", "pageNum": 3, "title": "Living with Nature: Houses & Rice", "subtitle": "How the Environment Shapes Communities", "mascot": "\ud83c\udf3e", "mascotMsg": "Look at how smart Thai ancestors were! They designed houses to match the weather and floods.", "examTip": "Houses on river plains have raised floors (stilts) to protect against floods! Pra Mae Poh Sop is the goddess of rice.", "contentHtml": "\n        <h4 class=\"section-title\">\ud83c\udfe1 Traditional Houses Adapted to Nature</h4>\n        <div class=\"table-wrap\">\n          <table class=\"fun-table\">\n            <thead>\n              <tr><th>Environment</th><th>House Design</th><th>Reason / Function</th></tr>\n            </thead>\n            <tbody>\n              <tr><td><strong>Plains / River Valleys</strong></td><td>Raised floors (Stilt house)</td><td>Protects living area from seasonal <strong>floodwaters</strong></td></tr>\n              <tr><td><strong>Cold / High Mountains</strong></td><td>Few windows & thick walls</td><td>Keeps the <strong>freezing air out</strong> and stays warm</td></tr>\n              <tr><td><strong>Waterways & Canals</strong></td><td>Floating houses (Ruan Pae)</td><td>Rises and falls with the <strong>water level</strong></td></tr>\n              <tr><td><strong>Dry Arid Lands</strong></td><td>Clay & mud-brick houses</td><td>Uses local <strong>clay</strong> and keeps the inside cool</td></tr>\n            </tbody>\n          </table>\n        </div>\n        <h4 class=\"section-title mt-3\">\ud83c\udf3e Rice Culture & Farming Traditions</h4>\n        <div class=\"three-col\">\n          <div class=\"mini-box\">\n            <strong>\ud83c\udf5a Calling Rice Spirit</strong>\n            <p>Worshipping <strong>Pra Mae Poh Sop</strong> (goddess of grain) for a bountiful harvest.</p>\n          </div>\n          <div class=\"mini-box\">\n            <strong>\ud83e\udd1d Long Khaek (Co-operation)</strong>\n            <p>Neighbours co-operating to harvest and store paddy together without charging money.</p>\n          </div>\n          <div class=\"mini-box\">\n            <strong>\ud83d\udc83 Scythe Dance (\u0e40\u0e15\u0e49\u0e19\u0e01\u0e33\u0e23\u0e33\u0e40\u0e04\u0e35\u0e22\u0e27)</strong>\n            <p>Folk singing and dancing with harvesting sickles to relieve boredom and tiredness!</p>\n          </div>\n        </div>\n        ", "ttsText": "Culture is adapted to the local environment. Houses in river plains have raised floors on stilts to protect against floods. Houses in cold mountain areas have few windows and thick walls to keep warm. Rice planting has been the main occupation since ancient times. Farmers worship Pra Mae Poh Sop, cooperate through Long Khaek harvests, and dance the Scythe Dance!"}, {"chapter": 1, "chapterTitle": "Chapter 1: Traditional & Culture", "chapterIcon": "\ud83c\udf38", "bookmark": "Culture", "pageNum": 4, "title": "Costumes & Food Across Regions", "subtitle": "Clothing Reflects Climate, Food Reflects Soil", "mascot": "\ud83d\udc57", "mascotMsg": "Different regions have their own unique dress styles and favorite types of rice!", "examTip": "North = Mo Hom & Pha Sin. Central = Jongkraben. Northeast = Mudmee silk. South = Batik.", "contentHtml": "\n        <div class=\"table-wrap\">\n          <table class=\"fun-table\">\n            <thead>\n              <tr><th>Region / Group</th><th>Costume Style</th><th>Special Feature</th></tr>\n            </thead>\n            <tbody>\n              <tr><td>\ud83d\udd35 <strong>Northern Thailand</strong></td><td><strong>Mo Hom</strong> shirt & <strong>Pha Sin</strong></td><td>Indigo dyed blue cotton shirt, comfortable for farm work</td></tr>\n              <tr><td>\ud83d\udfe1 <strong>Central Thailand</strong></td><td><strong>Jongkraben</strong> style</td><td>Draped trouser-like cloth tucked between legs</td></tr>\n              <tr><td>\ud83d\udfe3 <strong>Northeastern (Isan)</strong></td><td><strong>Mudmee Silk</strong> (\u0e21\u0e31\u0e14\u0e2b\u0e21\u0e35\u0e48)</td><td>Intricate tie-dye patterned woven silk skirts</td></tr>\n              <tr><td>\ud83d\udfe2 <strong>Southern Thailand</strong></td><td><strong>Batik</strong> fabric</td><td>Wax-resist dyed cloth with vibrant floral patterns</td></tr>\n              <tr><td>\ud83d\udd34 <strong>Hmong People</strong></td><td>Embroidered costume</td><td>Colorful geometric needlework and pom-poms</td></tr>\n              <tr><td>\ud83d\udfe0 <strong>Thai-Raman (Mon)</strong></td><td>Mon traditional dress</td><td>Distinctive shawl draped over chest and shoulder</td></tr>\n            </tbody>\n          </table>\n        </div>\n        <div class=\"highlight-banner mt-3\">\n          <span class=\"icon\">\ud83c\udf5a</span>\n          <div>\n            <strong>Rice Varieties in Thailand:</strong> In Central Thailand, people prefer fragrant <strong>jasmine white rice</strong> (round/soft grains). In Northern and Northeastern Thailand, people prefer <strong>glutinous (sticky) rice</strong> eaten by hand!\n          </div>\n        </div>\n        ", "ttsText": "Traditional costumes tell us about climate and work. Northern people wear Mo Hom shirts and Pha Sin skirts. Central people wear Jongkraben. Northeastern people wear Mudmee silk, and Southern people wear colorful Batik fabric. In Central Thailand, people eat jasmine rice, while in the North and Northeast, people enjoy sticky rice!"}, {"chapter": 1, "chapterTitle": "Chapter 1: Traditional & Culture", "chapterIcon": "\ud83c\udf38", "bookmark": "Culture", "pageNum": 5, "title": "Kitchen Herbs as Medicine", "subtitle": "Thai Food is Delicious Functional Medicine!", "mascot": "\ud83e\uddc4", "mascotMsg": "Thai ancestors used fresh kitchen herbs to keep the whole family healthy every day!", "examTip": "EXAM TRAP: Shallot = blocked nose. Garlic = blood cholesterol. Lemongrass = flatus/gas. Turmeric = peptic ulcers!", "contentHtml": "\n        <div class=\"herb-grid\">\n          <div class=\"herb-card\">\n            <div class=\"herb-img\">\ud83e\uddc5</div>\n            <h4>Shallot (\u0e2b\u0e2d\u0e21\u0e41\u0e14\u0e07)</h4>\n            <div class=\"herb-benefit\">Relieves <strong>blocked nose</strong> & common cold</div>\n            <p>Vapours clear the respiratory airways when boiled in hot water or added to soup.</p>\n          </div>\n          <div class=\"herb-card\">\n            <div class=\"herb-img\">\ud83e\uddc4</div>\n            <h4>Garlic (\u0e01\u0e23\u0e30\u0e40\u0e17\u0e35\u0e22\u0e21)</h4>\n            <div class=\"herb-benefit\">Reduces <strong>blood cholesterol</strong></div>\n            <p>Supports heart and blood vessel health, adds savory aroma to stir-fries.</p>\n          </div>\n          <div class=\"herb-card\">\n            <div class=\"herb-img\">\ud83c\udf3f</div>\n            <h4>Lemongrass (\u0e15\u0e30\u0e44\u0e04\u0e23\u0e49)</h4>\n            <div class=\"herb-benefit\">Reduces <strong>flatus</strong> (stomach gas & bloating)</div>\n            <p>Helps smooth digestion, a key aromatic ingredient in world-famous Tom Yum soup.</p>\n          </div>\n          <div class=\"herb-card\">\n            <div class=\"herb-img\">\ud83d\udfe1</div>\n            <h4>Turmeric (\u0e02\u0e21\u0e34\u0e49\u0e19)</h4>\n            <div class=\"herb-benefit\">Cures <strong>peptic ulcers</strong> & stomach lining</div>\n            <p>Rich bright yellow spice with powerful anti-inflammatory and soothing powers.</p>\n          </div>\n        </div>\n        ", "ttsText": "Pay close attention to the four medicinal herbs for your exam! Shallot relieves a blocked nose. Garlic reduces blood cholesterol. Lemongrass reduces flatus and stomach gas. Turmeric helps cure peptic ulcers and stomach irritation."}, {"chapter": 1, "chapterTitle": "Chapter 1: Traditional & Culture", "chapterIcon": "\ud83c\udf38", "bookmark": "Culture", "pageNum": 6, "title": "Three Religions & Sangahavatthu 4", "subtitle": "Living Together in Peace, Harmony, and Virtue", "mascot": "\ud83d\udd4a\ufe0f", "mascotMsg": "Thailand embraces different faiths! Let's explore the symbols, places of worship, and virtues.", "examTip": "Buddhism = Temple & Dhamma Wheel. Christianity = Church & Cross. Islam = Mosque & Crescent/Star. Sangahavatthu 4 = Dana, Piyavaca, Atthacariya, Samanattata.", "contentHtml": "\n        <div class=\"card-grid\">\n          <div class=\"info-card\">\n            <div class=\"card-header\">\u2638\ufe0f Buddhism</div>\n            <p><strong>Place:</strong> Temple (Wat) | <strong>Symbol:</strong> Dhamma Wheel (Dharmachakra)</p>\n            <p>Buddhists make merit, offer alms to monks, meditate, and listen to sermons.</p>\n          </div>\n          <div class=\"info-card\">\n            <div class=\"card-header\">\u271d\ufe0f Christianity</div>\n            <p><strong>Place:</strong> Church | <strong>Symbol:</strong> The Holy Cross</p>\n            <p>Christians attend Sunday service, baptise newborns, and perform community charity.</p>\n          </div>\n          <div class=\"info-card\">\n            <div class=\"card-header\">\u262a\ufe0f Islam</div>\n            <p><strong>Place:</strong> Mosque | <strong>Symbol:</strong> Crescent Moon & Star</p>\n            <p>Muslims pray Salat five times daily and observe halal dietary rules.</p>\n          </div>\n        </div>\n        <div class=\"highlight-banner mt-3\">\n          <strong>\ud83d\udc57 Rule of Thumb for Religious Places:</strong> Dress respectfully! Cover shoulders and knees. Avoid revealing, tight-fitting, or see-through clothes. In some mosques, women cover hair and body except hands and face.\n        </div>\n        <h4 class=\"section-title mt-3\">\u2764\ufe0f Sangahavatthu 4 (Four Virtues of Social Harmony)</h4>\n        <div class=\"table-wrap\">\n          <table class=\"fun-table\">\n            <thead>\n              <tr><th>Virtue</th><th>Meaning</th><th>Example Action</th></tr>\n            </thead>\n            <tbody>\n              <tr><td>\ud83c\udf81 <strong>Dana (\u0e17\u0e32\u0e19)</strong></td><td>Generosity</td><td>Willingly giving or sharing food, clothes, or medicine</td></tr>\n              <tr><td>\ud83d\udcac <strong>Piyavaca (\u0e1b\u0e34\u0e22\u0e27\u0e32\u0e08\u0e32)</strong></td><td>Kindly speech</td><td>Using polite words, speaking truth, saying helpful things</td></tr>\n              <tr><td>\ud83e\udd1d <strong>Atthacariya (\u0e2d\u0e31\u0e15\u0e16\u0e08\u0e23\u0e34\u0e22\u0e32)</strong></td><td>Useful conduct</td><td>Helping other people without expecting anything in return</td></tr>\n              <tr><td>\u2696\ufe0f <strong>Samanattata (\u0e2a\u0e21\u0e32\u0e19\u0e31\u0e15\u0e15\u0e15\u0e32)</strong></td><td>Equal treatment</td><td>Behaving properly in all situations and treating everyone fairly</td></tr>\n            </tbody>\n          </table>\n        </div>\n        ", "ttsText": "Thailand is home to Buddhism, Christianity, and Islam. Buddhists worship in temples with the Dhamma Wheel. Christians worship in churches with the Cross. Muslims worship in mosques with the Crescent and Star. Remember Sangahavatthu 4: Dana means generosity, Piyavaca means kindly speech, Atthacariya means useful conduct, and Samanattata means equal treatment."}, {"chapter": 1, "chapterTitle": "Chapter 1: Traditional & Culture", "chapterIcon": "\ud83c\udf38", "bookmark": "Culture", "pageNum": 7, "title": "Official Royal Holidays", "subtitle": "Commemorating Our Monarchy & National Milestones", "mascot": "\ud83d\udc51", "mascotMsg": "On royal holidays, Thai people fly the national flag, light candles, and sign royal greeting books!", "examTip": "Chakri Day = 6 April (Rama I). Coronation Day = 4 May (Rama X). Chulalongkorn Day = 23 October (Rama V). Constitution Day = 10 December (Rama VII).", "contentHtml": "\n        <div class=\"table-wrap\">\n          <table class=\"fun-table\">\n            <thead>\n              <tr><th>Date</th><th>Official Holiday</th><th>Significance & History</th></tr>\n            </thead>\n            <tbody>\n              <tr><td><strong>6 April</strong></td><td>\ud83d\udc51 <strong>Chakri Memorial Day</strong></td><td>Honours King Rama I, founder of Chakri Dynasty, who established Bangkok as capital in 1782</td></tr>\n              <tr><td><strong>4 May</strong></td><td>\ud83d\udc51 <strong>Coronation Day</strong> (Wan Chattra Mongkhon)</td><td>Commemorates the coronation of King Rama X (4 May 2019)</td></tr>\n              <tr><td><strong>3 June</strong></td><td>\ud83d\udc51 <strong>H.M. Queen Suthida's Birthday</strong></td><td>Celebrates Queen Suthida Bajrasudhabimalalakshana</td></tr>\n              <tr><td><strong>28 July</strong></td><td>\ud83d\udc51 <strong>H.M. King Rama X's Birthday</strong></td><td>Celebrates King Maha Vajiralongkorn Phra Vajiraklaochaoyuhua</td></tr>\n              <tr><td><strong>23 October</strong></td><td>\ud83d\udc51 <strong>Chulalongkorn Day</strong> (Piyamaharaj Day)</td><td>Commemorates King Rama V (\"The Great Beloved King\")</td></tr>\n              <tr><td><strong>10 December</strong></td><td>\ud83d\udcdc <strong>Constitution Day</strong></td><td>Commemorates King Rama VII granting the first permanent constitution in 1932</td></tr>\n              <tr><td><strong>5 December</strong></td><td>\ud83d\udc9b <strong>Father's Day / National Day</strong></td><td>Birthday of King Bhumibol Adulyadej The Great (Rama IX)</td></tr>\n              <tr><td><strong>12 August</strong></td><td>\ud83d\udc99 <strong>Mother's Day</strong></td><td>Birthday of Queen Sirikit The Queen Mother</td></tr>\n            </tbody>\n          </table>\n        </div>\n        ", "ttsText": "Important royal holidays to remember: Chakri Memorial Day is on April 6th, commemorating King Rama I. Coronation Day is on May 4th for King Rama X. Chulalongkorn Day is on October 23rd for King Rama V. Constitution Day is on December 10th. Father's Day is on December 5th, and Mother's Day is on August 12th!"}, {"chapter": 1, "chapterTitle": "Chapter 1: Traditional & Culture", "chapterIcon": "\ud83c\udf38", "bookmark": "Culture", "pageNum": 8, "title": "Buddhist & Traditional Holidays", "subtitle": "Holy Lunar Days and Joyous Festivals", "mascot": "\ud83d\udd6f\ufe0f", "mascotMsg": "Buddhists observe Wien Tien candle walks on holy days. Songkran is our joyous traditional New Year!", "examTip": "Makha Bucha = 3rd lunar month (1250 monks). Visakha Bucha = 6th lunar month (birth, enlightenment, passing). Asarnha Bucha = 8th lunar month (first sermon, Triple Gem completed).", "contentHtml": "\n        <div class=\"card-grid\">\n          <div class=\"info-card\">\n            <div class=\"card-header\">\ud83c\udf15 Makha Bucha Day</div>\n            <p><strong>When:</strong> Full moon of 3rd Thai lunar month</p>\n            <p><strong>1,250 Arahants</strong> gathered spontaneously without schedule. Lord Buddha taught the <strong>Ovada Patimokkha</strong> (core teachings).</p>\n          </div>\n          <div class=\"info-card\">\n            <div class=\"card-header\">\ud83c\udf15 Visakha Bucha Day</div>\n            <p><strong>When:</strong> Full moon of 6th Thai lunar month</p>\n            <p>Marks 3 miracles on the same date: Lord Buddha's <strong>birth</strong>, <strong>enlightenment</strong> (age 35), and <strong>passing away</strong> (age 80).</p>\n          </div>\n          <div class=\"info-card\">\n            <div class=\"card-header\">\ud83c\udf15 Asarnha Bucha Day</div>\n            <p><strong>When:</strong> Full moon of 8th Thai lunar month</p>\n            <p>Buddha delivered his <strong>first sermon</strong> to the 5 ascetics. The <strong>Triple Gem</strong> (Buddha, Dhamma, Sangha) was completed!</p>\n          </div>\n          <div class=\"info-card\">\n            <div class=\"card-header\">\ud83c\udf27\ufe0f Buddhist Lent (Khao Phansa)</div>\n            <p><strong>When:</strong> Day after Asarnha Bucha (8th month)</p>\n            <p>Beginning of the <strong>3-month retreat</strong> where monks stay inside their temple during the rainy crop season.</p>\n          </div>\n        </div>\n        <h4 class=\"section-title mt-3\">\ud83c\udf0a Songkran Festival (13\u201315 April)</h4>\n        <div class=\"three-col\">\n          <div class=\"mini-box\"><strong>13 April:</strong> Wan Maha Songkran & Old Folks' Day</div>\n          <div class=\"mini-box\"><strong>14 April:</strong> Wan Nao & Family Day</div>\n          <div class=\"mini-box\"><strong>15 April:</strong> Wan Thaloeng Sok (New Year officially begins)</div>\n        </div>\n        <div class=\"highlight-banner mt-3\">\n          \ud83c\udf3e <strong>Royal Ploughing Ceremony Day (Farmer's Day):</strong> Held in May (6th lunar month) to mark the rice-growing season and honour farmers.\n        </div>\n        ", "ttsText": "Buddhist holidays follow the lunar calendar. Makha Bucha in the 3rd lunar month commemorates 1,250 monks gathering to hear the Ovada Patimokkha. Visakha Bucha in the 6th lunar month marks the Buddha's birth, enlightenment, and passing. Asarnha Bucha in the 8th lunar month commemorates the first sermon, completing the Triple Gem. Buddhist Lent lasts 3 months. Songkran is celebrated from April 13th to 15th."}, {"chapter": 1, "chapterTitle": "Chapter 1: Traditional & Culture", "chapterIcon": "\ud83c\udf38", "bookmark": "Culture", "pageNum": 9, "title": "Community Hero: Pu Yai Viboon", "subtitle": "Forest Agriculture & the Sufficiency Economy", "mascot": "\ud83c\udf33", "mascotMsg": "Pu Yai Viboon turned 9 rai of land into a 500-species nature paradise for his community!", "examTip": "Pu Yai Viboon Kheam-Chalerm led Baan Huay Hin, Chachoengsao. Practiced Agroforestry on 9 rai with 500 plant species!", "contentHtml": "\n        <div class=\"hero-profile\">\n          <div class=\"hero-badge\">\ud83c\udf1f Exemplary Community Member</div>\n          <h3>Pu Yai Viboon Kheam-Chalerm (\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e0d\u0e48\u0e27\u0e34\u0e1a\u0e39\u0e25\u0e22\u0e4c \u0e40\u0e02\u0e47\u0e21\u0e40\u0e09\u0e25\u0e34\u0e21)</h3>\n          <p><strong>Position:</strong> Village leader of <strong>Baan Huay Hin</strong>, Sanam Chai Khet District, <strong>Chachoengsao Province</strong> (elected 1969).</p>\n          \n          <div class=\"card-grid mt-2\">\n            <div class=\"info-card\">\n              <div class=\"card-header\">\ud83d\udcc9 The Turning Point</div>\n              <p>In 1961, he worked in cash-crop farming but fell deep into debt and nearly went bankrupt. In 1987, he planted morning glory and decided to change his entire approach.</p>\n            </div>\n            <div class=\"info-card\">\n              <div class=\"card-header\">\ud83c\udf32 Agroforestry (\u0e27\u0e19\u0e40\u0e01\u0e29\u0e15\u0e23)</div>\n              <p>On his remaining <strong>9 rai</strong> of land, he created a return-to-nature forest farm where nature provides food, medicine, and shade in self-sufficient harmony.</p>\n            </div>\n          </div>\n          \n          <div class=\"highlight-banner mt-3\">\n            <strong>Key Community Contributions:</strong>\n            <ul class=\"custom-list mt-1\">\n              <li>\ud83c\udf93 Known as the <strong>\"University of Community and Nature\"</strong>, teaching self-reliance to thousands.</li>\n              <li>\ud83c\udf31 UN survey recorded nearly <strong>500 plant species</strong> in this thriving man-made forest.</li>\n              <li>\ud83d\udc96 Embodies King Rama IX's <strong>Sufficiency Economy Philosophy</strong> \u2014 living moderately, sharing with neighbours, and living in peace.</li>\n            </ul>\n          </div>\n        </div>\n        ", "ttsText": "Pu Yai Viboon Kheam-Chalerm was a village leader in Baan Huay Hin, Chachoengsao Province. After facing heavy farming debt, he created an Agroforestry scheme on his nine rai of land. A United Nations survey found nearly 500 species of plants! He transformed his land into a University of Community and Nature, practicing the Sufficiency Economy Philosophy."}, {"chapter": 1, "chapterTitle": "Chapter 1: Traditional & Culture", "chapterIcon": "\ud83c\udf38", "bookmark": "Culture", "pageNum": 10, "title": "\ud83c\udfaf Chapter 1 Mini-Quiz", "subtitle": "Test your knowledge on Culture, Costumes, Herbs & Holidays!", "mascot": "\ud83c\udfc6", "mascotMsg": "Can you score 5 out of 5? The choices shuffle every time you open this quiz!", "examTip": "Tap your answers below to check instantly. Practice makes perfect!", "isQuiz": true, "quizChapter": 1, "contentHtml": "\n        <div id=\"mini-quiz-ch1\" class=\"quiz-container\">\n          <div class=\"quiz-status-bar\">\n            <span>Question <span class=\"q-current\">1</span> of 5</span>\n            <button class=\"btn-shuffle\" onclick=\"shuffleMiniQuiz(1)\"><i class=\"fa-solid fa-arrows-rotate\"></i> Shuffle Choices</button>\n          </div>\n          <div id=\"quiz-ch1-content\"></div>\n        </div>\n        ", "ttsText": "Time for the Chapter 1 Mini Quiz! Test your knowledge on Thai traditions, herbs, costumes, and official holidays. Tap the correct answers and see your score!"}, {"chapter": 2, "chapterTitle": "Chapter 2: Democracy in Action", "chapterIcon": "\ud83c\udfdb\ufe0f", "bookmark": "Democracy", "pageNum": 11, "title": "What Is Democracy?", "subtitle": "People Governing Themselves with Equal Rights", "mascot": "\ud83d\uddf3\ufe0f", "mascotMsg": "In a democracy, every voice matters and everyone has equal rights under the law!", "examTip": "Democracy means people help govern themselves. Liberty = freedom. Equality = equal rights. Follow majority, respect minority.", "contentHtml": "\n        <div class=\"card-grid\">\n          <div class=\"info-card democracy-accent\">\n            <div class=\"card-header\">\ud83c\udfdb\ufe0f Core Definition</div>\n            <p><strong>Democracy</strong> is a way of life and government where <strong>people help govern themselves</strong>. It gives all citizens equal rights and opportunities to participate in decisions.</p>\n          </div>\n          <div class=\"info-card democracy-accent\">\n            <div class=\"card-header\">\ud83d\udd4a\ufe0f Liberty & Equality</div>\n            <p>\u2022 <strong>Liberty:</strong> Freedom to think, speak, and act according to the law without harming others.<br>\n               \u2022 <strong>Equality:</strong> Everyone has equal rights, fair chances, and dignity under the law.</p>\n          </div>\n        </div>\n        <div class=\"highlight-banner mt-3\">\n          <span class=\"icon\">\u2696\ufe0f</span>\n          <div>\n            <strong>The Golden Rule of Decision-Making:</strong><br>\n            1. <strong>Accept the Majority Decision:</strong> The choice with the greater number of votes wins.<br>\n            2. <strong>Respect the Minority:</strong> The smaller group must be treated kindly, allowed to share ideas, and not ignored!\n          </div>\n        </div>\n        ", "ttsText": "What is democracy? Democracy is a system where people help govern themselves. Liberty means freedom under the law. Equality means equal rights for all. In democracy, we accept the majority decision, while always respecting and listening to the minority group!"}, {"chapter": 2, "chapterTitle": "Chapter 2: Democracy in Action", "chapterIcon": "\ud83c\udfdb\ufe0f", "bookmark": "Democracy", "pageNum": 12, "title": "Rules for Living Democratically", "subtitle": "Being a Great Leader and a Great Follower", "mascot": "\ud83e\udd1d", "mascotMsg": "Democracy is not just about voting; it is about how we treat our friends and classmates!", "examTip": "Five guidelines: Respect rights, accept majority + listen to minority, follow agreed rules, be calm and reasonable, do your duty!", "contentHtml": "\n        <div class=\"rules-stack\">\n          <div class=\"rule-item\">\n            <div class=\"rule-num\">1</div>\n            <div><strong>Respect Rights & Dignity:</strong> Treat every person with fairness and never bully or take away someone's freedom.</div>\n          </div>\n          <div class=\"rule-item\">\n            <div class=\"rule-num\">2</div>\n            <div><strong>Accept Majority & Listen to Minority:</strong> Follow group votes, but always listen to differing suggestions.</div>\n          </div>\n          <div class=\"rule-item\">\n            <div class=\"rule-num\">3</div>\n            <div><strong>Follow Agreed Rules:</strong> School rules, class agreements, and public laws exist to keep us all safe and organized.</div>\n          </div>\n          <div class=\"rule-item\">\n            <div class=\"rule-num\">4</div>\n            <div><strong>Be Calm & Reasonable:</strong> Talk politely with logic. Listen carefully to classmates who disagree with you.</div>\n          </div>\n          <div class=\"rule-item\">\n            <div class=\"rule-num\">5</div>\n            <div><strong>Be a Good Leader & Follower:</strong> Know your role, cooperate with team members, and do your assigned duty responsibly.</div>\n          </div>\n        </div>\n        ", "ttsText": "Here are five rules for living democratically: Respect everyone's rights and dignity. Accept the majority choice while listening to the minority. Follow agreed rules. Be calm and reasonable when solving disagreements. And be a good leader and responsible follower."}, {"chapter": 2, "chapterTitle": "Chapter 2: Democracy in Action", "chapterIcon": "\ud83c\udfdb\ufe0f", "bookmark": "Democracy", "pageNum": 13, "title": "Two Ways to Vote", "subtitle": "Direct Voting vs. Indirect Voting", "mascot": "\ud83d\ude4b", "mascotMsg": "How does your classroom choose a leader? Direct voting or indirect voting?", "examTip": "Direct = voters choose the person directly (class monitor). Indirect = voters choose representatives who then choose the leader (student president)!", "contentHtml": "\n        <div class=\"card-grid\">\n          <div class=\"info-card\">\n            <div class=\"card-header\">\ud83d\udc46 1. Direct Voting (Popular Voting)</div>\n            <p>Every individual voter casts a ballot directly for the candidate they want.</p>\n            <div class=\"example-box\">\n              <strong>School Example:</strong> All students raise their hands or mark ballots for the <strong>class monitor</strong>. The candidate with the most votes wins directly!\n            </div>\n          </div>\n          <div class=\"info-card\">\n            <div class=\"card-header\">\ud83d\udd04 2. Indirect Voting (Electoral College)</div>\n            <p>Voters elect representatives first. Those representatives then meet to vote and elect the top leader.</p>\n            <div class=\"example-box\">\n              <strong>School Example:</strong><br>\n              <code>All Students \u2794 Elect Class Monitors \u2794 Monitors Elect Student President</code>\n            </div>\n          </div>\n        </div>\n        <div class=\"table-wrap mt-3\">\n          <table class=\"fun-table\">\n            <thead>\n              <tr><th>Voting Method</th><th>Who Makes the Choice?</th><th>Classroom Example</th></tr>\n            </thead>\n            <tbody>\n              <tr><td><strong>Direct Voting</strong></td><td>Voters directly pick the candidate</td><td>Students directly elect Class Monitor</td></tr>\n              <tr><td><strong>Indirect Voting</strong></td><td>Elected representatives pick the leader</td><td>Class Monitors elect Student President</td></tr>\n            </tbody>\n          </table>\n        </div>\n        ", "ttsText": "There are two ways to vote! Direct voting means every person votes directly for the person, like students choosing a class monitor. Indirect voting means voters choose representatives, and those representatives elect the leader, like class monitors choosing a student president!"}, {"chapter": 2, "chapterTitle": "Chapter 2: Democracy in Action", "chapterIcon": "\ud83c\udfdb\ufe0f", "bookmark": "Democracy", "pageNum": 14, "title": "Community Leaders & Administration", "subtitle": "Choosing Capable, Honest, and Helpful Leaders", "mascot": "\ud83c\udfd8\ufe0f", "mascotMsg": "In our towns and provinces, citizens elect dedicated leaders to look after public welfare!", "examTip": "Village leader manages the village. Sub-district leader (Kamnan) reports to district chief. TAO/SAO manages sub-district. PAO manages province.", "contentHtml": "\n        <div class=\"leader-grid\">\n          <div class=\"leader-card\">\n            <div class=\"leader-icon\">\ud83c\udfe1</div>\n            <h4>Village Leader (\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e0d\u0e48\u0e1a\u0e49\u0e32\u0e19)</h4>\n            <p>Leads local administration, resolves village disputes, and organizes community activities.</p>\n          </div>\n          <div class=\"leader-card\">\n            <div class=\"leader-icon\">\ud83c\udf3e</div>\n            <h4>Sub-district Leader (\u0e01\u0e33\u0e19\u0e31\u0e19)</h4>\n            <p>Elected from village leaders to coordinate sub-district affairs and report issues to district chief.</p>\n          </div>\n          <div class=\"leader-card\">\n            <div class=\"leader-icon\">\ud83c\udfe2</div>\n            <h4>Sub-district Admin (\u0e2d\u0e1a\u0e15. / SAO)</h4>\n            <p>Chief executive and council members elected by direct vote to build local roads, clean water, and schools.</p>\n          </div>\n          <div class=\"leader-card\">\n            <div class=\"leader-icon\">\ud83c\udfdb\ufe0f</div>\n            <h4>Provincial Admin (\u0e2d\u0e1a\u0e08. / PAO)</h4>\n            <p>Develops provincial infrastructure, bridges, public parks, and healthcare services across the whole province.</p>\n          </div>\n        </div>\n        <div class=\"highlight-banner mt-3\">\n          \u2b50 <strong>Key Quality of Leaders:</strong> The textbook emphasizes choosing leaders who are <strong>good, able, and honest</strong>!\n        </div>\n        ", "ttsText": "Community leaders represent us because everyone cannot attend every meeting. Village leaders govern villages. Sub-district leaders, or Kamnan, handle sub-districts. Sub-district and Provincial administrative organizations develop public infrastructure. We must always vote for honest, able, and dedicated leaders!"}, {"chapter": 2, "chapterTitle": "Chapter 2: Democracy in Action", "chapterIcon": "\ud83c\udfdb\ufe0f", "bookmark": "Democracy", "pageNum": 15, "title": "Roles & Duties of Good Citizens", "subtitle": "Civic Responsibility at School and in Public", "mascot": "\ud83d\udeb6", "mascotMsg": "Being a responsible citizen starts with everyday habits, like crossing at zebra crossings!", "examTip": "Good citizens obey traffic laws, use pedestrian crossings, keep public spaces clean, conserve nature, and vote!", "contentHtml": "\n        <div class=\"duties-grid\">\n          <div class=\"duty-pill\">\ud83d\udeb8 <strong>Road Safety:</strong> Use pedestrian (zebra) crossings and obey traffic signals</div>\n          <div class=\"duty-pill\">\ud83d\uddd1\ufe0f <strong>Cleanliness:</strong> Put trash in waste bins, keep streets and parks clean</div>\n          <div class=\"duty-pill\">\ud83c\udf33 <strong>Nature:</strong> Conserve water, plant trees, and avoid wasting resources</div>\n          <div class=\"duty-pill\">\ud83c\udfeb <strong>School Duties:</strong> Follow classroom rules, help friends, and take care of desks</div>\n          <div class=\"duty-pill\">\ud83d\uddf3\ufe0f <strong>Democratic Duty:</strong> Exercise the right to vote in school and local elections</div>\n          <div class=\"duty-pill\">\ud83e\udd1d <strong>Public Service:</strong> Volunteer to repair community halls and help neighbours</div>\n        </div>\n        <div class=\"card-grid mt-3\">\n          <div class=\"info-card\">\n            <div class=\"card-header\">\ud83c\udfe0 Good Member at Home</div>\n            <p>Listen when family members make a shared decision, help wash dishes, and keep your bedroom tidy.</p>\n          </div>\n          <div class=\"info-card\">\n            <div class=\"card-header\">\ud83c\udf92 Good Member at School</div>\n            <p>Respect teacher instructions, take turns on the playground, and support elected class representatives.</p>\n          </div>\n        </div>\n        ", "ttsText": "A good citizen fulfills important duties: Obey traffic laws and use pedestrian crossings. Keep public areas clean by throwing garbage in bins. Protect the environment. Follow school rules and volunteer for public service. When everyone does their duty, our community is safe and happy!"}, {"chapter": 2, "chapterTitle": "Chapter 2: Democracy in Action", "chapterIcon": "\ud83c\udfdb\ufe0f", "bookmark": "Democracy", "pageNum": 16, "title": "Think & Analyze: Fair Choices", "subtitle": "Why Do Our Democratic Choices Matter?", "mascot": "\ud83d\udca1", "mascotMsg": "Critical thinking makes us smarter citizens! Let's explore these five big questions.", "examTip": "Analytical thinking: Listening to minority prevents mistakes and makes plans kinder. Representatives save time for large groups.", "contentHtml": "\n        <div class=\"analytical-grid\">\n          <div class=\"analytic-card\">\n            <h4>1. Why listen to the minority?</h4>\n            <p>Even though the majority makes the final choice, the minority might possess a brilliant suggestion or point out a hidden danger. Listening makes plans kinder and more complete!</p>\n          </div>\n          <div class=\"analytic-card\">\n            <h4>2. Why do we need representatives?</h4>\n            <p>A school or province has thousands of people. It is impossible for all members to speak at once. Representatives carry everyone's voice to meetings efficiently.</p>\n          </div>\n          <div class=\"analytic-card\">\n            <h4>3. What makes an excellent class monitor?</h4>\n            <p>A great monitor doesn't boss people around. They listen with patience, obey classroom rules, assist the teacher, and treat every classmate fairly.</p>\n          </div>\n          <div class=\"analytic-card\">\n            <h4>4. How does leadership affect everyone?</h4>\n            <p>A capable, honest leader builds clean parks, safe roads, and joyful classrooms. A careless or selfish leader can waste resources and cause conflicts.</p>\n          </div>\n        </div>\n        ", "ttsText": "Think and analyze! Why do we listen to the minority? Because the minority may offer valuable ideas that improve the plan. Why do we need representatives? Because large groups cannot all speak at once. A good leader listens, helps others, and acts honestly for everyone's benefit."}, {"chapter": 2, "chapterTitle": "Chapter 2: Democracy in Action", "chapterIcon": "\ud83c\udfdb\ufe0f", "bookmark": "Democracy", "pageNum": 17, "title": "\ud83c\udfaf Chapter 2 Mini-Quiz", "subtitle": "Test your knowledge on Democracy, Voting & Civic Duties!", "mascot": "\ud83c\udfc6", "mascotMsg": "Ready to test your civic skills? Choices randomize every time you attempt the quiz!", "examTip": "Review direct vs indirect voting, and majority vs minority rules before submitting!", "isQuiz": true, "quizChapter": 2, "contentHtml": "\n        <div id=\"mini-quiz-ch2\" class=\"quiz-container\">\n          <div class=\"quiz-status-bar\">\n            <span>Question <span class=\"q-current\">1</span> of 5</span>\n            <button class=\"btn-shuffle\" onclick=\"shuffleMiniQuiz(2)\"><i class=\"fa-solid fa-arrows-rotate\"></i> Shuffle Choices</button>\n          </div>\n          <div id=\"quiz-ch2-content\"></div>\n        </div>\n        ", "ttsText": "Time for the Chapter 2 Mini Quiz on Democracy! Read each question carefully and select the best answer. Don't forget, choices shuffle every time you try!"}, {"chapter": 3, "chapterTitle": "Chapter 3: World History & Heritage", "chapterIcon": "\ud83c\udf0d", "bookmark": "History", "pageNum": 18, "title": "Ancient Egypt: Land of the Pharaohs", "subtitle": "Pyramids, Nile River, and Hieroglyphic Writing", "mascot": "\ud83e\udd85", "mascotMsg": "Welcome to Ancient Egypt! Let's travel back thousands of years to the banks of the Nile.", "examTip": "Nile River provided life in the desert. Pyramids = tombs for Pharaohs. Hieroglyphics = picture writing. Mummies = preserved bodies.", "contentHtml": "\n        <div class=\"history-grid\">\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83c\udf0a</div>\n            <h4>Nile River</h4>\n            <p>The lifeline of Egypt! Annual floods deposited rich black silt for farming wheat and barley in the desert.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83d\udcd0</div>\n            <h4>Pyramids</h4>\n            <p>Monumental stone structures built as royal <strong>tombs</strong> to preserve the Pharaoh's body for the afterlife.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83d\udc51</div>\n            <h4>Pharaoh</h4>\n            <p>The supreme ruler and high priest of Egypt, considered both a king and an earthly god.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83c\udffa</div>\n            <h4>Mummy</h4>\n            <p>Preserved bodies wrapped in linen bandages with sacred amulets to prepare for eternity.</p>\n          </div>\n        </div>\n        <div class=\"highlight-banner mt-3\">\n          <span class=\"icon\">\ud83d\udcdc</span>\n          <div>\n            <strong>Hieroglyphics & The 'NANA' Mystery:</strong> Ancient Egyptians wrote with picture symbols called <strong>Hieroglyphics</strong>. As shown in the student notebook: <code>NANA = \u3030\ufe0f (water) \ud80c\udd6d (bird) \u3030\ufe0f (water) \ud80c\udd6d (bird)</code>!\n          </div>\n        </div>\n        ", "ttsText": "Ancient Egypt developed along the mighty Nile River! The river provided fertile soil for crops. The Great Pyramids were built as tombs for Pharaohs, the rulers of Egypt. Bodies were preserved as mummies. Egyptians wrote using picture symbols called Hieroglyphics, such as water and bird symbols for NANA!"}, {"chapter": 3, "chapterTitle": "Chapter 3: World History & Heritage", "chapterIcon": "\ud83c\udf0d", "bookmark": "History", "pageNum": 19, "title": "Ancient Greece: Birthplace of Democracy", "subtitle": "Philosophy, Mount Olympus, and the Olympic Games", "mascot": "\ud83c\udfdb\ufe0f", "mascotMsg": "Did you know the word 'Democracy' comes from ancient Athens, Greece?", "examTip": "Democracy was invented in Athens, Greece! Mount Olympus was the mythical home of Zeus. The Olympics honoured Zeus.", "contentHtml": "\n        <div class=\"history-grid\">\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83d\uddf3\ufe0f</div>\n            <h4>Democracy</h4>\n            <p>Created in <strong>Athens, Greece</strong>! Citizens gathered at the Agora to vote directly on laws and policies.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\u26a1</div>\n            <h4>Zeus & Mount Olympus</h4>\n            <p><strong>Zeus</strong> was king of the Greek gods. Mount Olympus was the majestic mythical palace of the gods in the clouds.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83e\udd47</div>\n            <h4>The Olympic Games</h4>\n            <p>Athletic games held every four years in Olympia to honour Zeus. Winners received sacred olive branch wreaths.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83d\udc0d</div>\n            <h4>Medusa & Legends</h4>\n            <p>Mythical creatures with snakes for hair, alongside playful <strong>dolphins</strong> celebrated in Greek pottery and sea lore.</p>\n          </div>\n        </div>\n        ", "ttsText": "Ancient Greece gave us democracy! In Athens, free citizens met to vote on their laws. Greeks believed their gods, led by Zeus, lived on Mount Olympus. Every four years, they celebrated the Olympic Games with running, wrestling, and chariot racing in honour of Zeus!"}, {"chapter": 3, "chapterTitle": "Chapter 3: World History & Heritage", "chapterIcon": "\ud83c\udf0d", "bookmark": "History", "pageNum": 20, "title": "Ancient China: Walls & Inventions", "subtitle": "The Great Wall, Compass, Fireworks & Giant Pandas", "mascot": "\ud83d\udc3c", "mascotMsg": "Ancient China gave the world compasses, fireworks, silk, and paper!", "examTip": "Great Wall was built for defense against northern invaders. Great inventions: Fireworks (gunpowder) and Magnetic Compass!", "contentHtml": "\n        <div class=\"history-grid\">\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83c\udfef</div>\n            <h4>The Great Wall</h4>\n            <p>A colossal stone fortification stretching thousands of kilometres across mountains to protect China from invaders.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83e\udded</div>\n            <h4>The Magnetic Compass</h4>\n            <p>Invented in China using lodestone, enabling sailors and travellers to navigate oceans and deserts accurately.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83c\udf86</div>\n            <h4>Fireworks & Gunpowder</h4>\n            <p>Created from saltpeter and charcoal, originally used during festivals and celebrations to ward off evil spirits.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83d\udc09</div>\n            <h4>Dragon & Giant Panda</h4>\n            <p>The <strong>Dragon</strong> symbolised imperial power and good fortune. The gentle <strong>Panda</strong> is China's cherished national treasure.</p>\n          </div>\n        </div>\n        ", "ttsText": "Ancient China was famous for amazing inventions and grand architecture. The Great Wall of China protected the country across mountains. Chinese scholars invented the magnetic compass for navigation and fireworks for celebrations. They also honored the mythical dragon and the giant panda!"}, {"chapter": 3, "chapterTitle": "Chapter 3: World History & Heritage", "chapterIcon": "\ud83c\udf0d", "bookmark": "History", "pageNum": 21, "title": "Evolution of the Thai Flag", "subtitle": "From Plain Red to the Five-Striped Trairanga", "mascot": "\ud83c\uddf9\ud83c\udded", "mascotMsg": "Look at how our flag transformed across different reigns of Thai history!", "examTip": "Ayutthaya = plain red. Rama I = red + white chakra. Rama II = white elephant inside chakra. Rama IV = white elephant on red. 1917 = Trairanga (5 stripes: Red, White, Blue, White, Red)!", "contentHtml": "\n        <div class=\"flag-timeline\">\n          <div class=\"flag-step\">\n            <div class=\"flag-box\" style=\"background:#dc2626;\"></div>\n            <h4>Ayutthaya Era</h4>\n            <p><strong>Plain Red Flag:</strong> Used by Siamese merchant ships trading across Southeast Asia.</p>\n          </div>\n          <div class=\"flag-step\">\n            <div class=\"flag-box\" style=\"background:#dc2626; display:flex; align-items:center; justify-content:center; color:white; font-size:1.4rem;\">\u2638\ufe0f</div>\n            <h4>1782\u20131817 (Rama I)</h4>\n            <p><strong>Red with White Chakra:</strong> King Rama I added the sacred Chakra wheel to denote royal ships.</p>\n          </div>\n          <div class=\"flag-step\">\n            <div class=\"flag-box\" style=\"background:#dc2626; display:flex; align-items:center; justify-content:center; color:white; font-size:1.3rem;\">\ud83d\udc18</div>\n            <h4>1817\u20131855 (Rama II)</h4>\n            <p><strong>Elephant inside Chakra:</strong> Added a white elephant inside the chakra after obtaining three royal white elephants.</p>\n          </div>\n          <div class=\"flag-step\">\n            <div class=\"flag-box\" style=\"background:#dc2626; display:flex; align-items:center; justify-content:center; color:white; font-size:1.4rem;\">\ud83d\udc18</div>\n            <h4>1855\u20131916 (Rama IV)</h4>\n            <p><strong>White Elephant on Red:</strong> King Rama IV made this the official civil flag for all Siamese citizens.</p>\n          </div>\n          <div class=\"flag-step\">\n            <div class=\"flag-box trairanga-preview\">\n              <div style=\"background:#dc2626; height:16%;\"></div>\n              <div style=\"background:#ffffff; height:16%;\"></div>\n              <div style=\"background:#1d4ed8; height:36%;\"></div>\n              <div style=\"background:#ffffff; height:16%;\"></div>\n              <div style=\"background:#dc2626; height:16%;\"></div>\n            </div>\n            <h4>1917\u2013Present (Rama VI)</h4>\n            <p><strong>Thong Trairanga (Tricolour):</strong> Red (Nation), White (Religions), Blue (Monarchy). 5 horizontal stripes!</p>\n          </div>\n        </div>\n        ", "ttsText": "The Thai flag evolved through history: In Ayutthaya, it was plain red. King Rama I added a white chakra wheel. King Rama II placed a white elephant inside the chakra. King Rama IV established the white elephant on a red field. In 1917, King Rama VI created the Trairanga flag with red, white, and blue stripes!"}, {"chapter": 3, "chapterTitle": "Chapter 3: World History & Heritage", "chapterIcon": "\ud83c\udf0d", "bookmark": "History", "pageNum": 22, "title": "Ancient Thai Commerce & Arts", "subtitle": "Bullet Money, Floating Markets & Classical Dance", "mascot": "\ud83d\udef6", "mascotMsg": "Can you believe Thai people once traded using silver bullet money called Pod Duang?", "examTip": "Bullet money (Pod Duang) was silver currency used in Sukhothai and Ayutthaya. Floating markets were trade hubs along canals.", "contentHtml": "\n        <div class=\"history-grid\">\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83e\ude99</div>\n            <h4>Bullet Money (\u0e40\u0e07\u0e34\u0e19\u0e1e\u0e14\u0e14\u0e49\u0e27\u0e07)</h4>\n            <p>Curved silver lumps shaped like rolled coils stamped with royal royal emblems, used from Sukhothai to early Bangkok.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83d\udef6</div>\n            <h4>Floating Markets (\u0e15\u0e25\u0e32\u0e14\u0e19\u0e49\u0e33)</h4>\n            <p>Vibrant trading hubs on rivers and canals where villagers paddled wooden boats loaded with fruits, vegetables, and hot noodles.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83c\udfad</div>\n            <h4>Classical Thai Dance (\u0e23\u0e33\u0e44\u0e17\u0e22)</h4>\n            <p>Graceful slow hand gestures (Jeeb), curved finger movements, elegant footwork, and glistening golden Chada crowns.</p>\n          </div>\n          <div class=\"history-item\">\n            <div class=\"hist-icon\">\ud83d\udcdc</div>\n            <h4>Shared Heritage</h4>\n            <p>These historical treasures reflect Thai ingenuity, warm community spirit, and a deep bond with waterways and nature.</p>\n          </div>\n        </div>\n        ", "ttsText": "Ancient Thailand had unique commercial and cultural traditions! Bullet money, or Pod Duang, was curved silver currency stamped with royal marks. Floating markets were centers of commerce along rivers and canals. Classical Thai dance features graceful hand gestures and beautiful golden crowns!"}, {"chapter": 3, "chapterTitle": "Chapter 3: World History & Heritage", "chapterIcon": "\ud83c\udf0d", "bookmark": "History", "pageNum": 23, "title": "\ud83c\udfaf Chapter 3 Mini-Quiz", "subtitle": "Test your knowledge on Egypt, Greece, China & Thai Heritage!", "mascot": "\ud83c\udfc6", "mascotMsg": "Final chapter quiz! Check how much you remember about world civilizations and Thai history!", "examTip": "Remember which civilization invented democracy, and the meaning of the Trairanga flag colors!", "isQuiz": true, "quizChapter": 3, "contentHtml": "\n        <div id=\"mini-quiz-ch3\" class=\"quiz-container\">\n          <div class=\"quiz-status-bar\">\n            <span>Question <span class=\"q-current\">1</span> of 5</span>\n            <button class=\"btn-shuffle\" onclick=\"shuffleMiniQuiz(3)\"><i class=\"fa-solid fa-arrows-rotate\"></i> Shuffle Choices</button>\n          </div>\n          <div id=\"quiz-ch3-content\"></div>\n        </div>\n        ", "ttsText": "Time for the Chapter 3 Mini Quiz! Test your knowledge on world civilizations, ancient inventions, and Thai national history. Choices will shuffle every time!"}];
+    const miniQuizzesData = {"ch1": [{"id": "mq1_1", "q": "What is the meaning of 'Tradition'?", "options": [{"text": "A set of customs and beliefs passed down for a long time", "correct": true}, {"text": "A brand new computer game invented yesterday", "correct": false}, {"text": "A classroom rule created only for today", "correct": false}, {"text": "A type of foreign money", "correct": false}], "exp": "Tradition refers to customs and beliefs that have been part of a way of life for a long time (like Loy Krathong)."}, {"id": "mq1_2", "q": "Why do traditional houses on river plains have raised floors (stilts)?", "options": [{"text": "To protect from seasonal floodwaters", "correct": true}, {"text": "To keep out cold freezing wind", "correct": false}, {"text": "To store cars underneath", "correct": false}, {"text": "To make them look like skyscrapers", "correct": false}], "exp": "Raised floors lift living spaces above seasonal floodwaters during the heavy rainy monsoon season."}, {"id": "mq1_3", "q": "Which kitchen herb is famous for reducing blood cholesterol?", "options": [{"text": "Garlic (\u0e01\u0e23\u0e30\u0e40\u0e17\u0e35\u0e22\u0e21)", "correct": true}, {"text": "Shallot (\u0e2b\u0e2d\u0e21\u0e41\u0e14\u0e07)", "correct": false}, {"text": "Lemongrass (\u0e15\u0e30\u0e44\u0e04\u0e23\u0e49)", "correct": false}, {"text": "Turmeric (\u0e02\u0e21\u0e34\u0e49\u0e19)", "correct": false}], "exp": "Garlic reduces blood cholesterol. Shallot relieves blocked nose, lemongrass helps with flatus/gas, turmeric heals peptic ulcers."}, {"id": "mq1_4", "q": "Which holiday commemorates King Rama I establishing Bangkok as capital in 1782?", "options": [{"text": "Chakri Memorial Day (6 April)", "correct": true}, {"text": "Chulalongkorn Day (23 October)", "correct": false}, {"text": "Constitution Day (10 December)", "correct": false}, {"text": "Coronation Day (4 May)", "correct": false}], "exp": "Chakri Memorial Day on 6 April commemorates King Rama I, founder of Bangkok and the Chakri Dynasty."}, {"id": "mq1_5", "q": "How many species of plants were found in Pu Yai Viboon's 9-rai Agroforestry forest?", "options": [{"text": "Almost 500 species", "correct": true}, {"text": "Only 10 species", "correct": false}, {"text": "50 species", "correct": false}, {"text": "None at all", "correct": false}], "exp": "A United Nations survey discovered almost 500 plant species in Pu Yai Viboon's man-made forest!"}], "ch2": [{"id": "mq2_1", "q": "What is the fundamental principle of Democracy?", "options": [{"text": "People help govern themselves with equal rights", "correct": true}, {"text": "One strong person decides everything for everyone", "correct": false}, {"text": "Only the richest people can make choices", "correct": false}, {"text": "Nobody is allowed to vote", "correct": false}], "exp": "Democracy means people help govern themselves with liberty, equality, and voting rights."}, {"id": "mq2_2", "q": "When a vote is finished in a democracy, what must the majority do?", "options": [{"text": "Accept the win, but still respect and listen to the minority", "correct": true}, {"text": "Punish the minority and take away their rights", "correct": false}, {"text": "Ignore the minority and force them to leave", "correct": false}, {"text": "Cancel the whole election", "correct": false}], "exp": "A democratic community accepts the majority decision while actively respecting and listening to minority viewpoints."}, {"id": "mq2_3", "q": "What is 'Direct Voting'?", "options": [{"text": "Voters directly choose the candidate themselves", "correct": true}, {"text": "Voters pick representatives, and representatives pick the leader", "correct": false}, {"text": "A teacher picks the student without voting", "correct": false}, {"text": "Rolling a dice to decide", "correct": false}], "exp": "Direct voting means every eligible person casts their vote directly for their candidate (like voting for a class monitor)."}, {"id": "mq2_4", "q": "Who leads the local administration of a village in Thailand?", "options": [{"text": "Village leader (\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e0d\u0e48\u0e1a\u0e49\u0e32\u0e19)", "correct": true}, {"text": "Sub-district leader (\u0e01\u0e33\u0e19\u0e31\u0e19)", "correct": false}, {"text": "Provincial Governor", "correct": false}, {"text": "Police Chief", "correct": false}], "exp": "The village leader (Pu Yai Baan) manages local village administration and community welfare."}, {"id": "mq2_5", "q": "Which action shows a responsible community member?", "options": [{"text": "Using pedestrian crossings and keeping parks clean", "correct": true}, {"text": "Throwing trash onto the road", "correct": false}, {"text": "Interrupting classmates when they are speaking", "correct": false}, {"text": "Refusing to follow classroom rules", "correct": false}], "exp": "Good citizens respect traffic rules, use zebra crossings, care for public places, and help others."}], "ch3": [{"id": "mq3_1", "q": "Along which river did Ancient Egyptian civilization develop?", "options": [{"text": "Nile River", "correct": true}, {"text": "Amazon River", "correct": false}, {"text": "Chao Phraya River", "correct": false}, {"text": "Yellow River", "correct": false}], "exp": "The Nile River provided fresh water, irrigation, and fertile silt for Ancient Egypt in the desert."}, {"id": "mq3_2", "q": "Where was Democracy first created and practiced by citizens?", "options": [{"text": "Athens, Ancient Greece", "correct": true}, {"text": "Cairo, Ancient Egypt", "correct": false}, {"text": "Beijing, Ancient China", "correct": false}, {"text": "Rome, Ancient Italy", "correct": false}], "exp": "Democracy was invented in Athens, Greece, where free citizens gathered to debate and vote on laws."}, {"id": "mq3_3", "q": "Which two famous inventions originated in Ancient China?", "options": [{"text": "Magnetic Compass & Fireworks", "correct": true}, {"text": "Pyramids & Mummies", "correct": false}, {"text": "Olympic Games & Greek Columns", "correct": false}, {"text": "Bullet Money & Floating Markets", "correct": false}], "exp": "Ancient China invented the magnetic compass for navigation and gunpowder/fireworks for celebrations."}, {"id": "mq3_4", "q": "What was the Siamese flag during the Ayutthaya period?", "options": [{"text": "A plain red flag", "correct": true}, {"text": "A flag with 5 horizontal stripes", "correct": false}, {"text": "A red flag with a white elephant", "correct": false}, {"text": "A blue flag with a golden star", "correct": false}], "exp": "In the Ayutthaya era, Siam used a plain red flag for royal and trade vessels."}, {"id": "mq3_5", "q": "What is the ancient curved silver coin from Sukhothai and Ayutthaya called?", "options": [{"text": "Bullet Money (Pod Duang / \u0e40\u0e07\u0e34\u0e19\u0e1e\u0e14\u0e14\u0e49\u0e27\u0e07)", "correct": true}, {"text": "Paper Baht banknote", "correct": false}, {"text": "Gold Dollar coin", "correct": false}, {"text": "Bronze medal", "correct": false}], "exp": "Pod Duang (Bullet Money) was traditional Thai silver currency stamped with royal symbols."}]};
+    const examSheetsData = [{"sheetNum": 1, "sheetTitle": "Sheet 1: Traditions, Family & Housing", "sheetDesc": "Read each question carefully and select the best answer.", "questions": [{"num": 1, "type": "choice", "question": "1. What is the definition of a 'Tradition'?", "options": [{"text": "A set of customs and beliefs that have been part of a way of life for a long time", "correct": true}, {"text": "A temporary rule created for one week in school", "correct": false}, {"text": "A modern machine used to plant rice faster", "correct": false}, {"text": "A computer program downloaded on a phone", "correct": false}], "exp": "Traditions are long-standing customs and beliefs passed down through generations."}, {"num": 2, "type": "choice", "question": "2. Why is carrying on traditions and culture beneficial to society?", "options": [{"text": "It enables society to become orderly, peaceful, and preserves identity", "correct": true}, {"text": "It forces everyone to dress in exactly the same clothes", "correct": false}, {"text": "It stops people from talking to neighbours", "correct": false}, {"text": "It eliminates all forms of art and singing", "correct": false}], "exp": "Textbook p.3 states that carrying on traditions and culture enables society to become orderly and peaceful."}, {"num": 3, "type": "choice", "question": "3. Which traditional Thai gesture shows respect when greeting parents or grandparents?", "options": [{"text": "Performing the Wai or Krab", "correct": true}, {"text": "Shaking hands firmly with gloves", "correct": false}, {"text": "Waving a flag in the air", "correct": false}, {"text": "Snapping fingers three times", "correct": false}], "exp": "The Wai (palms pressed together) and Krab are traditional Thai gestures of respect towards elders."}, {"num": 4, "type": "choice", "question": "4. Why are traditional houses in plains and river valleys built with raised floors (on stilts)?", "options": [{"text": "To protect the living area from seasonal floodwaters", "correct": true}, {"text": "To protect the roof from freezing snowfall", "correct": false}, {"text": "To catch fish directly from bedroom windows", "correct": false}, {"text": "To make the house shake during earthquakes", "correct": false}], "exp": "Raised floors elevate homes above seasonal monsoon floodwaters in river valley plains."}, {"num": 5, "type": "choice", "question": "5. Why do traditional houses in cold mountain regions have few windows and thick walls?", "options": [{"text": "To keep the freezing cold air out and maintain warmth inside", "correct": true}, {"text": "To hide away from visiting relatives", "correct": false}, {"text": "Because people did not know how to make glass", "correct": false}, {"text": "To make the house completely dark at noon", "correct": false}], "exp": "Thick walls and minimal window openings trap warmth and protect against mountain chill."}]}, {"sheetNum": 2, "sheetTitle": "Sheet 2: Rice Culture, Costumes & Food", "sheetDesc": "Select the correct option for each question on Thai agriculture and regional culture.", "questions": [{"num": 6, "type": "choice", "question": "6. Which goddess of grain is worshipped during the ceremony of calling the rice spirit?", "options": [{"text": "Pra Mae Poh Sop", "correct": true}, {"text": "Phra Mae Khongkha", "correct": false}, {"text": "Phra Mae Thorani", "correct": false}, {"text": "Medusa", "correct": false}], "exp": "Pra Mae Poh Sop is the revered goddess of grain and rice in traditional Thai agricultural rituals."}, {"num": 7, "type": "choice", "question": "7. What is the traditional practice called where neighbouring farmers co-operate to harvest rice together?", "options": [{"text": "Long Khaek (\u0e1b\u0e23\u0e30\u0e40\u0e1e\u0e13\u0e35\u0e25\u0e07\u0e41\u0e02\u0e01)", "correct": true}, {"text": "Wien Tien (\u0e40\u0e27\u0e35\u0e22\u0e19\u0e40\u0e17\u0e35\u0e22\u0e19)", "correct": false}, {"text": "Loy Krathong (\u0e25\u0e2d\u0e22\u0e01\u0e23\u0e30\u0e17\u0e07)", "correct": false}, {"text": "Songkran (\u0e2a\u0e07\u0e01\u0e23\u0e32\u0e19\u0e15\u0e4c)", "correct": false}], "exp": "Long Khaek is the mutual communal aid tradition of farmers harvesting paddy together."}, {"num": 8, "type": "choice", "question": "8. In which region of Thailand do people traditionally wear the Mo Hom shirt and Pha Sin skirt?", "options": [{"text": "Northern Thailand", "correct": true}, {"text": "Southern Thailand", "correct": false}, {"text": "Central Thailand", "correct": false}, {"text": "Eastern Thailand", "correct": false}], "exp": "Northern Thailand is celebrated for indigo Mo Hom shirts and woven Pha Sin skirts."}, {"num": 9, "type": "choice", "question": "9. Which traditional draped trouser-cloth style was historically worn in Central Thailand?", "options": [{"text": "Jongkraben (\u0e42\u0e08\u0e07\u0e01\u0e23\u0e30\u0e40\u0e1a\u0e19)", "correct": true}, {"text": "Mudmee silk skirt", "correct": false}, {"text": "Batik sarong", "correct": false}, {"text": "Hmong pleated dress", "correct": false}], "exp": "Jongkraben is the draped trouser-cloth cloth wrapped around the waist and tucked back between the legs."}, {"num": 10, "type": "choice", "question": "10. What kind of staple rice is traditionally preferred in Northern and Northeastern Thailand?", "options": [{"text": "Glutinous (sticky) rice (\u0e02\u0e49\u0e32\u0e27\u0e40\u0e2b\u0e19\u0e35\u0e22\u0e27)", "correct": true}, {"text": "Round jasmine white rice (\u0e02\u0e49\u0e32\u0e27\u0e2a\u0e27\u0e22)", "correct": false}, {"text": "Basmati brown rice", "correct": false}, {"text": "Wild wheat grain", "correct": false}], "exp": "Northern and Northeastern Thai diets traditionally center around sticky glutinous rice eaten with hands."}]}, {"sheetNum": 3, "sheetTitle": "Sheet 3: Medicinal Herbs & World Religions", "sheetDesc": "Test your knowledge on healing herbs and religious practices.", "questions": [{"num": 11, "type": "choice", "question": "11. Which kitchen herb is widely known for reducing blood cholesterol?", "options": [{"text": "Garlic (\u0e01\u0e23\u0e30\u0e40\u0e17\u0e35\u0e22\u0e21)", "correct": true}, {"text": "Shallot (\u0e2b\u0e2d\u0e21\u0e41\u0e14\u0e07)", "correct": false}, {"text": "Lemongrass (\u0e15\u0e30\u0e44\u0e04\u0e23\u0e49)", "correct": false}, {"text": "Turmeric (\u0e02\u0e21\u0e34\u0e49\u0e19)", "correct": false}], "exp": "Garlic reduces blood cholesterol and promotes healthy cardiovascular function."}, {"num": 12, "type": "choice", "question": "12. If a child has a blocked nose or cold, which herb provides soothing steam relief?", "options": [{"text": "Shallot (\u0e2b\u0e2d\u0e21\u0e41\u0e14\u0e07)", "correct": true}, {"text": "Turmeric (\u0e02\u0e21\u0e34\u0e49\u0e19)", "correct": false}, {"text": "Garlic (\u0e01\u0e23\u0e30\u0e40\u0e17\u0e35\u0e22\u0e21)", "correct": false}, {"text": "Black pepper", "correct": false}], "exp": "Shallot vapours relieve nasal congestion and clear respiratory pathways."}, {"num": 13, "type": "choice", "question": "13. What health problem does Turmeric (\u0e02\u0e21\u0e34\u0e49\u0e19) help cure?", "options": [{"text": "Peptic ulcers and stomach lining irritation", "correct": true}, {"text": "Broken bones", "correct": false}, {"text": "Toothaches", "correct": false}, {"text": "Poor vision", "correct": false}], "exp": "Turmeric is famous in Thai medicine for soothing the stomach and curing peptic ulcers."}, {"num": 14, "type": "choice", "question": "14. Which fragrant stalk herb reduces flatus (stomach gas and bloating)?", "options": [{"text": "Lemongrass (\u0e15\u0e30\u0e44\u0e04\u0e23\u0e49)", "correct": true}, {"text": "Shallot (\u0e2b\u0e2d\u0e21\u0e41\u0e14\u0e07)", "correct": false}, {"text": "Garlic (\u0e01\u0e23\u0e30\u0e40\u0e17\u0e35\u0e22\u0e21)", "correct": false}, {"text": "Chili pepper", "correct": false}], "exp": "Lemongrass soothes digestive cramps and expels flatus/gas."}, {"num": 15, "type": "choice", "question": "15. Where do Muslims go to worship and perform their daily Salat prayers?", "options": [{"text": "Mosque (\u0e21\u0e31\u0e2a\u0e22\u0e34\u0e14)", "correct": true}, {"text": "Church (\u0e42\u0e1a\u0e2a\u0e16\u0e4c\u0e04\u0e23\u0e34\u0e2a\u0e15\u0e4c)", "correct": false}, {"text": "Temple (\u0e27\u0e31\u0e14)", "correct": false}, {"text": "Museum", "correct": false}], "exp": "Muslims worship at the Mosque, while Buddhists go to Temples and Christians to Churches."}]}, {"sheetNum": 4, "sheetTitle": "Sheet 4: Sangahavatthu 4 & Royal Holidays", "sheetDesc": "Select the correct answer regarding social virtues and official national holidays.", "questions": [{"num": 16, "type": "choice", "question": "16. In Sangahavatthu 4, what does 'Dana' (\u0e17\u0e32\u0e19 / Generosity) mean?", "options": [{"text": "Willingly giving or sharing food, clothes, or medicine to help others", "correct": true}, {"text": "Speaking with a very loud and strict voice", "correct": false}, {"text": "Working alone without talking to neighbours", "correct": false}, {"text": "Selling goods at expensive prices", "correct": false}], "exp": "Dana represents generosity: freely sharing possessions like food, clothing, and medicine."}, {"num": 17, "type": "choice", "question": "17. In Sangahavatthu 4, 'Piyavaca' (\u0e1b\u0e34\u0e22\u0e27\u0e32\u0e08\u0e32) means:", "options": [{"text": "Using polite words, telling the truth, and saying useful things", "correct": true}, {"text": "Telling scary ghost stories to classmates", "correct": false}, {"text": "Remaining silent and never answering questions", "correct": false}, {"text": "Arguing until you win every disagreement", "correct": false}], "exp": "Piyavaca means kindly, polite, honest, and beneficial speech."}, {"num": 18, "type": "choice", "question": "18. Which holiday on 6 April commemorates King Rama I establishing Bangkok in 1782?", "options": [{"text": "Chakri Memorial Day", "correct": true}, {"text": "Chulalongkorn Day", "correct": false}, {"text": "Coronation Day", "correct": false}, {"text": "Constitution Day", "correct": false}], "exp": "Chakri Memorial Day on 6 April honours King Rama I who established Bangkok as capital in 1782."}, {"num": 19, "type": "choice", "question": "19. Which beloved monarch's passing is commemorated on Chulalongkorn Day (23 October)?", "options": [{"text": "King Chulalongkorn the Great (Rama V)", "correct": true}, {"text": "King Rama I", "correct": false}, {"text": "King Rama VII", "correct": false}, {"text": "King Rama X", "correct": false}], "exp": "Chulalongkorn Day (23 October) commemorates King Rama V, known as 'Phra Piyamaharaj'."}, {"num": 20, "type": "choice", "question": "20. When is Constitution Day celebrated in Thailand, marking the 1932 constitution?", "options": [{"text": "10th of December", "correct": true}, {"text": "5th of December", "correct": false}, {"text": "28th of July", "correct": false}, {"text": "1st of January", "correct": false}], "exp": "Constitution Day is on 10 December, commemorating King Rama VII granting the first permanent constitution in 1932."}]}, {"sheetNum": 5, "sheetTitle": "Sheet 5: Buddhist Holidays & Songkran", "sheetDesc": "Review holy lunar observances and traditional celebrations.", "questions": [{"num": 21, "type": "choice", "question": "21. On which holy day did 1,250 Arahant monks gather spontaneously to hear Ovada Patimokkha?", "options": [{"text": "Makha Bucha Day (3rd Thai lunar month)", "correct": true}, {"text": "Visakha Bucha Day (6th Thai lunar month)", "correct": false}, {"text": "Asarnha Bucha Day (8th Thai lunar month)", "correct": false}, {"text": "Buddhist Lent Day", "correct": false}], "exp": "Makha Bucha on the 3rd lunar full moon marks the miraculous gathering of 1,250 enlightened monks."}, {"num": 22, "type": "choice", "question": "22. Which three major milestones in Lord Buddha's life occurred on Visakha Bucha Day?", "options": [{"text": "His birth, enlightenment, and passing away (all on the same lunar date)", "correct": true}, {"text": "His ordination, coronation, and writing of scriptures", "correct": false}, {"text": "His departure from Egypt, crossing of rivers, and first sermon", "correct": false}, {"text": "His birth, wedding, and retirement", "correct": false}], "exp": "Visakha Bucha celebrates the threefold miracle of the Buddha's birth, enlightenment, and parinibbana."}, {"num": 23, "type": "choice", "question": "23. On Asarnha Bucha Day, what was completed for the very first time following Buddha's first sermon?", "options": [{"text": "The Triple Gem (Buddha, Dhamma, and Sangha)", "correct": true}, {"text": "The construction of the first temple", "correct": false}, {"text": "The writing of the Tripitaka on paper", "correct": false}, {"text": "The invention of printing", "correct": false}], "exp": "After Buddha's first sermon to the 5 ascetics, the first monk was ordained, completing the Triple Gem."}, {"num": 24, "type": "choice", "question": "24. How many months does Buddhist Lent (Khao Phansa) last, during which monks reside in their temple?", "options": [{"text": "3 months", "correct": true}, {"text": "1 month", "correct": false}, {"text": "6 months", "correct": false}, {"text": "12 months", "correct": false}], "exp": "Buddhist Lent lasts for 3 months during the rainy season."}, {"num": 25, "type": "choice", "question": "25. What is the 13th of April known as during the traditional Songkran festival?", "options": [{"text": "Wan Maha Songkran & Old Folks' Day", "correct": true}, {"text": "Wan Nao & Family Day", "correct": false}, {"text": "Wan Thaloeng Sok", "correct": false}, {"text": "Farmer's Day", "correct": false}], "exp": "13 April is Wan Maha Songkran and Old Folks' Day; 14 April is Wan Nao/Family Day; 15 April is Wan Thaloeng Sok."}]}, {"sheetNum": 6, "sheetTitle": "Sheet 6: Farmer's Day & Community Hero", "sheetDesc": "Learn about agricultural ceremonies and community leadership.", "questions": [{"num": 26, "type": "choice", "question": "26. What is the Royal Ploughing Ceremony Day also commonly called?", "options": [{"text": "Farmer's Day (\u0e27\u0e31\u0e19\u0e40\u0e01\u0e29\u0e15\u0e23\u0e01\u0e23)", "correct": true}, {"text": "Teacher's Day", "correct": false}, {"text": "Children's Day", "correct": false}, {"text": "Constitution Day", "correct": false}], "exp": "The Royal Ploughing Ceremony Day in May is also known as Farmer's Day."}, {"num": 27, "type": "choice", "question": "27. In which village and province did Pu Yai Viboon Kheam-Chalerm establish his Agroforestry farm?", "options": [{"text": "Baan Huay Hin, Chachoengsao Province", "correct": true}, {"text": "Baan Mae Chaem, Chiang Mai Province", "correct": false}, {"text": "Baan Koh Samui, Surat Thani Province", "correct": false}, {"text": "Baan Bang Pa-in, Ayutthaya Province", "correct": false}], "exp": "Pu Yai Viboon led Baan Huay Hin, Sanam Chai Khet District, Chachoengsao Province."}, {"num": 28, "type": "choice", "question": "28. How many rai of land did Pu Yai Viboon use for his Agroforestry scheme?", "options": [{"text": "9 rai", "correct": true}, {"text": "90 rai", "correct": false}, {"text": "500 rai", "correct": false}, {"text": "2 rai", "correct": false}], "exp": "Pu Yai Viboon transformed his remaining 9 rai into a self-sufficient forest agriculture farm."}, {"num": 29, "type": "choice", "question": "29. How many plant species did the United Nations survey discover on Pu Yai Viboon's agroforestry land?", "options": [{"text": "Almost 500 species", "correct": true}, {"text": "Exactly 5 species", "correct": false}, {"text": "About 50 species", "correct": false}, {"text": "Over 5,000 species", "correct": false}], "exp": "The survey recorded nearly 500 varieties of rare and useful plants on the 9 rai."}, {"num": 30, "type": "choice", "question": "30. Which famous Thai royal philosophy is directly embodied in Pu Yai Viboon's self-sufficient farming?", "options": [{"text": "Sufficiency Economy Philosophy (King Rama IX)", "correct": true}, {"text": "Monocrop Export Strategy", "correct": false}, {"text": "Industrial Automation Plan", "correct": false}, {"text": "Urban High-Rise Living", "correct": false}], "exp": "Pu Yai Viboon's farm demonstrates King Rama IX's Sufficiency Economy Philosophy of moderation, reasonableness, and self-reliance."}]}, {"sheetNum": 7, "sheetTitle": "Sheet 7: Democracy, Liberty & Voting", "sheetDesc": "Test your grasp of democratic rights, principles, and election formats.", "questions": [{"num": 31, "type": "choice", "question": "31. What is the core definition of Democracy?", "options": [{"text": "A way of life where people help govern themselves with equal rights", "correct": true}, {"text": "A rule where only teachers vote on everything", "correct": false}, {"text": "A country where citizens have no personal freedom", "correct": false}, {"text": "An organization where the oldest person makes all decisions alone", "correct": false}], "exp": "Democracy means self-governance by the people with equal participation and protection under the law."}, {"num": 32, "type": "choice", "question": "32. What does 'Liberty' mean in a democratic society?", "options": [{"text": "Freedom to speak, think, and act according to the law without harming others", "correct": true}, {"text": "Freedom to break any rule whenever you feel like it", "correct": false}, {"text": "The right to stop others from expressing opinions", "correct": false}, {"text": "Free tickets to amusement parks", "correct": false}], "exp": "Liberty represents lawful individual freedom that respects the rights of fellow citizens."}, {"num": 33, "type": "choice", "question": "33. What should the majority group do when working with a minority group?", "options": [{"text": "Listen to and respect minority ideas with an open mind", "correct": true}, {"text": "Expel minority members from the classroom", "correct": false}, {"text": "Ignore minority suggestions completely", "correct": false}, {"text": "Refuse to speak to anyone who voted differently", "correct": false}], "exp": "Democracy requires accepting the majority vote while continuing to listen to and respect minority views."}, {"num": 34, "type": "choice", "question": "34. What type of voting occurs when every student directly votes for their class monitor?", "options": [{"text": "Direct voting (Popular voting)", "correct": true}, {"text": "Indirect voting (Electoral college)", "correct": false}, {"text": "Lottery voting", "correct": false}, {"text": "Secret assignment", "correct": false}], "exp": "Direct voting is when voters directly cast their ballots for the person they want."}, {"num": 35, "type": "choice", "question": "35. If students elect class monitors, and those monitors then elect the school president, this is:", "options": [{"text": "Indirect voting (Electoral college method)", "correct": true}, {"text": "Direct voting", "correct": false}, {"text": "Unanimous decree", "correct": false}, {"text": "Dictatorship", "correct": false}], "exp": "Indirect voting occurs when voters choose representatives, who then choose the executive leader."}]}, {"sheetNum": 8, "sheetTitle": "Sheet 8: Community Roles & Ancient Civilizations", "sheetDesc": "Explore community leadership and world history milestones.", "questions": [{"num": 36, "type": "choice", "question": "36. Who leads public administration and community welfare in a Thai village?", "options": [{"text": "Village leader (\u0e1c\u0e39\u0e49\u0e43\u0e2b\u0e0d\u0e48\u0e1a\u0e49\u0e32\u0e19)", "correct": true}, {"text": "School monitor", "correct": false}, {"text": "Bank manager", "correct": false}, {"text": "Pharaoh", "correct": false}], "exp": "The village leader (Pu Yai Baan) is elected to manage village administration and welfare."}, {"num": 37, "type": "choice", "question": "37. What is an everyday civic duty that helps ensure road safety in the community?", "options": [{"text": "Using pedestrian (zebra) crossings and obeying traffic signals", "correct": true}, {"text": "Running across highways during rush hour", "correct": false}, {"text": "Riding bicycles without holding handlebars", "correct": false}, {"text": "Painting graffiti on road signs", "correct": false}], "exp": "Good community members use pedestrian zebra crossings to keep themselves and others safe."}, {"num": 38, "type": "choice", "question": "38. Which famous river served as the vital lifeline of Ancient Egyptian civilization?", "options": [{"text": "Nile River", "correct": true}, {"text": "Amazon River", "correct": false}, {"text": "Mississippi River", "correct": false}, {"text": "Thames River", "correct": false}], "exp": "The Nile River provided water, irrigation, and fertile mud that enabled Egypt to thrive in the desert."}, {"num": 39, "type": "choice", "question": "39. Why did Ancient Egyptians build the monumental stone Pyramids?", "options": [{"text": "As royal tombs to preserve Pharaohs' bodies for eternity", "correct": true}, {"text": "As giant grain storage silos", "correct": false}, {"text": "As sports stadiums for running races", "correct": false}, {"text": "As lighthouses for river boats", "correct": false}], "exp": "Pyramids were built as sacred tombs to protect and preserve the mummified bodies of Pharaohs."}, {"num": 40, "type": "choice", "question": "40. In which ancient city-state was Democracy first developed and practiced?", "options": [{"text": "Athens, Ancient Greece", "correct": true}, {"text": "Giza, Ancient Egypt", "correct": false}, {"text": "Beijing, Ancient China", "correct": false}, {"text": "London, England", "correct": false}], "exp": "Athens in Ancient Greece pioneered direct democracy where citizens gathered to vote on civic policies."}]}, {"sheetNum": 9, "sheetTitle": "Sheet 9: Matching & Associations", "sheetDesc": "Match each item on the left with its correct partner on the right.", "questions": [{"num": 41, "type": "matching", "question": "41. Match each Kitchen Herb with its Health Benefit:", "pairs": [{"left": "\ud83e\uddc5 Shallot", "right": "Relieves blocked nose & cold"}, {"left": "\ud83e\uddc4 Garlic", "right": "Reduces blood cholesterol"}, {"left": "\ud83c\udf3f Lemongrass", "right": "Reduces flatus (stomach gas)"}, {"left": "\ud83d\udfe1 Turmeric", "right": "Helps cure peptic ulcers"}], "exp": "Shallot = blocked nose, Garlic = cholesterol, Lemongrass = flatus/gas, Turmeric = peptic ulcers."}, {"num": 42, "type": "matching", "question": "42. Match each Religion with its Sacred Symbol & Worship Place:", "pairs": [{"left": "\u2638\ufe0f Buddhism", "right": "Temple (Wat) & Dhamma Wheel"}, {"left": "\u271d\ufe0f Christianity", "right": "Church & Holy Cross"}, {"left": "\u262a\ufe0f Islam", "right": "Mosque & Crescent Moon with Star"}], "exp": "Buddhism = Temple/Wheel, Christianity = Church/Cross, Islam = Mosque/Crescent & Star."}, {"num": 43, "type": "matching", "question": "43. Match each Civilization with its Famous Wonder or Invention:", "pairs": [{"left": "\ud83d\udcd0 Ancient Egypt", "right": "Pyramids & Hieroglyphics"}, {"left": "\u26a1 Ancient Greece", "right": "Democracy & Olympic Games"}, {"left": "\ud83e\udded Ancient China", "right": "Great Wall, Compass & Fireworks"}, {"left": "\ud83e\ude99 Ancient Thailand", "right": "Bullet Money (Pod Duang) & Floating Markets"}], "exp": "Egypt = Pyramids/Hieroglyphics, Greece = Democracy/Olympics, China = Compass/Great Wall, Thailand = Pod Duang/Floating Markets."}, {"num": 44, "type": "matching", "question": "44. Match the Thai Flag Design with its Historical Era:", "pairs": [{"left": "Ayutthaya Period", "right": "Plain Red Flag"}, {"left": "King Rama I (1782)", "right": "Red Flag with White Chakra Wheel"}, {"left": "King Rama IV (1855)", "right": "White Elephant on Plain Red Field"}, {"left": "King Rama VI (1917)", "right": "Trairanga (5 horizontal stripes: Red, White, Blue)"}], "exp": "Plain Red -> Chakra (Rama I) -> White Elephant (Rama IV) -> Trairanga 5 stripes (Rama VI)."}, {"num": 45, "type": "matching", "question": "45. Match each Sangahavatthu 4 Virtue with its Meaning:", "pairs": [{"left": "\ud83c\udf81 Dana (\u0e17\u0e32\u0e19)", "right": "Generosity & willingly sharing goods"}, {"left": "\ud83d\udcac Piyavaca (\u0e1b\u0e34\u0e22\u0e27\u0e32\u0e08\u0e32)", "right": "Kindly, polite & truthful speech"}, {"left": "\ud83e\udd1d Atthacariya (\u0e2d\u0e31\u0e15\u0e16\u0e08\u0e23\u0e34\u0e22\u0e32)", "right": "Useful conduct & helping others without reward"}, {"left": "\u2696\ufe0f Samanattata (\u0e2a\u0e21\u0e32\u0e19\u0e31\u0e15\u0e15\u0e15\u0e32)", "right": "Equal treatment & proper behaviour in all situations"}], "exp": "Dana = giving, Piyavaca = kind speech, Atthacariya = helpful conduct, Samanattata = equal treatment."}]}, {"sheetNum": 10, "sheetTitle": "Sheet 10: Fill-in-the-Blank & Reading Stories", "sheetDesc": "Complete the statements using the word bank, then read the passages to answer comprehension questions.", "questions": [{"num": 46, "type": "fillin", "question": "46. Fill in the blanks using words from the word bank:", "template": "Traditional houses built on river plains have {blank1} to protect families from seasonal {blank2}.", "wordBank": ["raised floors", "floodwaters", "chimneys", "blizzards"], "blanks": {"blank1": "raised floors", "blank2": "floodwaters"}, "exp": "River valley houses feature raised floors (stilts) to stay dry above seasonal floodwaters."}, {"num": 47, "type": "fillin", "question": "47. Fill in the blanks using words from the word bank:", "template": "In a democratic classroom, we agree to accept the {blank1} vote, while always showing respect for the {blank2}.", "wordBank": ["majority", "minority", "monarch", "teacher"], "blanks": {"blank1": "majority", "blank2": "minority"}, "exp": "Democratic decision-making accepts majority outcomes while respecting minority views."}, {"num": 48, "type": "fillin", "question": "48. Fill in the blanks using words from the word bank:", "template": "Ancient Thai merchants used curved silver currency called {blank1}, and traded fresh produce from boats at {blank2}.", "wordBank": ["Pod Duang", "floating markets", "gold bars", "pyramids"], "blanks": {"blank1": "Pod Duang", "blank2": "floating markets"}, "exp": "Pod Duang (bullet money) and floating markets were pillars of ancient Siamese commerce."}, {"num": 49, "type": "story", "storyTitle": "\ud83d\udcd6 Story 1: The Green Forest of Pu Yai Viboon", "storyPassage": "Pu Yai Viboon Kheam-Chalerm was a farmer in Baan Huay Hin, Chachoengsao Province. In his youth, he tried single-crop commercial farming and fell heavily into debt. Instead of giving up, in 1987 he planted vegetables and turned his remaining 9 rai of land into an Agroforestry sanctuary. He grew tall timber trees, fruit trees, and medicinal herbs together like a natural forest. A United Nations survey found nearly 500 species of plants on his land! Soon, visitors from all over Thailand came to learn how to grow their own food without debt. His farm became known as the 'University of Community and Nature'.", "question": "49. Why is Pu Yai Viboon's agroforestry farm called the 'University of Community and Nature'?", "options": [{"text": "Because it teaches farmers how to be self-sufficient and grow food with nature without falling into debt", "correct": true}, {"text": "Because it is a regular college that charges expensive student tuition fees", "correct": false}, {"text": "Because only university professors are allowed to walk in the forest", "correct": false}, {"text": "Because it produces computers and modern smartphones", "correct": false}], "exp": "His farm serves as a hands-on learning center teaching self-reliance, ecological harmony, and debt-free living."}, {"num": 50, "type": "story", "storyTitle": "\ud83d\udcd6 Story 2: King Rama V and Chulalongkorn Day", "storyPassage": "King Chulalongkorn the Great (Rama V) reigned over Siam during a time when modern reforms were essential to keep the country independent. He modernized government administration, built the first railways and telegraph networks, established hospitals, and peacefully abolished slavery without civil war. Thai people loved him deeply and called him 'Phra Piyamaharaj', which translates to 'The Great Beloved King'. Every year on the 23rd of October, Thai citizens place floral wreaths at his equestrian statue in Bangkok to commemorate his profound royal benevolence.", "question": "50. Why did the Thai people honor King Rama V with the royal title 'Phra Piyamaharaj'?", "options": [{"text": "Because he abolished slavery peacefully and brought modern progress out of great love for his people", "correct": true}, {"text": "Because he won sports games at the Olympic stadium", "correct": false}, {"text": "Because he was the very first King of the Ayutthaya period", "correct": false}, {"text": "Because he built the Great Wall of China", "correct": false}], "exp": "'Phra Piyamaharaj' means 'The Great Beloved King', honoring his loving reforms and peaceful abolition of slavery."}]}];
+
+    // AUDIO CONTEXT & SYNTHESIS (REALISTIC PAPER TURN SOUND)
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          audioCtx = new AudioContext();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playPageTurnSound() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        
+        // Realistic paper rustle sound via white noise buffer + bandpass filter
+        const bufferSize = ctx.sampleRate * 0.18; // 180ms
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(800, ctx.currentTime);
+        filter.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.18);
+        filter.Q.setValueAtTime(1.8, ctx.currentTime);
+
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.01, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start();
+      } catch (e) {
+        console.warn("Audio sound error:", e);
+      }
+    }
+
+    function playChimeSound(isCorrect) {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        if (isCorrect) {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+          osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+          osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2); // G5
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.4);
+        } else {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(320, ctx.currentTime);
+          osc.frequency.setValueAtTime(240, ctx.currentTime + 0.12);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.3);
+        }
+      } catch (e) {}
+    }
+
+    function toggleAudio() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById('btn-toggle-sound');
+      if (soundEnabled) {
+        btn.innerHTML = '<i class="fa-solid fa-volume-high"></i> Sound: ON';
+        btn.style.color = 'white';
+      } else {
+        btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Sound: OFF';
+        btn.style.color = '#94a3b8';
+      }
+    }
+
+    // WEB SPEECH API TTS (ENGLISH NARRATION)
+    let isSpeaking = false;
+    function toggleSpeech() {
+      if (!('speechSynthesis' in window)) {
+        alert("Speech synthesis is not supported on this browser.");
+        return;
+      }
+      if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+        updateSpeechBtn(false);
+      } else {
+        const currentPage = storybookPages[currentPageIndex];
+        const text = currentPage.ttsText || currentPage.title;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.92;
+        utterance.pitch = 1.05;
+
+        utterance.onstart = () => {
+          isSpeaking = true;
+          updateSpeechBtn(true);
+        };
+        utterance.onend = () => {
+          isSpeaking = false;
+          updateSpeechBtn(false);
+        };
+        utterance.onerror = () => {
+          isSpeaking = false;
+          updateSpeechBtn(false);
+        };
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function updateSpeechBtn(speaking) {
+      const btn = document.getElementById('btn-read-aloud');
+      if (speaking) {
+        btn.classList.add('speaking');
+        btn.innerHTML = '<i class="fa-solid fa-circle-stop"></i> <span>Stop</span>';
+      } else {
+        btn.classList.remove('speaking');
+        btn.innerHTML = '<i class="fa-solid fa-volume-high"></i> <span>Listen</span>';
+      }
+    }
+
+    // APP MODE SWITCHER (STORYBOOK VS DESK EXAM)
+    function switchMode(mode) {
+      if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+        updateSpeechBtn(false);
+      }
+      const storyView = document.getElementById('storybook-view');
+      const examView = document.getElementById('exam-view');
+      const btnStory = document.getElementById('btn-mode-story');
+      const btnExam = document.getElementById('btn-mode-exam');
+
+      if (mode === 'storybook') {
+        storyView.style.display = 'flex';
+        examView.style.display = 'none';
+        btnStory.classList.add('active');
+        btnExam.classList.remove('active');
+      } else {
+        storyView.style.display = 'none';
+        examView.style.display = 'flex';
+        btnStory.classList.remove('active');
+        btnExam.classList.add('active');
+        renderExamSheet(currentExamSheetIndex);
+      }
+    }
+
+    // FONT SIZE ADJUSTMENT
+    function setFontSize(size) {
+      document.documentElement.setAttribute('data-font-size', size);
+      document.querySelectorAll('.btn-font').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.innerText.toLowerCase().includes(size === 'small' ? '-' : size === 'large' ? '+' : 'a') && 
+           (size === 'medium' ? btn.innerText === 'A' : true)) {
+          btn.classList.add('active');
+        }
+      });
+    }
+
+    // ========================================================
+    // STORYBOOK LOGIC
+    // ========================================================
+    let currentPageIndex = 0;
+    const miniQuizState = {
+      1: { index: 0, score: 0, answered: {}, currentQuestions: [] },
+      2: { index: 0, score: 0, answered: {}, currentQuestions: [] },
+      3: { index: 0, score: 0, answered: {}, currentQuestions: [] }
+    };
+
+    function initStorybook() {
+      document.getElementById('total-page-num').innerText = storybookPages.length;
+      renderPageDots();
+      renderStoryPage(0);
+    }
+
+    function renderPageDots() {
+      const container = document.getElementById('page-dots-container');
+      container.innerHTML = '';
+      storybookPages.forEach((_, idx) => {
+        const dot = document.createElement('div');
+        dot.className = `page-dot ${idx === 0 ? 'active' : ''}`;
+        dot.title = `Page ${idx + 1}`;
+        dot.onclick = () => renderStoryPage(idx);
+        container.appendChild(dot);
+      });
+    }
+
+    function renderStoryPage(idx) {
+      if (idx < 0 || idx >= storybookPages.length) return;
+      if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+        updateSpeechBtn(false);
+      }
+
+      playPageTurnSound();
+      currentPageIndex = idx;
+      const page = storybookPages[idx];
+
+      // Update Indicators
+      const chIndicator = document.getElementById('book-ch-indicator');
+      chIndicator.className = `ch-indicator c${page.chapter}`;
+      document.getElementById('ch-icon').innerText = page.chapterIcon;
+      document.getElementById('ch-title').innerText = page.chapterTitle;
+
+      // Update Bookmark ribbons
+      document.querySelectorAll('.bookmark-tab').forEach((tab, tIdx) => {
+        if (tIdx + 1 === page.chapter) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+
+      // Update Texts
+      document.getElementById('page-title').innerText = page.title;
+      document.getElementById('page-subtitle').innerText = page.subtitle;
+      document.getElementById('mascot-icon').innerText = page.mascot;
+      document.getElementById('mascot-bubble').innerText = page.mascotMsg;
+      document.getElementById('exam-tip-text').innerText = page.examTip;
+      document.getElementById('current-page-num').innerText = idx + 1;
+
+      // Update Dots
+      document.querySelectorAll('.page-dot').forEach((dot, dIdx) => {
+        dot.classList.toggle('active', dIdx === idx);
+      });
+
+      // Enable/Disable Nav Buttons
+      document.getElementById('btn-prev-page').disabled = (idx === 0);
+      document.getElementById('btn-next-page').disabled = (idx === storybookPages.length - 1);
+
+      // Render Dynamic Page Body
+      const contentEl = document.getElementById('page-dynamic-content');
+      contentEl.innerHTML = page.contentHtml;
+
+      // If Quiz page, initialize mini quiz
+      if (page.isQuiz) {
+        initMiniQuiz(page.quizChapter);
+      }
+    }
+
+    function changePage(direction) {
+      renderStoryPage(currentPageIndex + direction);
+    }
+
+    function jumpToChapter(chNum) {
+      const targetIndex = storybookPages.findIndex(p => p.chapter === chNum);
+      if (targetIndex !== -1) {
+        renderStoryPage(targetIndex);
+      }
+    }
+
+    // MINI QUIZ LOGIC
+    function initMiniQuiz(ch) {
+      const state = miniQuizState[ch];
+      if (state.currentQuestions.length === 0) {
+        shuffleMiniQuiz(ch);
+      } else {
+        renderMiniQuizQuestion(ch);
+      }
+    }
+
+    function shuffleMiniQuiz(ch) {
+      const rawQuestions = miniQuizzesData[`ch${ch}`];
+      // Clone & shuffle question choices
+      const shuffled = rawQuestions.map(q => {
+        const copy = JSON.parse(JSON.stringify(q));
+        copy.options.sort(() => Math.random() - 0.5);
+        return copy;
+      });
+      miniQuizState[ch].currentQuestions = shuffled;
+      miniQuizState[ch].index = 0;
+      miniQuizState[ch].score = 0;
+      miniQuizState[ch].answered = {};
+      renderMiniQuizQuestion(ch);
+    }
+
+    function renderMiniQuizQuestion(ch) {
+      const state = miniQuizState[ch];
+      const q = state.currentQuestions[state.index];
+      const container = document.getElementById(`quiz-ch${ch}-content`);
+      if (!container || !q) return;
+
+      const statusBar = document.querySelector(`#mini-quiz-ch${ch} .q-current`);
+      if (statusBar) statusBar.innerText = state.index + 1;
+
+      let optsHtml = q.options.map((opt, i) => `
+        <button class="quiz-opt-btn" onclick="selectMiniQuizOpt(${ch}, ${i}, ${opt.correct})">
+          <span style="font-weight:800; color:#6366f1;">${String.fromCharCode(65 + i)}.</span>
+          <span>${opt.text}</span>
+        </button>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="quiz-q-title">${q.q}</div>
+        <div class="quiz-options-list">${optsHtml}</div>
+        <div id="quiz-feedback-box-ch${ch}" style="display:none;"></div>
+        <div class="quiz-nav-row">
+          <div class="quiz-score-badge">Score: ${state.score} / 5</div>
+          <div>
+            ${state.index < 4 
+              ? `<button class="btn-page-nav" onclick="nextMiniQuizQ(${ch})">Next Question <i class="fa-solid fa-arrow-right"></i></button>`
+              : `<button class="btn-page-nav" style="background:#10b981;" onclick="shuffleMiniQuiz(${ch})">Retake Quiz <i class="fa-solid fa-arrows-rotate"></i></button>`
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    function selectMiniQuizOpt(ch, optIndex, isCorrect) {
+      const state = miniQuizState[ch];
+      if (state.answered[state.index]) return; // already answered
+      state.answered[state.index] = true;
+
+      const q = state.currentQuestions[state.index];
+      const buttons = document.querySelectorAll(`#quiz-ch${ch}-content .quiz-opt-btn`);
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (q.options[idx].correct) {
+          btn.classList.add('correct');
+        } else if (idx === optIndex && !isCorrect) {
+          btn.classList.add('wrong');
+        }
+      });
+
+      playChimeSound(isCorrect);
+      if (isCorrect) state.score++;
+
+      const fbBox = document.getElementById(`quiz-feedback-box-ch${ch}`);
+      fbBox.style.display = 'block';
+      fbBox.className = `quiz-feedback-box ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+      fbBox.innerHTML = `
+        <strong>${isCorrect ? '🎉 Correct!' : '❌ Not quite!'}</strong> ${q.exp}
+      `;
+
+      const scoreEl = document.querySelector(`#quiz-ch${ch}-content .quiz-score-badge`);
+      if (scoreEl) scoreEl.innerText = `Score: ${state.score} / 5`;
+    }
+
+    function nextMiniQuizQ(ch) {
+      const state = miniQuizState[ch];
+      if (state.index < 4) {
+        state.index++;
+        renderMiniQuizQuestion(ch);
+      }
+    }
+
+    // ========================================================
+    // PART 2: DESK EXAM LOGIC (50 QUESTIONS)
+    // ========================================================
+    let currentExamSheetIndex = 0;
+    const examAnswers = {}; // questionNum -> answer
+    let isReviewMode = false;
+
+    function initDeskExam() {
+      renderSheetPills();
+      updateExamProgress();
+    }
+
+    function renderSheetPills() {
+      const container = document.getElementById('sheet-pills-bar');
+      container.innerHTML = '';
+      examSheetsData.forEach((sheet, idx) => {
+        const pill = document.createElement('button');
+        pill.className = `sheet-pill ${idx === 0 ? 'active' : ''}`;
+        pill.innerText = `Sheet ${idx + 1}`;
+        pill.onclick = () => renderExamSheet(idx);
+        container.appendChild(pill);
+      });
+    }
+
+    function renderExamSheet(idx) {
+      if (idx < 0 || idx >= examSheetsData.length) return;
+      playPageTurnSound();
+      currentExamSheetIndex = idx;
+      const sheet = examSheetsData[idx];
+
+      document.getElementById('current-sheet-title').innerText = sheet.sheetTitle;
+      document.getElementById('current-sheet-desc').innerText = sheet.sheetDesc;
+      document.getElementById('sheet-indicator').innerText = `Sheet ${idx + 1} of ${examSheetsData.length}`;
+
+      // Update Sheet pills
+      document.querySelectorAll('.sheet-pill').forEach((pill, pIdx) => {
+        pill.classList.toggle('active', pIdx === idx);
+      });
+
+      // Nav buttons
+      document.getElementById('btn-prev-sheet').disabled = (idx === 0);
+      document.getElementById('btn-next-sheet').disabled = (idx === examSheetsData.length - 1);
+
+      // Render 5 questions of this sheet
+      const container = document.getElementById('exam-questions-container');
+      container.innerHTML = '';
+
+      sheet.questions.forEach(q => {
+        const qCard = document.createElement('div');
+        qCard.className = `question-card ${examAnswers[q.num] !== undefined ? 'answered' : ''}`;
+        qCard.id = `q-card-${q.num}`;
+
+        if (q.type === 'choice') {
+          qCard.innerHTML = renderChoiceQuestionHtml(q);
+        } else if (q.type === 'matching') {
+          qCard.innerHTML = renderMatchingQuestionHtml(q);
+        } else if (q.type === 'fillin') {
+          qCard.innerHTML = renderFillinQuestionHtml(q);
+        } else if (q.type === 'story') {
+          qCard.innerHTML = renderStoryQuestionHtml(q);
+        }
+
+        container.appendChild(qCard);
+      });
+    }
+
+    function changeExamSheet(dir) {
+      renderExamSheet(currentExamSheetIndex + dir);
+    }
+
+    // QUESTION HTML BUILDERS
+    function renderChoiceQuestionHtml(q) {
+      const userAns = examAnswers[q.num];
+      let opts = q.options.map((opt, i) => {
+        const isChecked = userAns === opt.text;
+        let reviewClass = '';
+        if (isReviewMode) {
+          if (opt.correct) reviewClass = 'style="border-color:#10b981; background:#ecfdf5; font-weight:700;"';
+          else if (isChecked && !opt.correct) reviewClass = 'style="border-color:#ef4444; background:#fef2f2;"';
+        }
+        return `
+          <label class="q-opt-label ${isChecked ? 'selected' : ''}" ${reviewClass}>
+            <input type="radio" name="q_${q.num}" value="${opt.text}" 
+              ${isChecked ? 'checked' : ''} 
+              ${isReviewMode ? 'disabled' : ''}
+              onchange="onSelectChoiceAnswer(${q.num}, '${opt.text.replace(/'/g, "\\'")}')">
+            <span><strong>${String.fromCharCode(65 + i)}.</strong> ${opt.text}</span>
+          </label>
+        `;
+      }).join('');
+
+      let expHtml = '';
+      if (isReviewMode) {
+        const isCorrect = (userAns === q.options.find(o => o.correct).text);
+        expHtml = `
+          <div class="exam-explanation show ${isCorrect ? 'correct-exp' : 'wrong-exp'}">
+            <strong>${isCorrect ? '✅ Correct' : '❌ Incorrect'}:</strong> ${q.exp}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="q-number-title">${q.question}</div>
+        <div class="q-options-grid">${opts}</div>
+        ${expHtml}
+      `;
+    }
+
+    function renderStoryQuestionHtml(q) {
+      const userAns = examAnswers[q.num];
+      let opts = q.options.map((opt, i) => {
+        const isChecked = userAns === opt.text;
+        let reviewClass = '';
+        if (isReviewMode) {
+          if (opt.correct) reviewClass = 'style="border-color:#10b981; background:#ecfdf5; font-weight:700;"';
+          else if (isChecked && !opt.correct) reviewClass = 'style="border-color:#ef4444; background:#fef2f2;"';
+        }
+        return `
+          <label class="q-opt-label ${isChecked ? 'selected' : ''}" ${reviewClass}>
+            <input type="radio" name="q_${q.num}" value="${opt.text}" 
+              ${isChecked ? 'checked' : ''} 
+              ${isReviewMode ? 'disabled' : ''}
+              onchange="onSelectChoiceAnswer(${q.num}, '${opt.text.replace(/'/g, "\\'")}')">
+            <span><strong>${String.fromCharCode(65 + i)}.</strong> ${opt.text}</span>
+          </label>
+        `;
+      }).join('');
+
+      let expHtml = '';
+      if (isReviewMode) {
+        const isCorrect = (userAns === q.options.find(o => o.correct).text);
+        expHtml = `
+          <div class="exam-explanation show ${isCorrect ? 'correct-exp' : 'wrong-exp'}">
+            <strong>${isCorrect ? '✅ Correct' : '❌ Incorrect'}:</strong> ${q.exp}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="story-reading-box">
+          <h4>${q.storyTitle}</h4>
+          <p>${q.storyPassage}</p>
+        </div>
+        <div class="q-number-title">${q.question}</div>
+        <div class="q-options-grid">${opts}</div>
+        ${expHtml}
+      `;
+    }
+
+    function renderMatchingQuestionHtml(q) {
+      const currentMatching = examAnswers[q.num] || {};
+      const rightOptions = q.pairs.map(p => p.right).sort();
+
+      let rows = q.pairs.map((pair, pIdx) => {
+        const selectedVal = currentMatching[pair.left] || '';
+        let opts = `<option value="">-- Choose Match --</option>` + rightOptions.map(r => `
+          <option value="${r}" ${selectedVal === r ? 'selected' : ''}>${r}</option>
+        `).join('');
+
+        let reviewStyle = '';
+        if (isReviewMode) {
+          if (selectedVal === pair.right) {
+            reviewStyle = 'border-color:#10b981; background:#ecfdf5;';
+          } else {
+            reviewStyle = 'border-color:#ef4444; background:#fef2f2;';
+          }
+        }
+
+        return `
+          <div class="matching-row" style="${reviewStyle}">
+            <span class="match-left">${pair.left}</span>
+            <span style="color:#94a3b8; font-size:1.1rem;">➔</span>
+            <select class="match-select" ${isReviewMode ? 'disabled' : ''}
+              onchange="onSelectMatchingAnswer(${q.num}, '${pair.left.replace(/'/g, "\\'")}', this.value)">
+              ${opts}
+            </select>
+          </div>
+        `;
+      }).join('');
+
+      let expHtml = '';
+      if (isReviewMode) {
+        expHtml = `
+          <div class="exam-explanation show correct-exp">
+            <strong>💡 Correct Matches:</strong> ${q.exp}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="q-number-title">${q.question}</div>
+        <div class="matching-box">${rows}</div>
+        ${expHtml}
+      `;
+    }
+
+    function renderFillinQuestionHtml(q) {
+      const currentFilled = examAnswers[q.num] || {};
+      
+      let chipsHtml = q.wordBank.map(w => `
+        <span class="word-chip" onclick="placeWordInNextBlank(${q.num}, '${w.replace(/'/g, "\\'")}')">${w}</span>
+      `).join('');
+
+      let renderedTemplate = q.template;
+      for (const blankKey in q.blanks) {
+        const val = currentFilled[blankKey] || '_____';
+        let reviewBorder = '';
+        if (isReviewMode) {
+          const isCorrect = (currentFilled[blankKey] === q.blanks[blankKey]);
+          reviewBorder = isCorrect ? 'border-color:#10b981; color:#065f46;' : 'border-color:#ef4444; color:#991b1b;';
+        }
+        const slotHtml = `
+          <span class="blank-slot" style="${reviewBorder}" onclick="clearBlank(${q.num}, '${blankKey}')" title="Click word chip below to fill, click to clear">
+            ${val}
+          </span>
+        `;
+        renderedTemplate = renderedTemplate.replace(' + blankKey + ', slotHtml);
+      }
+
+      let expHtml = '';
+      if (isReviewMode) {
+        expHtml = `
+          <div class="exam-explanation show correct-exp">
+            <strong>💡 Correct Words:</strong> ${q.exp}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="q-number-title">${q.question}</div>
+        <div class="word-bank-box">
+          <span class="bank-title"><i class="fa-solid fa-shapes"></i> Word Bank:</span>
+          ${chipsHtml}
+        </div>
+        <div class="fill-template-text">${renderedTemplate}</div>
+        ${expHtml}
+      `;
+    }
+
+    // EXAM INTERACTIONS
+    function onSelectChoiceAnswer(qNum, value) {
+      examAnswers[qNum] = value;
+      updateExamProgress();
+      renderExamSheet(currentExamSheetIndex);
+    }
+
+    function onSelectMatchingAnswer(qNum, leftKey, rightValue) {
+      if (!examAnswers[qNum]) examAnswers[qNum] = {};
+      if (rightValue) {
+        examAnswers[qNum][leftKey] = rightValue;
+      } else {
+        delete examAnswers[qNum][leftKey];
+      }
+      updateExamProgress();
+      renderExamSheet(currentExamSheetIndex);
+    }
+
+    function placeWordInNextBlank(qNum, word) {
+      if (isReviewMode) return;
+      if (!examAnswers[qNum]) examAnswers[qNum] = {};
+      const sheet = examSheetsData.find(s => s.questions.some(q => q.num === qNum));
+      const q = sheet.questions.find(q => q.num === qNum);
+      
+      // Find first empty blank
+      for (const bKey in q.blanks) {
+        if (!examAnswers[qNum][bKey]) {
+          examAnswers[qNum][bKey] = word;
+          break;
+        }
+      }
+      updateExamProgress();
+      renderExamSheet(currentExamSheetIndex);
+    }
+
+    function clearBlank(qNum, blankKey) {
+      if (isReviewMode) return;
+      if (examAnswers[qNum] && examAnswers[qNum][blankKey]) {
+        delete examAnswers[qNum][blankKey];
+        updateExamProgress();
+        renderExamSheet(currentExamSheetIndex);
+      }
+    }
+
+    function updateExamProgress() {
+      let answeredCount = 0;
+      for (let i = 1; i <= 50; i++) {
+        const ans = examAnswers[i];
+        if (ans !== undefined) {
+          if (typeof ans === 'object') {
+            if (Object.keys(ans).length > 0) answeredCount++;
+          } else {
+            answeredCount++;
+          }
+        }
+      }
+      const pct = (answeredCount / 50) * 100;
+      const fill = document.getElementById('exam-progress-fill');
+      if (fill) fill.style.width = `${pct}%`;
+
+      // Update pills complete status
+      examSheetsData.forEach((sheet, idx) => {
+        const sheetAnswered = sheet.questions.every(q => {
+          const a = examAnswers[q.num];
+          if (!a) return false;
+          if (typeof a === 'object') return Object.keys(a).length > 0;
+          return true;
+        });
+        const pill = document.querySelectorAll('.sheet-pill')[idx];
+        if (pill) pill.classList.toggle('complete', sheetAnswered);
+      });
+    }
+
+    // SUBMIT & GRADING
+    function submitExam() {
+      let score = 0;
+
+      examSheetsData.forEach(sheet => {
+        sheet.questions.forEach(q => {
+          const userAns = examAnswers[q.num];
+          if (!userAns) return;
+
+          if (q.type === 'choice' || q.type === 'story') {
+            const correctOpt = q.options.find(o => o.correct);
+            if (correctOpt && userAns === correctOpt.text) {
+              score++;
+            }
+          } else if (q.type === 'matching') {
+            let allMatched = true;
+            q.pairs.forEach(pair => {
+              if (userAns[pair.left] !== pair.right) allMatched = false;
+            });
+            if (allMatched && Object.keys(userAns).length === q.pairs.length) {
+              score++;
+            }
+          } else if (q.type === 'fillin') {
+            let allFilledCorrect = true;
+            for (const bKey in q.blanks) {
+              if (userAns[bKey] !== q.blanks[bKey]) allFilledCorrect = false;
+            }
+            if (allFilledCorrect && Object.keys(userAns).length === Object.keys(q.blanks).length) {
+              score++;
+            }
+          }
+        });
+      });
+
+      const pct = Math.round((score / 50) * 100);
+      playChimeSound(score >= 35);
+
+      // Render Modal
+      document.getElementById('modal-score-val').innerText = `${score} / 50`;
+      document.getElementById('modal-percent-val').innerText = `${pct}% Score`;
+
+      let stars = '⭐';
+      let praise = 'Good effort! Review the studybook and try again.';
+      if (pct >= 85) {
+        stars = '⭐⭐⭐';
+        praise = '🏆 Fantastic Achievement! You are a Social Studies Superstar!';
+      } else if (pct >= 60) {
+        stars = '⭐⭐';
+        praise = '🎉 Great job! You have a solid grasp of traditions, democracy and history!';
+      }
+      document.getElementById('modal-stars').innerText = stars;
+      document.getElementById('modal-praise-msg').innerText = praise;
+
+      document.getElementById('result-modal').style.display = 'flex';
+    }
+
+    function enterReviewMode() {
+      isReviewMode = true;
+      closeModal();
+      renderExamSheet(currentExamSheetIndex);
+    }
+
+    function retakeExam() {
+      for (const k in examAnswers) delete examAnswers[k];
+      isReviewMode = false;
+      closeModal();
+      updateExamProgress();
+      renderExamSheet(0);
+    }
+
+    function closeModal() {
+      document.getElementById('result-modal').style.display = 'none';
+    }
+
+    // ON LOAD INITIALIZATION
+    window.addEventListener('DOMContentLoaded', () => {
+      initStorybook();
+      initDeskExam();
+    });
+  </script>
+</body>
+</html>
