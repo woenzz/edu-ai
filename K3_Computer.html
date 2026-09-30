@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>K3 Computer Adventure: Storybook & Desk Exam</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,6 +34,7 @@
       padding: 0;
       user-select: none;
       -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -49,82 +50,78 @@
     /* Top Navigation Bar */
     header {
       background: linear-gradient(135deg, #1e1b4b, #312e81);
-      padding: 12px 24px;
+      padding: 10px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: white;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
       z-index: 50;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .brand-title {
       font-family: var(--font-fun);
-      font-size: 24px;
+      font-size: 19px;
       font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       color: #FDE047;
       text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
     .nav-tabs {
       display: flex;
-      gap: 12px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 6px;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 4px;
       border-radius: 999px;
     }
 
     .nav-btn {
-      padding: 10px 22px;
+      padding: 8px 14px;
       border-radius: 999px;
       border: none;
       font-family: var(--font-fun);
-      font-size: 17px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      gap: 6px;
+      transition: all 0.25s ease;
       color: #E0E7FF;
       background: transparent;
+      white-space: nowrap;
     }
 
     .nav-btn.active {
       background: #F59E0B;
       color: #1E1B4B;
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
-      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+      transform: translateY(-1px);
     }
 
     .header-tools {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
     }
 
     .tool-btn {
       background: rgba(255, 255, 255, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.3);
       color: white;
-      width: 42px;
-      height: 42px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s;
-      font-size: 16px;
-    }
-
-    .tool-btn:hover {
-      background: white;
-      color: #1e1b4b;
-      transform: scale(1.08);
+      font-size: 15px;
     }
 
     /* Main Viewport Container */
@@ -132,69 +129,62 @@
       flex: 1;
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 24px;
+      align-items: flex-start;
+      padding: 12px;
       position: relative;
     }
 
     /* ========================================================
-       SECTION 1: 3D STORYBOOK WITH CHAPTER BOOKMARKS
+       SECTION 1: STORYBOOK
        ======================================================== */
     #storybook-section {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1050px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
     .book-wrapper {
-      perspective: 1800px;
       position: relative;
-      width: 1000px;
-      height: 620px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Bookmark Ribbon Tabs on Right Edge */
-    .bookmark-tabs {
-      position: absolute;
-      right: -80px;
-      top: 40px;
+      width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      z-index: 20;
+      align-items: center;
     }
+
+    /* Bookmark Ribbon Tabs */
+    .bookmark-tabs {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .bookmark-tabs::-webkit-scrollbar { display: none; }
 
     .bookmark-tab {
-      padding: 10px 18px 10px 22px;
-      border-radius: 0 12px 12px 0;
+      padding: 8px 14px;
+      border-radius: 999px;
       color: white;
       font-family: var(--font-fun);
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 4px 4px 10px rgba(0,0,0,0.3);
-      transition: all 0.25s ease;
       display: flex;
       align-items: center;
-      gap: 8px;
-      clip-path: polygon(0 0, 100% 0, 85% 50%, 100% 100%, 0 100%);
-      width: 125px;
-      position: relative;
-    }
-
-    .bookmark-tab:hover {
-      transform: translateX(12px);
+      gap: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
     .bookmark-tab.active {
-      transform: translateX(18px);
-      filter: brightness(1.15);
-      border-left: 5px solid #fff;
+      transform: scale(1.05);
+      border: 2px solid #fff;
     }
 
     .tab-ch1 { background: #3B82F6; }
@@ -204,183 +194,141 @@
     .tab-ch5 { background: #EC4899; }
     .tab-ch6 { background: #06B6D4; }
 
-    /* Realistic 3D Book Frame */
+    /* Book Frame */
     .storybook {
-      width: 950px;
-      height: 600px;
+      width: 100%;
       background: #fffdf5;
-      border-radius: 20px 28px 28px 20px;
-      box-shadow:
-        0 25px 50px -12px rgba(0, 0, 0, 0.7),
-        inset 0 0 20px rgba(0, 0, 0, 0.05),
-        -15px 0 25px rgba(0,0,0,0.3);
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       display: flex;
       position: relative;
-      border: 8px solid #c2410c;
+      border: 5px solid #c2410c;
       overflow: hidden;
+      flex-direction: column;
     }
 
-    /* Central Book Spine */
     .book-spine {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      bottom: 0;
-      width: 36px;
-      transform: translateX(-50%);
-      background: linear-gradient(90deg,
-        rgba(0,0,0,0.2) 0%,
-        rgba(0,0,0,0.05) 30%,
-        rgba(255,255,255,0.4) 50%,
-        rgba(0,0,0,0.05) 70%,
-        rgba(0,0,0,0.2) 100%);
-      z-index: 10;
-      pointer-events: none;
+      display: none;
     }
 
     .page {
-      flex: 1;
-      height: 100%;
-      padding: 36px 42px;
+      width: 100%;
+      padding: 20px 18px;
       position: relative;
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
-      background: linear-gradient(to right, #FAF8F5, #FFFDF8);
+      background: linear-gradient(to bottom, #FAF8F5, #FFFDF8);
     }
 
     .page.left-page {
-      border-right: 1px solid rgba(0,0,0,0.08);
-      padding-right: 48px;
-    }
-
-    .page.right-page {
-      padding-left: 48px;
+      border-bottom: 2px dashed #E2E8F0;
     }
 
     .page-turn-anim {
-      animation: pageTurn 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+      animation: pageTurn 0.4s ease-out;
     }
 
     @keyframes pageTurn {
-      0% { transform: rotateY(-18deg) scale(0.98); opacity: 0.6; filter: blur(1px); }
-      100% { transform: rotateY(0deg) scale(1); opacity: 1; filter: blur(0); }
+      0% { opacity: 0.7; transform: translateY(6px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     .chapter-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
+      gap: 6px;
+      padding: 4px 12px;
       background: #FEE2E2;
       color: #991B1B;
       border-radius: 999px;
       font-family: var(--font-fun);
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       width: fit-content;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .story-heading {
       font-family: var(--font-fun);
-      font-size: 28px;
+      font-size: 22px;
       color: #1E293B;
-      line-height: 1.25;
+      line-height: 1.3;
       margin-bottom: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .audio-read-btn {
       background: #EEF2FF;
-      border: 2px solid #818CF8;
+      border: 1.5px solid #818CF8;
       color: #4F46E5;
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 999px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s;
-    }
-
-    .audio-read-btn:hover {
-      background: #4F46E5;
-      color: white;
-      transform: scale(1.05);
     }
 
     .story-desc {
-      font-size: 17px;
-      line-height: 1.6;
+      font-size: 15px;
+      line-height: 1.5;
       color: #334155;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     /* Graphic Cards & Illustrations */
     .character-card {
       background: white;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-      border: 2px dashed #CBD5E1;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 1.5px dashed #CBD5E1;
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin-bottom: 14px;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
     .character-avatar {
-      font-size: 48px;
-      width: 70px;
-      height: 70px;
+      font-size: 38px;
+      width: 54px;
+      height: 54px;
       background: #EFF6FF;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
     }
 
     .item-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-top: 10px;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 6px;
     }
 
     .item-card {
       background: white;
-      border-radius: 14px;
-      padding: 12px 14px;
-      border: 2px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1.5px solid #E2E8F0;
       display: flex;
       align-items: center;
-      gap: 12px;
-      transition: all 0.2s;
-    }
-
-    .item-card:hover {
-      border-color: #6366F1;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+      gap: 10px;
     }
 
     .item-icon {
-      font-size: 28px;
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
+      font-size: 24px;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
       background: #F1F5F9;
       display: flex;
       align-items: center;
@@ -390,7 +338,7 @@
 
     .item-title {
       font-family: var(--font-fun);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       color: #1E293B;
     }
@@ -399,65 +347,58 @@
       font-size: 13px;
       color: #64748B;
       font-weight: 600;
+      line-height: 1.3;
     }
 
-    /* Chapter Mini Quiz on Right Page */
+    /* Chapter Mini Quiz */
     .mini-quiz-box {
       background: #FFF;
-      border-radius: 18px;
-      padding: 20px;
+      border-radius: 16px;
+      padding: 16px;
       border: 2px solid #FCD34D;
-      box-shadow: 0 6px 18px rgba(245, 158, 11, 0.15);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
       display: flex;
       flex-direction: column;
-      flex: 1;
     }
 
     .quiz-title {
       font-family: var(--font-fun);
-      font-size: 20px;
+      font-size: 18px;
       color: #B45309;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 8px;
     }
 
     .quiz-question {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       color: #1F2937;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       line-height: 1.4;
     }
 
     .choice-container {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      flex: 1;
+      gap: 8px;
     }
 
     .choice-btn {
       background: #F8FAFC;
       border: 2px solid #E2E8F0;
-      border-radius: 14px;
-      padding: 12px 16px;
-      font-size: 15px;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
       font-weight: 700;
       text-align: left;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       color: #334155;
-      transition: all 0.2s;
-    }
-
-    .choice-btn:hover {
-      background: #EEF2FF;
-      border-color: #818CF8;
-      transform: translateX(4px);
+      min-height: 48px;
     }
 
     .choice-btn.correct {
@@ -473,242 +414,158 @@
     }
 
     .quiz-feedback {
-      margin-top: 12px;
-      padding: 10px 14px;
-      border-radius: 12px;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       display: none;
       align-items: center;
       gap: 8px;
+      line-height: 1.4;
     }
 
-    .quiz-feedback.show {
-      display: flex;
-    }
-
-    .quiz-feedback.success {
-      background: #ECFDF5;
-      color: #047857;
-      border: 1px solid #A7F3D0;
-    }
-
-    .quiz-feedback.error {
-      background: #FEF2F2;
-      color: #B91C1C;
-      border: 1px solid #FECACA;
-    }
+    .quiz-feedback.show { display: flex; }
+    .quiz-feedback.success { background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0; }
+    .quiz-feedback.error { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
 
     /* Page Navigation Footer */
     .book-controls {
       display: flex;
-      gap: 20px;
-      margin-top: 24px;
+      gap: 10px;
+      margin-top: 16px;
       align-items: center;
+      width: 100%;
+      justify-content: space-between;
     }
 
     .page-nav-btn {
       background: #F59E0B;
       color: #1E1B4B;
       border: none;
-      padding: 12px 28px;
+      padding: 10px 16px;
       border-radius: 999px;
       font-family: var(--font-fun);
-      font-size: 18px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
       display: flex;
       align-items: center;
-      gap: 10px;
-      transition: all 0.2s;
-    }
-
-    .page-nav-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(245, 158, 11, 0.6);
-      background: #FBBF24;
+      gap: 6px;
+      box-shadow: 0 3px 8px rgba(245, 158, 11, 0.4);
     }
 
     .page-nav-btn:disabled {
       opacity: 0.4;
       cursor: not-allowed;
-      transform: none;
       box-shadow: none;
     }
 
     .page-indicator {
       color: white;
       font-family: var(--font-fun);
-      font-size: 18px;
+      font-size: 14px;
       font-weight: 700;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 8px 20px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 6px 14px;
       border-radius: 999px;
     }
 
-
     /* ========================================================
-       SECTION 2: REALISTIC EXAM PAPER ON WOODEN DESK
+       SECTION 2: DESK EXAM
        ======================================================== */
     #exam-section {
       width: 100%;
-      max-width: 980px;
+      max-width: 900px;
       display: none;
       flex-direction: column;
       align-items: center;
     }
 
-    /* Wooden Desk Surface */
     .desk-surface {
       width: 100%;
-      min-height: 720px;
       background:
         radial-gradient(ellipse at center, rgba(93, 64, 55, 0.8) 0%, rgba(62, 39, 35, 0.98) 100%),
-        repeating-linear-gradient(45deg, rgba(0,0,0,0.05), rgba(0,0,0,0.05) 10px, transparent 10px, transparent 20px),
         #4A2E18;
-      border-radius: 28px;
-      box-shadow:
-        0 30px 60px rgba(0, 0, 0, 0.8),
-        inset 0 2px 10px rgba(255, 255, 255, 0.15),
-        inset 0 -10px 20px rgba(0,0,0,0.6);
-      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+      padding: 16px 10px;
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      border: 12px solid #271406;
+      border: 6px solid #271406;
     }
 
-    /* Desk Accessories (Ruler, Pencil, Eraser) */
-    .desk-pencil {
-      position: absolute;
-      top: 50px;
-      right: 35px;
-      width: 16px;
-      height: 220px;
-      background: #FBBF24;
-      border-radius: 4px;
-      transform: rotate(18deg);
-      box-shadow: 4px 8px 15px rgba(0,0,0,0.4);
-      border-top: 15px solid #F43F5E;
-      border-bottom: 20px solid #E5E7EB;
-    }
-    .desk-pencil::after {
-      content: '';
-      position: absolute;
-      bottom: -32px;
-      left: 1px;
-      width: 0;
-      height: 0;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-top: 12px solid #1E293B;
-    }
+    .desk-pencil, .desk-eraser { display: none; }
 
-    .desk-eraser {
-      position: absolute;
-      bottom: 60px;
-      left: 40px;
-      width: 55px;
-      height: 35px;
-      background: #EC4899;
-      border-radius: 6px;
-      transform: rotate(-15deg);
-      box-shadow: 3px 6px 12px rgba(0,0,0,0.4);
-      border-right: 18px solid #3B82F6;
-    }
-
-    /* The Stapled Paper Packet */
     .paper-packet {
-      width: 780px;
-      min-height: 600px;
+      width: 100%;
       position: relative;
       background: #FFFDF9;
-      border-radius: 4px 16px 16px 4px;
-      box-shadow:
-        0 15px 35px rgba(0,0,0,0.4),
-        0 0 0 1px rgba(0,0,0,0.05),
-        5px 5px 0 #F8F6F0,
-        10px 10px 0 #F1EFEA,
-        15px 15px 15px rgba(0,0,0,0.3);
-      padding: 45px 50px 40px 50px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      padding: 24px 14px 18px 14px;
       display: flex;
       flex-direction: column;
-      transition: transform 0.4s ease;
     }
 
-    /* Metallic Staple at Top-Left */
+    /* Metallic Staple */
     .staple-pin {
       position: absolute;
-      top: 24px;
-      left: 24px;
-      width: 48px;
-      height: 12px;
+      top: 14px;
+      left: 14px;
+      width: 32px;
+      height: 8px;
       background: linear-gradient(180deg, #E2E8F0 0%, #94A3B8 50%, #475569 100%);
       transform: rotate(-45deg);
       border-radius: 2px;
-      box-shadow:
-        0 3px 6px rgba(0,0,0,0.4),
-        inset 0 1px 2px rgba(255,255,255,0.8);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
       z-index: 30;
     }
-    .staple-pin::before, .staple-pin::after {
-      content: '';
-      position: absolute;
-      top: -3px;
-      width: 2px;
-      height: 18px;
-      background: #334155;
-    }
-    .staple-pin::before { left: 4px; }
-    .staple-pin::after { right: 4px; }
 
-    /* Lined Paper Texture */
     .paper-header {
       border-bottom: 2px solid #DC2626;
-      padding-bottom: 12px;
-      margin-bottom: 20px;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .exam-title-box h2 {
       font-family: var(--font-hand);
-      font-size: 32px;
+      font-size: 24px;
       color: #1E3A8A;
-      letter-spacing: 0.5px;
       font-weight: 700;
+      line-height: 1.2;
     }
     .exam-title-box p {
       font-family: var(--font-hand);
-      font-size: 19px;
+      font-size: 16px;
       color: #4B5563;
     }
 
     .student-badge-slot {
       font-family: var(--font-hand);
-      font-size: 18px;
+      font-size: 16px;
       color: #1F2937;
-      text-align: right;
+      text-align: left;
     }
     .student-badge-slot span {
       border-bottom: 1.5px dashed #4B5563;
-      padding: 0 10px;
+      padding: 0 6px;
       color: #2563EB;
       font-weight: bold;
     }
 
-    /* Paper Page Turn Effect */
     .paper-sheet-turn {
-      animation: flipPaper 0.5s cubic-bezier(0.2, 0.8, 0.4, 1);
-      transform-origin: 24px 24px;
+      animation: flipPaper 0.4s ease-out;
     }
 
     @keyframes flipPaper {
-      0% { transform: rotate(-8deg) translateY(-20px); opacity: 0.5; }
-      100% { transform: rotate(0deg) translateY(0); opacity: 1; }
+      0% { opacity: 0.6; transform: translateY(-8px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     .exam-content {
@@ -718,242 +575,213 @@
     }
 
     .question-block {
-      background: rgba(248, 250, 252, 0.7);
+      background: rgba(248, 250, 252, 0.85);
       border: 1px solid #E2E8F0;
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 16px;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
     }
 
     .q-number {
       font-family: var(--font-fun);
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
       color: #4F46E5;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
     .q-text {
-      font-size: 18px;
+      font-size: 15px;
       font-weight: 700;
       color: #1E293B;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       line-height: 1.4;
     }
 
-    /* Exam Question Types */
     .options-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .opt-label {
       background: white;
-      border: 2px solid #CBD5E1;
-      border-radius: 10px;
-      padding: 10px 14px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 8px;
+      padding: 8px 12px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
       color: #334155;
-      transition: all 0.15s;
-    }
-
-    .opt-label:hover {
-      border-color: #6366F1;
-      background: #F5F3FF;
+      min-height: 42px;
     }
 
     .opt-label input[type="radio"] {
       width: 18px;
       height: 18px;
       accent-color: #4F46E5;
-      cursor: pointer;
+      flex-shrink: 0;
     }
 
-    /* Word Bank for Fill in Blank */
+    /* Word Bank */
     .word-bank {
       display: flex;
-      gap: 10px;
+      gap: 6px;
       flex-wrap: wrap;
       background: #EEF2FF;
-      border: 2px dashed #818CF8;
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-bottom: 12px;
+      border: 1.5px dashed #818CF8;
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 8px;
       align-items: center;
     }
 
     .word-bank-tag {
       font-family: var(--font-fun);
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
       color: #3730A3;
-      margin-right: 6px;
+      width: 100%;
     }
 
     .word-chip {
       background: white;
       border: 1.5px solid #6366F1;
-      border-radius: 8px;
-      padding: 4px 12px;
-      font-size: 15px;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 13px;
       font-weight: 700;
       color: #4F46E5;
       cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .word-chip:hover {
-      background: #4F46E5;
-      color: white;
     }
 
     .fill-blank-sentence {
-      font-size: 18px;
-      line-height: 1.8;
+      font-size: 15px;
+      line-height: 1.7;
       color: #1E293B;
     }
 
     .blank-slot {
       display: inline-block;
-      min-width: 130px;
-      height: 34px;
-      border-bottom: 2.5px solid #2563EB;
-      background: rgba(224, 231, 255, 0.4);
+      min-width: 90px;
+      height: 30px;
+      border-bottom: 2px solid #2563EB;
+      background: rgba(224, 231, 255, 0.5);
       border-radius: 4px;
       text-align: center;
-      line-height: 34px;
+      line-height: 30px;
       font-family: var(--font-fun);
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
       color: #1D4ED8;
-      margin: 0 4px;
+      margin: 0 2px;
       vertical-align: middle;
-      cursor: pointer;
     }
 
-    /* Matching Interface */
+    /* Matching */
     .match-row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 8px;
       background: white;
-      padding: 8px 12px;
+      padding: 8px 10px;
       border-radius: 8px;
       border: 1px solid #E2E8F0;
     }
 
     .match-left {
       font-weight: 700;
-      font-size: 16px;
+      font-size: 14px;
       color: #1E293B;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
     .match-select {
-      flex: 1;
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 2px solid #94A3B8;
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1.5px solid #94A3B8;
       font-family: var(--font-body);
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
-      color: #1E293B;
       background: #F8FAFC;
-      cursor: pointer;
     }
 
-    .match-select:focus {
-      outline: none;
-      border-color: #4F46E5;
-    }
-
-    /* Story Reading Box */
+    /* Story Box */
     .reading-passage {
       background: #FFFBEB;
-      border-left: 5px solid #F59E0B;
-      padding: 14px 18px;
-      border-radius: 0 12px 12px 0;
-      font-size: 16px;
-      line-height: 1.6;
+      border-left: 4px solid #F59E0B;
+      padding: 10px 12px;
+      border-radius: 0 8px 8px 0;
+      font-size: 14px;
+      line-height: 1.5;
       color: #78350F;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
       font-family: var(--font-fun);
     }
 
-    /* Exam Bottom Navigation */
+    /* Exam Footer */
     .paper-footer {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 16px;
-      padding-top: 14px;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 12px;
       border-top: 1.5px dashed #CBD5E1;
+      align-items: center;
+    }
+
+    .exam-nav-group {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      gap: 8px;
     }
 
     .exam-nav-btn {
       background: #1E293B;
       color: white;
       border: none;
-      padding: 10px 22px;
-      border-radius: 10px;
+      padding: 10px 16px;
+      border-radius: 8px;
       font-family: var(--font-fun);
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-
-    .exam-nav-btn:hover {
-      background: #3B82F6;
-      transform: translateY(-2px);
+      gap: 6px;
     }
 
     .exam-nav-btn:disabled {
       opacity: 0.3;
       cursor: not-allowed;
-      transform: none;
     }
 
     .exam-submit-btn {
       background: #059669;
       color: white;
       border: none;
-      padding: 12px 28px;
-      border-radius: 12px;
+      padding: 10px 20px;
+      border-radius: 8px;
       font-family: var(--font-fun);
-      font-size: 18px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
+      gap: 6px;
+      width: 100%;
+      justify-content: center;
     }
 
-    .exam-submit-btn:hover {
-      background: #10B981;
-      transform: scale(1.05);
-    }
-
-    /* Score Report Modal */
+    /* Score Modal */
     #score-modal {
       position: fixed;
       inset: 0;
@@ -962,103 +790,152 @@
       align-items: center;
       justify-content: center;
       z-index: 100;
-      backdrop-filter: blur(6px);
+      padding: 16px;
     }
 
     .score-card {
       background: white;
-      border-radius: 28px;
-      width: 90%;
-      max-width: 520px;
-      padding: 36px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 440px;
+      padding: 24px 18px;
       text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-      border: 8px solid #FCD34D;
-      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 5px solid #FCD34D;
     }
 
-    @keyframes popIn {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .score-emoji {
-      font-size: 72px;
-      margin-bottom: 12px;
-      animation: bounce 1.5s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-    }
-
+    .score-emoji { font-size: 54px; margin-bottom: 8px; }
     .score-num {
       font-family: var(--font-fun);
-      font-size: 52px;
+      font-size: 42px;
       font-weight: 900;
       color: #4F46E5;
-      margin: 8px 0;
+      margin: 4px 0;
     }
-
-    .score-msg {
-      font-size: 19px;
-      color: #475569;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
+    .score-msg { font-size: 15px; color: #475569; margin-bottom: 18px; line-height: 1.4; }
 
     .review-btn {
       background: #F59E0B;
       color: #1E1B4B;
       border: none;
-      padding: 12px 30px;
+      padding: 10px 18px;
       border-radius: 999px;
       font-family: var(--font-fun);
-      font-size: 18px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-      margin: 6px;
+      margin: 4px;
     }
 
-    /* Responsiveness */
-    @media (max-width: 1024px) {
-      .book-wrapper {
-        width: 100%;
-        height: auto;
-      }
-      .storybook {
-        width: 100%;
-        height: auto;
-        flex-direction: column;
-      }
-      .book-spine { display: none; }
-      .page.left-page {
-        border-right: none;
-        border-bottom: 2px dashed #E2E8F0;
-        padding-right: 24px;
-      }
-      .page.right-page {
-        padding-left: 24px;
-      }
+    /* TABLET / DESKTOP UPGRADE STYLES */
+    @media (min-width: 768px) {
+      header { padding: 12px 24px; }
+      .brand-title { font-size: 24px; }
+      .nav-btn { font-size: 16px; padding: 10px 20px; }
+      #main-container { padding: 24px; }
+      
+      /* Storybook on Tablet/Desktop */
       .bookmark-tabs {
-        position: static;
-        flex-direction: row;
-        width: 100%;
-        overflow-x: auto;
-        margin-bottom: 16px;
+        position: absolute;
+        right: -75px;
+        top: 30px;
+        flex-direction: column;
+        width: auto;
+        overflow: visible;
+        margin-bottom: 0;
+        z-index: 20;
       }
       .bookmark-tab {
-        clip-path: none;
-        border-radius: 12px;
-        width: auto;
+        border-radius: 0 10px 10px 0;
+        clip-path: polygon(0 0, 100% 0, 85% 50%, 100% 100%, 0 100%);
+        width: 120px;
+      }
+      .bookmark-tab.active { transform: translateX(12px); border: none; }
+      
+      .storybook {
+        flex-direction: row;
+        border-radius: 24px;
+        border-width: 8px;
+        height: 600px;
+      }
+      .book-spine {
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 32px;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, rgba(0,0,0,0.18) 0%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0.18) 100%);
+        z-index: 10;
+      }
+      .page {
+        flex: 1;
+        padding: 30px 36px;
+        overflow-y: auto;
+      }
+      .page.left-page {
+        border-bottom: none;
+        border-right: 1px solid rgba(0,0,0,0.08);
+        padding-right: 40px;
+      }
+      .page.right-page { padding-left: 40px; }
+      
+      .item-grid { grid-template-columns: 1fr 1fr; }
+      .story-heading { font-size: 26px; }
+      
+      /* Exam on Tablet/Desktop */
+      .desk-surface {
+        padding: 40px 30px;
+        border-width: 10px;
+      }
+      .desk-pencil {
+        display: block;
+        position: absolute;
+        top: 40px;
+        right: 25px;
+        width: 14px;
+        height: 180px;
+        background: #FBBF24;
+        border-radius: 4px;
+        transform: rotate(18deg);
+        box-shadow: 4px 6px 12px rgba(0,0,0,0.4);
+      }
+      .desk-eraser {
+        display: block;
+        position: absolute;
+        bottom: 40px;
+        left: 25px;
+        width: 48px;
+        height: 30px;
+        background: #EC4899;
+        border-radius: 6px;
+        transform: rotate(-15deg);
+        box-shadow: 3px 5px 10px rgba(0,0,0,0.4);
       }
       .paper-packet {
-        width: 95%;
-        padding: 30px 20px;
+        width: 760px;
+        padding: 36px 42px;
       }
-      .desk-pencil, .desk-eraser { display: none; }
+      .paper-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .student-badge-slot { text-align: right; }
+      .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .match-row {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .match-select { width: 50%; }
+      .paper-footer {
+        flex-direction: row;
+      }
+      .exam-nav-group { width: auto; }
+      .exam-submit-btn { width: auto; }
     }
   </style>
 </head>
@@ -1073,10 +950,10 @@
 
     <div class="nav-tabs">
       <button class="nav-btn active" id="tab-book-btn" onclick="switchMainTab('book')">
-        <i class="fa-solid fa-book-open"></i> Storybook (หนังสือนิทาน)
+        <i class="fa-solid fa-book-open"></i> Storybook
       </button>
       <button class="nav-btn" id="tab-exam-btn" onclick="switchMainTab('exam')">
-        <i class="fa-solid fa-file-signature"></i> Desk Exam (ชุดข้อสอบบนโต๊ะ)
+        <i class="fa-solid fa-file-signature"></i> Desk Exam
       </button>
     </div>
 
@@ -1090,62 +967,60 @@
     </div>
   </header>
 
-  <!-- Main Display Area -->
+  <!-- Main Container -->
   <main id="main-container">
 
     <!-- ==========================================
-         PART 1: 3D STORYBOOK (เปิดเรียนทีละหน้า)
+         PART 1: STORYBOOK
          ========================================== -->
     <section id="storybook-section">
       <div class="book-wrapper">
 
-        <!-- Bookmark Tabs on the Right Spine -->
+        <!-- Bookmark Tabs (Ribbons) -->
         <div class="bookmark-tabs" id="bookmark-ribbons">
           <!-- Injected via JavaScript -->
         </div>
 
-        <!-- 3D Storybook Frame -->
+        <!-- Book Element -->
         <div class="storybook" id="book-element">
           <div class="book-spine"></div>
 
-          <!-- Left Page: Story Lesson -->
+          <!-- Left Page: Story Content -->
           <div class="page left-page" id="book-left-page">
-            <!-- Left content dynamic -->
+            <!-- Dynamic left content -->
           </div>
 
-          <!-- Right Page: Details & Mini Quiz -->
+          <!-- Right Page: Details & Mini-Quiz -->
           <div class="page right-page" id="book-right-page">
-            <!-- Right content dynamic -->
+            <!-- Dynamic right content -->
           </div>
         </div>
 
       </div>
 
-      <!-- Book Bottom Controls -->
+      <!-- Controls -->
       <div class="book-controls">
         <button class="page-nav-btn" id="book-prev-btn" onclick="turnBookPage(-1)">
-          <i class="fa-solid fa-arrow-left"></i> Previous Page
+          <i class="fa-solid fa-arrow-left"></i> Prev
         </button>
         <div class="page-indicator" id="book-page-indicator">
-          Page 1 / 6
+          1 / 6
         </div>
         <button class="page-nav-btn" id="book-next-btn" onclick="turnBookPage(1)">
-          Next Page <i class="fa-solid fa-arrow-right"></i>
+          Next <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </section>
 
     <!-- ==========================================
-         PART 2: DESK EXAM (ข้อสอบเย็บแม็กบนโต๊ะไม้)
+         PART 2: DESK EXAM
          ========================================== -->
     <section id="exam-section">
       <div class="desk-surface">
         <div class="desk-pencil"></div>
         <div class="desk-eraser"></div>
 
-        <!-- The Stapled Paper Sheet Stack -->
         <div class="paper-packet" id="exam-sheet-paper">
-          <!-- Metallic Staple at Top-Left -->
           <div class="staple-pin" title="Stapled corner"></div>
 
           <div class="paper-header">
@@ -1159,22 +1034,22 @@
             </div>
           </div>
 
-          <!-- Dynamic Exam Content Container -->
           <div class="exam-content" id="exam-questions-box">
-            <!-- Questions for current page injected here -->
+            <!-- Exam Questions dynamic -->
           </div>
 
-          <!-- Exam Footer Controls -->
           <div class="paper-footer">
-            <button class="exam-nav-btn" id="exam-prev-btn" onclick="flipExamPage(-1)">
-              <i class="fa-solid fa-arrow-left"></i> Turn Back Page
-            </button>
-            <div style="font-family: var(--font-hand); font-size: 20px; font-weight: bold; color: #4B5563;" id="exam-page-indicator">
-              Exam Sheet 1 of 6 (Questions 1 - 5)
+            <div class="exam-nav-group">
+              <button class="exam-nav-btn" id="exam-prev-btn" onclick="flipExamPage(-1)">
+                <i class="fa-solid fa-arrow-left"></i> Prev
+              </button>
+              <button class="exam-nav-btn" id="exam-next-btn" onclick="flipExamPage(1)">
+                Next <i class="fa-solid fa-arrow-right"></i>
+              </button>
             </div>
-            <button class="exam-nav-btn" id="exam-next-btn" onclick="flipExamPage(1)">
-              Lift & Turn Page <i class="fa-solid fa-arrow-right"></i>
-            </button>
+            <div style="font-family: var(--font-hand); font-size: 16px; font-weight: bold; color: #4B5563; text-align: center;" id="exam-page-indicator">
+              Sheet 1 of 6 (Questions 1 - 5)
+            </div>
             <button class="exam-submit-btn" id="exam-submit-btn" onclick="gradeFullExam()" style="display: none;">
               <i class="fa-solid fa-check-double"></i> Submit Exam
             </button>
@@ -1185,78 +1060,62 @@
 
   </main>
 
-  <!-- Score Summary Modal -->
+  <!-- Score Modal -->
   <div id="score-modal">
     <div class="score-card">
       <div class="score-emoji" id="score-emoji">🎉</div>
-      <h2 style="font-family: var(--font-fun); font-size: 32px; color: #1E1B4B;">Exam Results!</h2>
+      <h2 style="font-family: var(--font-fun); font-size: 26px; color: #1E1B4B;">Exam Results!</h2>
       <div class="score-num" id="score-display">28 / 30</div>
       <p class="score-msg" id="score-feedback">Superstar! You know computers inside out!</p>
       <div>
-        <button class="review-btn" onclick="restartExam()"><i class="fa-solid fa-rotate-right"></i> Try Again</button>
-        <button class="review-btn" style="background: #6366F1; color: white;" onclick="closeScoreModal()"><i class="fa-solid fa-magnifying-glass"></i> Review Answers</button>
+        <button class="review-btn" onclick="restartExam()"><i class="fa-solid fa-rotate-right"></i> Retry</button>
+        <button class="review-btn" style="background: #6366F1; color: white;" onclick="closeScoreModal()"><i class="fa-solid fa-magnifying-glass"></i> Review</button>
       </div>
     </div>
   </div>
 
   <script>
-    /* ========================================================
-       AUDIO SYNTHESIS SYSTEM (Web Audio API - No external files)
-       ======================================================== */
+    /* AUDIO SYNTHESIS */
     let audioCtx = null;
     let isSoundMuted = false;
 
     function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 
     function toggleMute() {
       isSoundMuted = !isSoundMuted;
       const icon = document.querySelector('#sound-toggle-btn i');
-      if (isSoundMuted) {
-        icon.className = 'fa-solid fa-volume-xmark';
-      } else {
-        icon.className = 'fa-solid fa-volume-high';
-        playPageTurnSound();
-      }
+      icon.className = isSoundMuted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
+      if (!isSoundMuted) playPageTurnSound();
     }
 
-    // Realistic paper flip rustle sound synthesizer
     function playPageTurnSound() {
       if (isSoundMuted) return;
       initAudio();
       try {
         const now = audioCtx.currentTime;
-        const bufferSize = audioCtx.sampleRate * 0.18;
+        const bufferSize = audioCtx.sampleRate * 0.16;
         const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = Math.random() * 2 - 1;
-        }
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
 
         const noise = audioCtx.createBufferSource();
         noise.buffer = buffer;
-
         const filter = audioCtx.createBiquadFilter();
         filter.type = 'bandpass';
         filter.frequency.setValueAtTime(1400, now);
-        filter.frequency.exponentialRampToValueAtTime(350, now + 0.18);
-        filter.Q.value = 1.8;
+        filter.frequency.exponentialRampToValueAtTime(350, now + 0.16);
 
         const gain = audioCtx.createGain();
-        gain.gain.setValueAtTime(0.4, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.16);
 
         noise.connect(filter);
         filter.connect(gain);
         gain.connect(audioCtx.destination);
-
         noise.start(now);
-      } catch (e) {
-        console.warn("Audio synth:", e);
-      }
+      } catch (e) {}
     }
 
     function playDing(isSuccess = true) {
@@ -1266,43 +1125,37 @@
         const now = audioCtx.currentTime;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-
         if (isSuccess) {
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(587.33, now); // D5
-          osc.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
-          gain.gain.setValueAtTime(0.3, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.frequency.setValueAtTime(587.33, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
         } else {
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(260, now);
-          osc.frequency.linearRampToValueAtTime(180, now + 0.25);
-          gain.gain.setValueAtTime(0.25, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+          osc.frequency.linearRampToValueAtTime(180, now + 0.2);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
         }
-
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start(now);
-        osc.stop(now + 0.3);
+        osc.stop(now + 0.25);
       } catch (e) {}
     }
 
-    // Speech synthesis helper for kids
     function speakText(text) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US';
         utterance.rate = 0.9;
-        utterance.pitch = 1.1;
         window.speechSynthesis.speak(utterance);
       }
     }
 
-    /* ========================================================
-       STORYBOOK DATA (6 Detailed Chapters with Mini-Quizzes)
-       ======================================================== */
+    /* STORYBOOK DATA */
     const storybookChapters = [
       {
         id: 'ch1',
@@ -1312,8 +1165,8 @@
         left: {
           character: '🤖',
           charName: 'Byte the Robot',
-          bubble: 'Hello friend! Digital devices are smart gadgets that help us work, play, and learn every day!',
-          desc: 'We see many kinds of digital devices around us in our homes and classrooms:',
+          bubble: 'Digital devices help us work, play, and learn every day!',
+          desc: 'We see many digital devices at home and school:',
           items: [
             { icon: '💻', title: 'Laptop', sub: 'School & Work' },
             { icon: '📱', title: 'SmartPhone', sub: 'Calls & Fun Apps' },
@@ -1325,7 +1178,7 @@
         },
         right: {
           takeawayTitle: 'Where do we use them?',
-          takeawayText: 'Laptops help mom and dad work, Tablets let us color and draw, and Smart TVs show our favorite cartoons!',
+          takeawayText: 'Laptops help mom and dad work, Tablets let us color, and Smart TVs show cartoons!',
           quizPool: [
             {
               question: 'Which device is mainly used for School & Work?',
@@ -1344,15 +1197,6 @@
                 { text: 'Microwave 🍲', correct: false }
               ],
               explanation: 'A Digital Camera captures and saves photos!'
-            },
-            {
-              question: 'Which device is best for gaming fun with controllers?',
-              options: [
-                { text: 'Game Console 🎮', correct: true },
-                { text: 'Flash Drive 💾', correct: false },
-                { text: 'Printer 🖨️', correct: false }
-              ],
-              explanation: 'Game Consoles are made especially for playing fun video games!'
             }
           ]
         }
@@ -1366,7 +1210,7 @@
           character: '⚙️',
           charName: 'Chip the CPU',
           bubble: 'Computers work in 3 magic steps: Input, Process, and Output!',
-          desc: 'Just like baking cookies, the computer takes ingredients, bakes them, and gives you sweet treats:',
+          desc: 'Just like baking cookies, the computer follows 3 steps:',
           items: [
             { icon: '📥', title: '1. Input', sub: 'You give information (Keyboard, Mouse, Mic)' },
             { icon: '🧠', title: '2. Process', sub: 'The computer thinks & works it out (CPU)' },
@@ -1375,7 +1219,7 @@
         },
         right: {
           takeawayTitle: 'Input ➔ Process ➔ Output Cycle',
-          takeawayText: '• When you click the mouse or type, that is INPUT.<br>• When the CPU calculates, that is PROCESS.<br>• When sound plays or pictures appear, that is OUTPUT!',
+          takeawayText: '• When you click or type, that is INPUT.<br>• When CPU calculates, that is PROCESS.<br>• When pictures or sound appear, that is OUTPUT!',
           quizPool: [
             {
               question: 'What is the middle step in computer processing?',
@@ -1394,15 +1238,6 @@
                 { text: 'Storage Drives 💾', correct: false }
               ],
               explanation: 'Keyboard and mouse give information into the computer.'
-            },
-            {
-              question: 'A computer screen and speakers are examples of:',
-              options: [
-                { text: 'Output Devices 📤', correct: true },
-                { text: 'Input Devices 📥', correct: false },
-                { text: 'WiFi Routers 📡', correct: false }
-              ],
-              explanation: 'Screens show pictures and speakers give sound out to you!'
             }
           ]
         }
@@ -1415,7 +1250,7 @@
         left: {
           character: '🧠',
           charName: 'Pip the Brain',
-          bubble: 'Both computers and human brains process information, but we have special powers!',
+          bubble: 'Computers and human brains both process info, but we have special powers!',
           desc: 'What can each do best?',
           items: [
             { icon: '💖', title: 'Human Brain', sub: 'Feels emotions, creates art, learns from mistakes' },
@@ -1425,7 +1260,7 @@
         },
         right: {
           takeawayTitle: 'Key Differences',
-          takeawayText: '• Humans have 5 senses (sight, hearing, touch, taste, smell) and can feel happiness or love.<br>• Computers need electricity and instructions, but they calculate numbers in milliseconds!',
+          takeawayText: '• Humans have 5 senses and feel emotions like happiness.<br>• Computers calculate numbers in milliseconds but need electricity!',
           quizPool: [
             {
               question: 'Who can feel genuine emotions and make creative art?',
@@ -1441,18 +1276,9 @@
               options: [
                 { text: 'Lightning fast calculations ⚡', correct: true },
                 { text: 'Tasting yummy ice cream 🍦', correct: false },
-                { text: 'Feeling tired at bedtime 😴', correct: false }
+                { text: 'Feeling sleepy 😴', correct: false }
               ],
               explanation: 'Computers calculate numbers without getting tired!'
-            },
-            {
-              question: 'What can BOTH the human brain and computers do?',
-              options: [
-                { text: 'Remember facts & solve problems 🤝', correct: true },
-                { text: 'Eat fried chicken 🍗', correct: false },
-                { text: 'Get a robot virus 🦠', correct: false }
-              ],
-              explanation: 'Both humans and computers can store memories and solve puzzles!'
             }
           ]
         }
@@ -1465,34 +1291,25 @@
         left: {
           character: '☁️',
           charName: 'Nimbus the Cloud',
-          bubble: 'Where do your photos and homework live? In the cloud or right on your device!',
+          bubble: 'Where do files live? In the cloud or right on your device!',
           desc: 'Compare the two big ways to keep files safe:',
           items: [
-            { icon: '☁️', title: 'Cloud Storage', sub: 'Stored on the Internet (Google Drive, OneDrive)' },
+            { icon: '☁️', title: 'Cloud Storage', sub: 'Stored on Internet (Google Drive, OneDrive)' },
             { icon: '💾', title: 'Local Storage', sub: 'Stored directly on device (Hard drive, USB stick)' }
           ]
         },
         right: {
-          takeawayTitle: 'Storage Face-Off: Cloud vs. Local',
-          takeawayText: '• <b>Cloud Storage:</b> Access files from ANYWHERE with WiFi! If your laptop drops, your files stay safe in the sky.<br>• <b>Local Storage:</b> Works without WiFi instantly, but if your flash drive gets lost, the files are gone!',
+          takeawayTitle: 'Storage Face-Off',
+          takeawayText: '• <b>Cloud Storage:</b> Access from ANYWHERE with WiFi! Safe if device breaks.<br>• <b>Local Storage:</b> Works without WiFi, but files are lost if the drive breaks!',
           quizPool: [
             {
               question: 'Which storage lets you open files from anywhere using WiFi?',
               options: [
-                { text: 'Cloud Storage (Google Drive) ☁️', correct: true },
+                { text: 'Cloud Storage ☁️', correct: true },
                 { text: 'USB Flash Drive 💾', correct: false },
                 { text: 'Paper Notebook 📓', correct: false }
               ],
-              explanation: 'Cloud storage keeps your files on secure internet servers!'
-            },
-            {
-              question: 'What is a big benefit of Local Storage (like a USB drive)?',
-              options: [
-                { text: 'Works fast without internet connection ⚡', correct: true },
-                { text: 'Floats in the clouds ☁️', correct: false },
-                { text: 'Requires high-speed WiFi 📶', correct: false }
-              ],
-              explanation: 'Local storage plugs right into your computer without needing WiFi!'
+              explanation: 'Cloud storage keeps files on secure online servers!'
             },
             {
               question: 'If a computer breaks, where are files still safe?',
@@ -1501,7 +1318,7 @@
                 { text: 'Broken Hard Drive 💥', correct: false },
                 { text: 'Cracked screen 📺', correct: false }
               ],
-              explanation: 'Cloud files are stored safely online, so a broken device will not erase them!'
+              explanation: 'Cloud files are stored safely online!'
             }
           ]
         }
@@ -1514,8 +1331,8 @@
         left: {
           character: '🎨',
           charName: 'Appy the Palette',
-          bubble: 'Software is a digital tool that helps us complete tasks and make cool projects!',
-          desc: 'Three major types of creative software:',
+          bubble: 'Software is a digital tool that helps us complete tasks and projects!',
+          desc: 'Three major types of software:',
           items: [
             { icon: '📄', title: 'Word Processing', sub: 'MS Word & Google Docs (Write letters & reports)' },
             { icon: '📽️', title: 'Presentations', sub: 'MS PowerPoint & Google Slides (Show slides to class)' },
@@ -1524,7 +1341,7 @@
         },
         right: {
           takeawayTitle: 'Match the Tool to Your Goal!',
-          takeawayText: '• Want to write a story? Use <b>Word or Google Docs</b>!<br>• Want to show photos and audio to friends? Use <b>PowerPoint or Google Slides</b>!<br>• Want to add, subtract, and make bar graphs? Use <b>Excel or Google Sheets</b>!',
+          takeawayText: '• Write a story? Use <b>Word or Google Docs</b>!<br>• Show slides to friends? Use <b>PowerPoint or Google Slides</b>!<br>• Math & charts? Use <b>Excel or Google Sheets</b>!',
           quizPool: [
             {
               question: 'Which software is best for typing stories and letters?',
@@ -1543,15 +1360,6 @@
                 { text: 'Digital Camera 📷', correct: false }
               ],
               explanation: 'Spreadsheets calculate numbers and turn them into charts!'
-            },
-            {
-              question: 'Which software helps you present slides with pictures and audio to class?',
-              options: [
-                { text: 'PowerPoint & Google Slides 📽️', correct: true },
-                { text: 'Wordpad 📝', correct: false },
-                { text: 'USB Driver 💾', correct: false }
-              ],
-              explanation: 'Slide presentation software makes slideshows for the classroom!'
             }
           ]
         }
@@ -1564,7 +1372,7 @@
         left: {
           character: '🛡️',
           charName: 'Shieldy the Guardian',
-          bubble: 'The Internet is a worldwide network of computers. Let us stay smart and safe!',
+          bubble: 'The Internet is a worldwide network of computers. Stay smart and safe!',
           desc: '3 Things to access the Internet:',
           items: [
             { icon: '📱', title: '1. Computer Device', sub: 'Phone, Laptop, or Tablet' },
@@ -1574,7 +1382,7 @@
         },
         right: {
           takeawayTitle: '5 Golden Internet Safety Rules for Kids',
-          takeawayText: '1. <b>Never share personal information</b> (full name, phone, address).<br>2. <b>Use a strong password</b>.<br>3. <b>Do not talk to strangers online</b>.<br>4. <b>Do not click on strange links</b>.<br>5. <b>Tell an adult</b> if something feels uncomfortable!',
+          takeawayText: '1. <b>Never share personal info</b>.<br>2. <b>Use a strong password</b>.<br>3. <b>Do not talk to strangers online</b>.<br>4. <b>Do not click strange links</b>.<br>5. <b>Tell an adult</b> if uncomfortable!',
           quizPool: [
             {
               question: 'What should you do if something online makes you uncomfortable?',
@@ -1593,15 +1401,6 @@
                 { text: '.fun', correct: false }
               ],
               explanation: '.ac stands for academic school and university websites!'
-            },
-            {
-              question: 'Which of these is a Web Browser to view websites?',
-              options: [
-                { text: 'Google Chrome / Safari 🌐', correct: true },
-                { text: 'Microsoft Excel 📊', correct: false },
-                { text: 'Printer Ink 🖨️', correct: false }
-              ],
-              explanation: 'Web browsers like Chrome and Safari open web pages.'
             }
           ]
         }
@@ -1610,10 +1409,7 @@
 
     let currentBookIndex = 0;
 
-    /* ========================================================
-       EXAM DATA (30 Complete Questions Across 6 Paper Sheets)
-       5 Questions per Page
-       ======================================================== */
+    /* EXAM DATA (30 Questions across 6 Pages) */
     const examPagesData = [
       {
         pageNumber: 1,
@@ -1705,7 +1501,7 @@
             id: 10,
             type: 'choice',
             q: '10. What does a microphone do when you speak into it?',
-            options: ['Sends your voice as INPUT', 'Prints out paper', 'Turns off the WiFi', 'Stores files on disk'],
+            options: ['Sends your voice as INPUT', 'Prints out paper', 'Turns off WiFi', 'Cleans screen'],
             answer: 0
           }
         ]
@@ -1773,7 +1569,7 @@
             id: 16,
             type: 'choice',
             q: '16. Where is Cloud Storage saved?',
-            options: ['On the Internet (secure servers)', 'Inside a plastic pencil case', 'Only on a CD disc', 'Under the classroom desk'],
+            options: ['On the Internet (secure servers)', 'Inside a plastic pencil case', 'Only on a CD disc', 'Under classroom desk'],
             answer: 0
           },
           {
@@ -1805,7 +1601,7 @@
             id: 20,
             type: 'choice',
             q: '20. What might happen if you lose your physical USB Flash Drive and had no backup?',
-            options: ['The files on it are lost', 'The files automatically print', 'The USB starts beeping', 'Nothing happens'],
+            options: ['The files on it are lost', 'The files automatically print', 'The USB starts singing', 'Nothing happens'],
             answer: 0
           }
         ]
@@ -1821,7 +1617,7 @@
             options: [
               'A digital program that helps us complete tasks',
               'A soft fluffy mouse pad',
-              'The plastic outside of the monitor',
+              'The plastic outside of monitor',
               'A piece of paper'
             ],
             answer: 0
@@ -1830,7 +1626,7 @@
             id: 22,
             type: 'choice',
             q: '22. Microsoft Word and Google Docs are used for:',
-            options: ['Word Processing (writing letters & reports)', 'Fixing broken hardware', 'Cooling down the CPU', 'Watching cartoons only'],
+            options: ['Word Processing (writing letters & reports)', 'Fixing broken hardware', 'Cooling CPU', 'Cooking lunch'],
             answer: 0
           },
           {
@@ -1868,7 +1664,7 @@
             id: 26,
             type: 'story_choice',
             story: `<b>Story: Meet Warinlada!</b><br>
-            Warinlada Ariyamethanan is 8 years old. Her birthday is on 31st May 2018. Her favorite color is purple, and she loves eating yummy Fried Chicken! During free time, her mom likes to sing songs, and her dad likes to watch TV. Her mom loves going on holiday to Pattaya, while her dad loves Khaoyai!`,
+            Warinlada Ariyamethanan is 8 years old. Her birthday is on 31st May 2018. Her favorite color is purple, and she loves eating yummy Fried Chicken! During free time, her mom likes to sing songs, and her dad likes to watch TV. Her mom loves going to Pattaya, while her dad loves Khaoyai!`,
             q: '26. What is Warinlada’s favorite color and favorite food according to her notebook story?',
             options: ['Purple & Fried Chicken', 'Orange & Somtum', 'Red & Mala', 'Blue & Pizza'],
             answer: 0
@@ -1917,9 +1713,7 @@
     let currentExamPageIndex = 0;
     const userExamAnswers = {};
 
-    /* ========================================================
-       MAIN TAB NAVIGATION (Storybook vs Desk Exam)
-       ======================================================== */
+    /* MAIN TAB NAVIGATION */
     function switchMainTab(tab) {
       playPageTurnSound();
       const bookSec = document.getElementById('storybook-section');
@@ -1941,9 +1735,7 @@
       }
     }
 
-    /* ========================================================
-       STORYBOOK LOGIC
-       ======================================================== */
+    /* STORYBOOK RENDERING */
     function renderBookmarkRibbons() {
       const ribbonContainer = document.getElementById('bookmark-ribbons');
       ribbonContainer.innerHTML = '';
@@ -1968,10 +1760,10 @@
       const ch = storybookChapters[currentBookIndex];
       const bookElement = document.getElementById('book-element');
       bookElement.classList.remove('page-turn-anim');
-      void bookElement.offsetWidth; // trigger reflow
+      void bookElement.offsetWidth;
       bookElement.classList.add('page-turn-anim');
 
-      // Left Page Render
+      // Left Page
       const leftPage = document.getElementById('book-left-page');
       leftPage.innerHTML = `
         <div class="chapter-badge"><i class="fa-solid fa-book-open"></i> Chapter ${currentBookIndex + 1}</div>
@@ -1984,8 +1776,8 @@
         <div class="character-card">
           <div class="character-avatar">${ch.left.character}</div>
           <div>
-            <h4 style="font-family: var(--font-fun); font-size: 18px; color: #1E293B;">${ch.left.charName}</h4>
-            <p style="font-size: 15px; color: #475569; font-weight: 600;">"${ch.left.bubble}"</p>
+            <h4 style="font-family: var(--font-fun); font-size: 16px; color: #1E293B;">${ch.left.charName}</h4>
+            <p style="font-size: 14px; color: #475569; font-weight: 600;">"${ch.left.bubble}"</p>
           </div>
         </div>
         <p class="story-desc">${ch.left.desc}</p>
@@ -2002,32 +1794,29 @@
         </div>
       `;
 
-      // Right Page Render (Quiz with randomized/shuffled choices)
+      // Right Page
       const rightPage = document.getElementById('book-right-page');
-
-      // Pick a random question from quiz pool or shuffle choices
       const randomQ = ch.right.quizPool[Math.floor(Math.random() * ch.right.quizPool.length)];
-      // Clone and shuffle options array
       const shuffledOptions = [...randomQ.options].sort(() => Math.random() - 0.5);
 
       rightPage.innerHTML = `
-        <div style="background: #F8FAFC; border-radius: 16px; padding: 18px; border: 1.5px solid #E2E8F0; margin-bottom: 16px;">
-          <h4 style="font-family: var(--font-fun); font-size: 20px; color: #1E293B; margin-bottom: 8px;">
+        <div style="background: #F8FAFC; border-radius: 14px; padding: 14px; border: 1.5px solid #E2E8F0; margin-bottom: 14px;">
+          <h4 style="font-family: var(--font-fun); font-size: 17px; color: #1E293B; margin-bottom: 6px;">
             <i class="fa-solid fa-lightbulb" style="color: #F59E0B;"></i> ${ch.right.takeawayTitle}
           </h4>
-          <p style="font-size: 15px; color: #475569; line-height: 1.6;">${ch.right.takeawayText}</p>
+          <p style="font-size: 14px; color: #475569; line-height: 1.5;">${ch.right.takeawayText}</p>
         </div>
 
         <div class="mini-quiz-box">
           <div class="quiz-title">
             <i class="fa-solid fa-gamepad"></i>
-            <span>Chapter Mini-Quiz (Randomized)</span>
+            <span>Chapter Mini-Quiz (Random)</span>
           </div>
           <div class="quiz-question">${randomQ.question}</div>
           <div class="choice-container" id="chapter-quiz-choices">
             ${shuffledOptions.map((opt, i) => `
               <button class="choice-btn" onclick="checkChapterQuiz(this, ${opt.correct}, '${escapeSpeech(randomQ.explanation)}')">
-                <span style="width: 28px; height: 28px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid #CBD5E1;">${String.fromCharCode(65 + i)}</span>
+                <span style="width: 24px; height: 24px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid #CBD5E1; font-size: 12px; flex-shrink: 0;">${String.fromCharCode(65 + i)}</span>
                 <span>${opt.text}</span>
               </button>
             `).join('')}
@@ -2036,8 +1825,7 @@
         </div>
       `;
 
-      // Update Controls
-      document.getElementById('book-page-indicator').textContent = `Chapter ${currentBookIndex + 1} / ${storybookChapters.length}`;
+      document.getElementById('book-page-indicator').textContent = `${currentBookIndex + 1} / ${storybookChapters.length}`;
       document.getElementById('book-prev-btn').disabled = currentBookIndex === 0;
       document.getElementById('book-next-btn').disabled = currentBookIndex === storybookChapters.length - 1;
     }
@@ -2045,9 +1833,7 @@
     function checkChapterQuiz(btn, isCorrect, explanation) {
       const container = document.getElementById('chapter-quiz-choices');
       const feedback = document.getElementById('chapter-feedback');
-      const allBtns = container.querySelectorAll('.choice-btn');
-
-      allBtns.forEach(b => b.disabled = true);
+      container.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
 
       if (isCorrect) {
         btn.classList.add('correct');
@@ -2074,9 +1860,7 @@
       return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
     }
 
-    /* ========================================================
-       DESK EXAM LOGIC (30 Questions across 6 Pages)
-       ======================================================== */
+    /* EXAM RENDERING */
     function renderExamPage() {
       playPageTurnSound();
       const pageData = examPagesData[currentExamPageIndex];
@@ -2087,14 +1871,13 @@
       void paperElement.offsetWidth;
       paperElement.classList.add('paper-sheet-turn');
 
-      let html = `<div style="margin-bottom: 12px; font-family: var(--font-fun); color: #B45309; font-size: 16px;">
+      let html = `<div style="margin-bottom: 10px; font-family: var(--font-fun); color: #B45309; font-size: 14px;">
         <i class="fa-solid fa-paperclip"></i> Section: ${pageData.title}
       </div>`;
 
       pageData.questions.forEach((q) => {
         html += `<div class="question-block" id="exam-qblock-${q.id}">`;
 
-        // Render based on type
         if (q.type === 'choice') {
           html += `
             <div class="q-number"><i class="fa-solid fa-circle-question"></i> Question ${q.id}</div>
@@ -2169,9 +1952,8 @@
 
       examBox.innerHTML = html;
 
-      // Controls State
       document.getElementById('exam-page-indicator').textContent =
-        `Exam Sheet ${currentExamPageIndex + 1} of ${examPagesData.length} (Questions ${currentExamPageIndex * 5 + 1} - ${currentExamPageIndex * 5 + 5})`;
+        `Sheet ${currentExamPageIndex + 1} of ${examPagesData.length} (Q ${currentExamPageIndex * 5 + 1} - ${currentExamPageIndex * 5 + 5})`;
 
       document.getElementById('exam-prev-btn').disabled = currentExamPageIndex === 0;
 
@@ -2201,12 +1983,11 @@
       if (nextIndex >= 0 && nextIndex < examPagesData.length) {
         currentExamPageIndex = nextIndex;
         renderExamPage();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
 
-    /* ========================================================
-       GRADING SYSTEM & SCORE MODAL
-       ======================================================== */
+    /* GRADING SYSTEM */
     function gradeFullExam() {
       let score = 0;
       let totalQuestions = 30;
@@ -2220,16 +2001,13 @@
           } else if (q.type === 'matching') {
             let allPairsCorrect = true;
             q.pairs.forEach((p, pIdx) => {
-              if (userExamAnswers[`${q.id}_${pIdx}`] !== p.answer) {
-                allPairsCorrect = false;
-              }
+              if (userExamAnswers[`${q.id}_${pIdx}`] !== p.answer) allPairsCorrect = false;
             });
             if (allPairsCorrect) score++;
           }
         });
       });
 
-      // Show Result Modal
       const modal = document.getElementById('score-modal');
       const scoreDisplay = document.getElementById('score-display');
       const scoreEmoji = document.getElementById('score-emoji');
@@ -2247,7 +2025,7 @@
         playDing(true);
       } else {
         scoreEmoji.textContent = '🌱';
-        scoreMsg.textContent = 'Good effort! Turn back through the Storybook and try again!';
+        scoreMsg.textContent = 'Good effort! Read through the Storybook again and retake!';
         playDing(false);
       }
 
@@ -2266,10 +2044,9 @@
     }
 
     function showHelpModal() {
-      alert("Tip for Kids & Teachers:\n\n1. Use 'Storybook' to read each lesson with cute characters and take randomized mini-quizzes!\n2. Click the 'Desk Exam' tab to open the 30-question stapled exam on the wooden desk.\n3. Flip through pages and click Submit at the end for instant grading!");
+      alert("Tip for Kids & Parents:\n\n1. Use 'Storybook' to read each lesson and solve mini-quizzes!\n2. Click 'Desk Exam' to take the 30-question stapled exam on the wooden desk.\n3. Flip through pages and click Submit at the end!");
     }
 
-    // Initialize application on load
     window.onload = () => {
       renderStorybook();
     };
